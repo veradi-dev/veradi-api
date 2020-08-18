@@ -40,7 +40,11 @@ DJANGO_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 ]
-PROJECT_APPS = ["core.apps.CoreConfig", "users.apps.UsersConfig"]
+PROJECT_APPS = [
+    "frontend.apps.FrontendConfig",
+    "core.apps.CoreConfig",
+    "users.apps.UsersConfig",
+]
 THIRD_PARTY_APPS = ["rest_framework"]
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
 
