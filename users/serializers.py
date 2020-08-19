@@ -1,8 +1,29 @@
 from django.contrib.auth import get_user_model
-from rest_framework.serializers import ModelSerializer
+from rest_framework import serializers
 
 
-class UserSerializer(ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+    code = serializers.CharField(write_only=True)
+
     class Meta:
         model = get_user_model()
-        fields = ("username",)
+        fields = (
+            "id",
+            "username",
+            "password",
+            "first_name",
+            "last_name",
+            "code",
+            "department",
+            "rank",
+            "team",
+            "position",
+            "email_verified",
+            "approved",
+        )
+        read_only_fields = (
+            "id",
+            "username",
+            "code",
+        )

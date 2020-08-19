@@ -1,8 +1,10 @@
-from django.urls import path
-from . import views
+from django.urls import path, include
+from frontend.views import index
 
-app_name = 'core'
+
+app_name = "core"
 
 urlpatterns = [
-	path('', views.HomeView.as_view(), name="home"),
+    path("", index, name="home"),
+    path("", include("users.urls")),
 ]
