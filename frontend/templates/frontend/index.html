@@ -1,13 +1,18 @@
+{% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Veradi</title>
-</head>
-<body >
-<div id="root"></div>
-{% load static %}
-<script src="{% static 'frontend/main.js' %}" ></script>
-</body>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'css/reset.css' %}"
+    />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script src="{% static 'frontend/main.js' %}"></script>
+  </body>
 </html>
