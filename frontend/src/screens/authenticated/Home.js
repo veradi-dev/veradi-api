@@ -7,11 +7,9 @@ const Home = ({ user }) => {
   const history = useHistory();
   const dispatch = useDispatch();
   useEffect(() => {
-    return () => {
-      if (!user.isAuthenticated) {
-        history.push("/auth");
-      }
-    };
+    if (!user.isAuthenticated) {
+      history.push("/auth");
+    }
   }, [user]);
 
   return (

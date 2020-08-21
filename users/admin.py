@@ -32,7 +32,7 @@ class UserAdmin(UserAdmin):
         "code",
         "get_department_name",
         "get_team_name",
-        "is_active",
+        "is_authenticated",
     )
 
     # 내부 패널

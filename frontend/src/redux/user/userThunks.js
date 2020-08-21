@@ -1,6 +1,13 @@
 import { userActions } from "./userSlice";
 import { loginRequest, logoutRequest } from "../../api/users/auth";
 
+const logout = () => (dispatch, getState) => {
+  const token = getState().user.token;
+  logoutRequest(token).finally(() => {
+    dispatch(userActions.logout());
+  });
+};
+
 const login = (data) => (dispatch) => {
   loginRequest(data)
     .then((res) => {
@@ -11,16 +18,8 @@ const login = (data) => (dispatch) => {
       }
     })
     .catch((e) => {
-      console.log(e);
+      dispatch(logout());
     });
-};
-
-const logout = () => (dispatch, getState) => {
-  const token = getState().user.token;
-  console.log(token);
-  logoutRequest(token).finally(() => {
-    dispatch(userActions.logout());
-  });
 };
 
 export { login, logout };
