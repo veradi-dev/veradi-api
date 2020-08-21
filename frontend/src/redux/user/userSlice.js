@@ -32,6 +32,22 @@ const userSlice = createSlice({
       state.team = user.team;
       state.position = user.position;
     },
+    logout: () => {
+      return {
+        id: 0,
+        expiry: null,
+        token: null,
+        isAuthenticated: false,
+        username: "",
+        email: "",
+        first_name: "",
+        last_name: "",
+        department: "",
+        rank: "",
+        team: "",
+        position: "",
+      };
+    },
   },
 });
 

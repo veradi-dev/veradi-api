@@ -1,5 +1,5 @@
 import { userActions } from "./userSlice";
-import { login as loginRequest } from "../../api/users/auth";
+import { loginRequest, logoutRequest } from "../../api/users/auth";
 
 const login = (data) => (dispatch) => {
   loginRequest(data)
@@ -15,4 +15,12 @@ const login = (data) => (dispatch) => {
     });
 };
 
-export { login };
+const logout = () => (dispatch, getState) => {
+  const token = getState().user.token;
+  console.log(token);
+  logoutRequest(token).finally(() => {
+    dispatch(userActions.logout());
+  });
+};
+
+export { login, logout };
