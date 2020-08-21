@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { connect } from "react-redux";
+import { login } from "../../redux/user/userThunks";
 
 const Container = styled.div`
   width: 100%;
@@ -46,12 +48,19 @@ const SubmitButton = styled.button`
   color: white;
 `;
 
-const Gate = () => {
+const Gate = ({ history, isAuthenticated, login }) => {
   const [userInput, setUserInput] = useState({
-    userId: "",
-    userPassword: "",
-    userCode: "",
+    username: "",
+    password: "",
+    code: "",
   });
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      history.push("/");
+    }
+  }, [isAuthenticated]);
+
   const handleChange = (e) => {
     setUserInput({
       ...userInput,
@@ -60,10 +69,11 @@ const Gate = () => {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
+    login(userInput);
     setUserInput({
-      userId: "",
-      userPassword: "",
-      userCode: "",
+      username: "",
+      password: "",
+      code: "",
     });
   };
   return (
@@ -73,27 +83,30 @@ const Gate = () => {
         <Input
           type="text"
           placeholder="ID"
-          name="userId"
+          name="username"
           onChange={handleChange}
-          value={userInput.userId}
+          value={userInput.username}
         />
         <Input
           type="password"
           placeholder="Password"
-          name="userPassword"
+          name="password"
           onChange={handleChange}
-          value={userInput.userPassword}
+          value={userInput.password}
         />
         <Input
           placeholder="Code"
-          name="userCode"
+          name="code"
           onChange={handleChange}
-          value={userInput.userCode}
+          value={userInput.code}
         />
         <SubmitButton type="submit">로그인</SubmitButton>
       </LoginForm>
     </Container>
   );
 };
-
-export default Gate;
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.user.isAuthenticated,
+});
+const mapDispatchToProps = { login };
+export default connect(mapStateToProps, mapDispatchToProps)(Gate);
