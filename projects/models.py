@@ -1,5 +1,9 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 from core.models import CoreModel
+
+
+User = get_user_model()
 
 
 class Subject(models.Model):
@@ -34,7 +38,7 @@ class History(CoreModel):
     question = models.ForeignKey(
         "Question", related_name="histories", on_delete=models.CASCADE
     )
-    writer = models.ForeignKey("User", on_delete=models.CASCADE)
+    writer = models.ForeignKey(User, on_delete=models.CASCADE)
     image = models.ImageField()
     difficulty = models.IntegerField(default=0)
     novelty = models.IntegerField(default=0)

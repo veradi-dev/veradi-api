@@ -46,6 +46,7 @@ PROJECT_APPS = [
     "frontend.apps.FrontendConfig",
     "core.apps.CoreConfig",
     "users.apps.UsersConfig",
+    "projects.apps.ProjectsConfig",
 ]
 THIRD_PARTY_APPS = ["rest_framework", "knox"]
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS

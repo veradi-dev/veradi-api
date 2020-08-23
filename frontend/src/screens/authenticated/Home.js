@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, Route, Link } from "react-router-dom";
 import { connect, useDispatch } from "react-redux";
 import { logout } from "../../redux/user/userThunks";
+import QuestionRegister from "./projects/questions/QuestionRegister";
 
-const Home = ({ user }) => {
+const Home = ({ match, user }) => {
   const history = useHistory();
   const dispatch = useDispatch();
   useEffect(() => {
@@ -18,6 +19,11 @@ const Home = ({ user }) => {
       <button type="button" onClick={() => dispatch(logout())}>
         logout
       </button>
+      <Route
+        path={`${match.path}projects/questions/registration`}
+        component={QuestionRegister}
+      />
+      <Link to={`${match.path}projects/questions/registration`}>문항 등록</Link>
     </div>
   );
 };
