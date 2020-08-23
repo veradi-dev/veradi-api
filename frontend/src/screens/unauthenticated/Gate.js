@@ -54,7 +54,6 @@ const Gate = ({ history, isAuthenticated, login }) => {
     password: "",
     code: "",
   });
-
   useEffect(() => {
     if (isAuthenticated) {
       history.push("/");

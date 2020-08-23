@@ -8,7 +8,10 @@ User = get_user_model()
 
 class Subject(models.Model):
     name = models.CharField(max_length=255)
+    curriculum = models.IntegerField(default=0)
     # <- units
+    def __str__(self):
+        return self.name
 
 
 class Unit(models.Model):
@@ -18,15 +21,19 @@ class Unit(models.Model):
     name = models.CharField(max_length=255)
     code = models.CharField(max_length=50)
     # <- questions
+    def __str__(self):
+        return self.name
 
 
 class Question(CoreModel):
-    curriculum = models.IntegerField()
     unit = models.ForeignKey("Unit", related_name="questions", on_delete=models.CASCADE)
     project = models.ForeignKey(
         "Project", related_name="questions", on_delete=models.CASCADE
     )
+    name = models.CharField(max_length=255)
     # <- histories
+    def __str__(self):
+        return self.name
 
 
 class History(CoreModel):
@@ -46,6 +53,9 @@ class History(CoreModel):
     order = models.IntegerField(default=0)
     size = models.CharField(choices=Size.choices, max_length=10, default=2)
     complete = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.question.name} - {self.writer} {self.created_at}"
 
 
 class Project(CoreModel):
