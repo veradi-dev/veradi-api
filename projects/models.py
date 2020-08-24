@@ -28,12 +28,19 @@ class Unit(models.Model):
 class Question(CoreModel):
     unit = models.ForeignKey("Unit", related_name="questions", on_delete=models.CASCADE)
     project = models.ForeignKey(
-        "Project", related_name="questions", on_delete=models.CASCADE
+        "Project", related_name="questions", on_delete=models.CASCADE, null=True
     )
     name = models.CharField(max_length=255)
     # <- histories
     def __str__(self):
         return self.name
+
+
+class QuestionImage(CoreModel):
+    history = models.ForeignKey(
+        "History", related_name="images", on_delete=models.CASCADE
+    )
+    file = models.ImageField(upload_to="question_images")
 
 
 class History(CoreModel):
@@ -46,12 +53,12 @@ class History(CoreModel):
         "Question", related_name="histories", on_delete=models.CASCADE
     )
     writer = models.ForeignKey(User, on_delete=models.CASCADE)
-    image = models.ImageField()
+    # <- images
     difficulty = models.IntegerField(default=0)
     novelty = models.IntegerField(default=0)
     integrity = models.IntegerField(default=0)
     order = models.IntegerField(default=0)
-    size = models.CharField(choices=Size.choices, max_length=10, default=2)
+    size = models.IntegerField(choices=Size.choices, default=2)
     complete = models.BooleanField(default=False)
 
     def __str__(self):

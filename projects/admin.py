@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Subject, Unit, Question, History, Project
+from .models import Subject, Unit, Question, History, Project, QuestionImage
 
 
 @admin.register(Subject)
@@ -24,4 +24,9 @@ class HistoryAdmin(admin.ModelAdmin):
 
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(QuestionImage)
+class QuestionImageAdmin(admin.ModelAdmin):
     pass

@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { AiOutlineCheckCircle, AiOutlineCloseCircle } from "react-icons/ai";
+import { AiOutlineCheckCircle } from "react-icons/ai";
 import axios from "axios";
 
 const FormContainer = styled.form`
   width: 80%;
-  height: 100vh;
+  height: 120vh;
   margin: auto;
   padding: 2rem;
   display: flex;
@@ -57,17 +57,33 @@ const Select = styled.select`
   padding-left: 1rem;
   border-radius: 20px 20px;
 `;
+const Button = styled.button`
+  width: 12rem;
+  height: 3rem;
+  font-size: 1.5rem;
+  background-color: rgb(82, 79, 150, 0.9);
+  border-radius: 1rem;
+  color: white;
+`;
+
 const QuestionRegister = () => {
   const [subject, setSubject] = useState("");
+
   const [unit, setUnit] = useState("");
+
   const [unitList, setUnitList] = useState([]);
-  const [image, setImage] = useState("");
+
+  const [images, setImages] = useState({
+    files: [],
+  });
+
   const [evaluation, setEvaluation] = useState({
     size: "",
     difficulty: "",
     novelty: "",
     integrity: "",
   });
+
   const handleSubjectChange = (e) => {
     if (e.target.value === "") {
       setUnit("");
@@ -79,14 +95,43 @@ const QuestionRegister = () => {
     }
     setSubject(e.target.value);
   };
+
+  const handleImagesChange = (e) => {
+    let fileObj = e.target.files;
+    let fileArray = [];
+    for (let i = 0; i < fileObj.length; i++) {
+      fileArray.push(fileObj[i]);
+    }
+    setImages({ files: fileArray });
+  };
+
   const handleEvaluationChange = (e) => {
     setEvaluation({
       ...evaluation,
       [e.target.name]: e.target.value,
     });
   };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    let form_data = new FormData();
+    form_data.append("subject", subject);
+    form_data.append("unit", unit);
+    for (let i = 0; i < images.files.length; i++) {
+      form_data.append(`image${i}`, images.files[i]);
+    }
+    form_data.append("size", evaluation.size);
+    form_data.append("difficulty", evaluation.difficulty);
+    form_data.append("novelty", evaluation.novelty);
+    form_data.append("integrity", evaluation.integrity);
+    axios.post("/api/v1/projects/question/", form_data, {
+      headers: {
+        "content-type": "multipart/form-data",
+      },
+    });
+  };
   return (
-    <FormContainer>
+    <FormContainer onSubmit={handleSubmit}>
       <Title>문항 등록</Title>
       <Column>
         <Label>과목</Label>
@@ -95,7 +140,7 @@ const QuestionRegister = () => {
             size={25}
             color={subject === "" ? "#ebebeb" : "#11992e"}
           />
-          <Select name="subject" onChange={handleSubjectChange}>
+          <Select name="subject" onChange={handleSubjectChange} required>
             <option value="">---------------</option>
             <option value="COLO">국어</option>
             <option value="COMT">수학</option>
@@ -113,7 +158,11 @@ const QuestionRegister = () => {
             size={25}
             color={unit === "" ? "#ebebeb" : "#11992e"}
           />
-          <Select name="unit" onChange={(e) => setUnit(e.target.value)}>
+          <Select
+            name="unit"
+            onChange={(e) => setUnit(e.target.value)}
+            required
+          >
             <option value="">---------------</option>
             {unitList == []
               ? null
@@ -130,11 +179,16 @@ const QuestionRegister = () => {
       <Column>
         <Label>이미지</Label>
         <InputContainer>
-          <AiOutlineCheckCircle size={25} color="#ebebeb" />
+          <AiOutlineCheckCircle
+            size={25}
+            color={images.files.length === 0 ? "#ebebeb" : "#11992e"}
+          />
           <input
             type="file"
             style={{ marginLeft: "1rem" }}
-            onChange={(e) => console.log(e)}
+            onChange={handleImagesChange}
+            multiple
+            required
           />
         </InputContainer>
       </Column>
@@ -145,11 +199,11 @@ const QuestionRegister = () => {
             size={25}
             color={evaluation.size === "" ? "#ebebeb" : "#11992e"}
           />
-          <Select name="size" onChange={handleEvaluationChange}>
+          <Select name="size" onChange={handleEvaluationChange} required>
             <option value="">---------------</option>
-            <option value="small">소</option>
-            <option value="medium">중</option>
-            <option value="big">대</option>
+            <option value={1}>소</option>
+            <option value={2}>중</option>
+            <option value={3}>대</option>
           </Select>
         </InputContainer>
       </Column>
@@ -160,7 +214,7 @@ const QuestionRegister = () => {
             size={25}
             color={evaluation.difficulty === "" ? "#ebebeb" : "#11992e"}
           />
-          <Select name="difficulty" onChange={handleEvaluationChange}>
+          <Select name="difficulty" onChange={handleEvaluationChange} required>
             <option value="">---------------</option>
             {[...Array(11).keys()].map((num) => (
               <option key={`difficulty${num}`} value={num}>
@@ -177,7 +231,7 @@ const QuestionRegister = () => {
             size={25}
             color={evaluation.novelty === "" ? "#ebebeb" : "#11992e"}
           />
-          <Select name="novelty" onChange={handleEvaluationChange}>
+          <Select name="novelty" onChange={handleEvaluationChange} required>
             <option value="">---------------</option>
             {[...Array(11).keys()].map((num) => (
               <option key={`novelty${num}`} value={num}>
@@ -194,7 +248,7 @@ const QuestionRegister = () => {
             size={25}
             color={evaluation.integrity === "" ? "#ebebeb" : "#11992e"}
           />
-          <Select name="integrity" onChange={handleEvaluationChange}>
+          <Select name="integrity" onChange={handleEvaluationChange} required>
             <option value="">---------------</option>
             {[...Array(11).keys()].map((num) => (
               <option key={`integrity${num}`} value={num}>
@@ -204,6 +258,7 @@ const QuestionRegister = () => {
           </Select>
         </InputContainer>
       </Column>
+      <Button>제출</Button>
     </FormContainer>
   );
 };
