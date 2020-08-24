@@ -7,7 +7,7 @@ import Button from "@material-ui/core/Button";
 
 const FormContainer = styled.form`
   width: 80%;
-  height: 120vh;
+  height: 150vh;
   margin: auto;
   padding: 2rem;
   display: flex;

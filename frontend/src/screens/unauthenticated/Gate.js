@@ -1,7 +1,23 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { connect } from "react-redux";
 import { login } from "../../redux/user/userThunks";
+
+const bulb = keyframes`
+  0%{
+    transform: scale(1)
+  }
+  
+  50%{
+    /* background-size:150% 150%; */
+    transform: scale(20)
+  }
+
+  100%{
+    transform: scale(1)
+  );
+  }
+`;
 
 const Container = styled.div`
   width: 100%;
@@ -10,10 +26,27 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background-color: black;
+  background-position: center center;
 `;
-
+const LogoContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+const Bulb = styled.div`
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: radial-gradient(circle, #857c51 10%, rgba(0, 0, 0, 0.2) 100%);
+  animation: ${bulb} 4s linear 2s infinite;
+  border: rgba(0, 0, 0, 0);
+  border-radius: 100%;
+  opacity: 0.4;
+`;
 const Logo = styled.img`
   height: 200px;
+  z-index: 10;
 `;
 
 const LoginForm = styled.form`
@@ -77,7 +110,10 @@ const Gate = ({ history, isAuthenticated, login }) => {
   };
   return (
     <Container>
-      <Logo alt="veradi_logo" src="/static/assets/veradi/logo.png" />
+      <LogoContainer>
+        <Bulb />
+        <Logo alt="veradi_logo" src="/static/assets/veradi/logo.png" />
+      </LogoContainer>
       <LoginForm onSubmit={handleSubmit}>
         <Input
           type="text"

@@ -24,6 +24,7 @@ const useStyles = makeStyles((theme) => ({
   toobar: {
     flexGrow: 1,
     flexDirection: "row-reverse",
+    backgroundColor: "white",
   },
 }));
 
@@ -47,7 +48,7 @@ function MenuAppBar({ logout }) {
           <IconButton
             edge="end"
             className={classes.menuButton}
-            color="inherit"
+            color="black"
             aria-label="menu"
           >
             <MenuIcon />
@@ -58,7 +59,7 @@ function MenuAppBar({ logout }) {
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleMenu}
-              color="inherit"
+              color="black"
             >
               <AccountCircle />
             </IconButton>
