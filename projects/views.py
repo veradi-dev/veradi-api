@@ -29,42 +29,42 @@ class QuestionRegisterView(APIView):
     parser_classes = (MultiPartParser, FormParser)
 
     def post(self, request, *args, **kwargs):
-        data = request.data
-        subject = data["subject"]
-        unit = data["unit"]
-        print(unit)
-        images = request.FILES
-        size = data["size"]
-        difficulty = data["difficulty"]
-        novelty = data["novelty"]
-        integrity = data["integrity"]
-        for key in images.keys():
-            print(type(images[key]))
-        unit_obj = Unit.objects.get(subject__name=subject, code=unit)
-        print(unit_obj)
-        question_obj, _ = Question.objects.get_or_create(
-            unit=unit_obj,
-            name=create_question_name(
-                subject,
-                unit,
-                User.objects.get(username=1),
-                (timezone.now()).strftime("%y%m%d"),
-            ),
-        )
-        order = question_obj.histories.get_queryset().__len__() + 1
-
-        history_obj = History.objects.create(
-            question=question_obj,
-            writer=User.objects.get(username=1),
-            difficulty=int(difficulty),
-            novelty=int(novelty),
-            integrity=int(integrity),
-            order=order,
-            size=int(size),
-        )
-
-        for key in images.keys():
-            question_image_obj = QuestionImage.objects.create(
-                history=history_obj, file=images[key],
+        try:
+            data = request.data
+            subject = data["subject"]
+            unit = data["unit"]
+            images = request.FILES
+            size = data["size"]
+            difficulty = data["difficulty"]
+            novelty = data["novelty"]
+            integrity = data["integrity"]
+            unit_obj = Unit.objects.get(subject__name=subject, code=unit)
+            question_obj, _ = Question.objects.get_or_create(
+                unit=unit_obj,
+                name=create_question_name(
+                    subject,
+                    unit,
+                    User.objects.get(username=1),
+                    (timezone.now()).strftime("%y%m%d"),
+                ),
             )
-        return Response()
+
+            order = question_obj.histories.get_queryset().__len__() + 1
+
+            history_obj = History.objects.create(
+                question=question_obj,
+                writer=User.objects.get(username=1),
+                difficulty=int(difficulty),
+                novelty=int(novelty),
+                integrity=int(integrity),
+                order=order,
+                size=int(size),
+            )
+
+            for key in images.keys():
+                question_image_obj = QuestionImage.objects.create(
+                    history=history_obj, file=images[key],
+                )
+            return Response(status=status.HTTP_200_OK)
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)

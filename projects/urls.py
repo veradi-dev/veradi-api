@@ -9,7 +9,9 @@ router.register("", viewset=QuestionViewSet)
 urlpatterns = [
     path("api/v1/projects/<str:subject>/unit-list/", get_units, name="get_unit"),
     path(
-        "api/v1/projects/question/", QuestionRegisterView.as_view(), name="get_question"
+        "api/v1/projects/question/registration/",
+        QuestionRegisterView.as_view(),
+        name="get_question",
     ),
     path("api/v1/projects/questions/", include(router.urls)),
 ]

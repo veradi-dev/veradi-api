@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { AiOutlineCheckCircle } from "react-icons/ai";
+import { IoIosArrowBack } from "react-icons/io";
 import axios from "axios";
+import Button from "@material-ui/core/Button";
 
 const FormContainer = styled.form`
   width: 80%;
@@ -57,16 +59,23 @@ const Select = styled.select`
   padding-left: 1rem;
   border-radius: 20px 20px;
 `;
-const Button = styled.button`
-  width: 12rem;
-  height: 3rem;
-  font-size: 1.5rem;
-  background-color: rgb(82, 79, 150, 0.9);
-  border-radius: 1rem;
-  color: white;
+// const Button = styled.button`
+//   width: 12rem;
+//   height: 3rem;
+//   font-size: 1.5rem;
+//   background-color: rgb(82, 79, 150, 0.9);
+//   border-radius: 1rem;
+//   color: white;
+// `;
+
+const BackBtn = styled.div`
+  margin: 2rem 0;
+  position: absolute;
+  align-self: flex-start;
+  cursor: pointer;
 `;
 
-const QuestionRegister = () => {
+const QuestionRegister = ({ history }) => {
   const [subject, setSubject] = useState("");
 
   const [unit, setUnit] = useState("");
@@ -85,14 +94,11 @@ const QuestionRegister = () => {
   });
 
   const handleSubjectChange = (e) => {
-    if (e.target.value === "") {
-      setUnit("");
-      setUnitList([]);
-    } else {
-      axios
-        .get(`/api/v1/projects/${e.target.value}/unit-list/`)
-        .then((res) => setUnitList(res.data));
-    }
+    setUnit("");
+    setUnitList([]);
+    axios
+      .get(`/api/v1/projects/${e.target.value}/unit-list/`)
+      .then((res) => setUnitList(res.data));
     setSubject(e.target.value);
   };
 
@@ -124,7 +130,7 @@ const QuestionRegister = () => {
     form_data.append("difficulty", evaluation.difficulty);
     form_data.append("novelty", evaluation.novelty);
     form_data.append("integrity", evaluation.integrity);
-    axios.post("/api/v1/projects/question/", form_data, {
+    axios.post("/api/v1/projects/question/registration/", form_data, {
       headers: {
         "content-type": "multipart/form-data",
       },
@@ -132,6 +138,9 @@ const QuestionRegister = () => {
   };
   return (
     <FormContainer onSubmit={handleSubmit}>
+      <BackBtn onClick={() => history.goBack()}>
+        <IoIosArrowBack size={25} />
+      </BackBtn>
       <Title>문항 등록</Title>
       <Column>
         <Label>과목</Label>
@@ -258,7 +267,9 @@ const QuestionRegister = () => {
           </Select>
         </InputContainer>
       </Column>
-      <Button>제출</Button>
+      <Button variant="contained" color="primary" type="submit">
+        제출
+      </Button>
     </FormContainer>
   );
 };
