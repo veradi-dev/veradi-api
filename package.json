@@ -6,7 +6,7 @@
   "author": "marpiotoun <plus470@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "webpack --mode development --watch ./frontend/src/index.js --output ./frontend/static/frontend/main.js",
+    "dev": "webpack --watch",
     "build": "webpack --mode production ./frontend/src/index.js --output ./frontend/static/frontend/main.js"
   },
   "dependencies": {
@@ -30,7 +30,10 @@
     "@babel/preset-env": "^7.11.0",
     "@babel/preset-react": "^7.10.4",
     "babel-loader": "^8.1.0",
+    "file-loader": "^6.0.0",
+    "image-webpack-loader": "^6.0.0",
     "webpack": "^4.44.1",
+    "webpack-bundle-tracker": "0.4.3",
     "webpack-cli": "^3.3.12"
   }
 }

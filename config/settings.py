@@ -48,7 +48,7 @@ PROJECT_APPS = [
     "users.apps.UsersConfig",
     "projects.apps.ProjectsConfig",
 ]
-THIRD_PARTY_APPS = ["rest_framework", "knox"]
+THIRD_PARTY_APPS = ["rest_framework", "knox", "webpack_loader"]
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
 
 # REST_FRAMEWORK SETTINGS
@@ -142,5 +142,16 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = "/static/"
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "frontend/static/"),
+]
+
+WEBPACK_LOADER = {
+    "DEFAULT": {
+        "CACHE": True,
+        "BUNDLE_DIR_NAME": "frontend/",  # must end with slash
+        "STATS_FILE": os.path.join(BASE_DIR, "webpack-stats.json"),
+    }
+}
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "uploads")

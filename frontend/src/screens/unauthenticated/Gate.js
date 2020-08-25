@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import styled, { keyframes } from "styled-components";
 import { connect } from "react-redux";
 import { login } from "../../redux/user/userThunks";
+import LogoImage from "../../../assets/veradi/logo.png";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const bulb = keyframes`
   0%{
@@ -9,7 +11,6 @@ const bulb = keyframes`
   }
   
   50%{
-    /* background-size:150% 150%; */
     transform: scale(20)
   }
 
@@ -29,6 +30,7 @@ const Container = styled.div`
   background-color: black;
   background-position: center center;
 `;
+
 const LogoContainer = styled.div`
   display: flex;
   align-items: center;
@@ -48,7 +50,6 @@ const Logo = styled.img`
   height: 200px;
   z-index: 10;
 `;
-
 const LoginForm = styled.form`
   display: flex;
   flex-direction: column;
@@ -87,18 +88,27 @@ const Gate = ({ history, isAuthenticated, login }) => {
     password: "",
     code: "",
   });
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    const img = new Image();
+    img.src = LogoImage;
+    img.onload = () => {
+      setInterval(() => setIsLoading(false), 1000);
+    };
+  });
+
   useEffect(() => {
     if (isAuthenticated) {
       history.push("/");
     }
   }, [isAuthenticated]);
-
   const handleChange = (e) => {
     setUserInput({
       ...userInput,
       [e.target.name]: e.target.value,
     });
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     login(userInput);
@@ -108,35 +118,50 @@ const Gate = ({ history, isAuthenticated, login }) => {
       code: "",
     });
   };
+
   return (
     <Container>
-      <LogoContainer>
-        <Bulb />
-        <Logo alt="veradi_logo" src="/static/assets/veradi/logo.png" />
-      </LogoContainer>
-      <LoginForm onSubmit={handleSubmit}>
-        <Input
-          type="text"
-          placeholder="ID"
-          name="username"
-          onChange={handleChange}
-          value={userInput.username}
+      {isLoading ? (
+        <CircularProgress
+          color="primary"
+          size={40}
+          thickness={5}
+          style={{
+            color: "#1a90ff",
+            animationDuration: "550ms",
+          }}
         />
-        <Input
-          type="password"
-          placeholder="Password"
-          name="password"
-          onChange={handleChange}
-          value={userInput.password}
-        />
-        <Input
-          placeholder="Code"
-          name="code"
-          onChange={handleChange}
-          value={userInput.code}
-        />
-        <SubmitButton type="submit">로그인</SubmitButton>
-      </LoginForm>
+      ) : (
+        <>
+          <LogoContainer>
+            <Bulb />
+            <Logo alt="veradi_logo" src={LogoImage} />
+          </LogoContainer>
+          <LoginForm onSubmit={handleSubmit}>
+            <Input
+              type="text"
+              placeholder="ID"
+              name="username"
+              onChange={handleChange}
+              value={userInput.username}
+            />
+            <Input
+              type="password"
+              placeholder="Password"
+              name="password"
+              onChange={handleChange}
+              value={userInput.password}
+            />
+            <Input
+              placeholder="Code"
+              name="code"
+              onChange={handleChange}
+              value={userInput.code}
+            />
+            <SubmitButton type="submit">로그인</SubmitButton>
+          </LoginForm>
+        </>
+      )}
     </Container>
   );
 };
