@@ -4,6 +4,7 @@ import {
   logoutRequest,
   CheckLogedInRequest,
 } from "../../api/users/auth";
+import { alertActions } from "../alert/alertSlice";
 
 const logout = () => (dispatch, getState) => {
   const token = getState().user.token;
@@ -18,11 +19,17 @@ const login = (data) => (dispatch) => {
       const { data, status } = res;
       if (status === 200) {
         dispatch(userActions.login(data));
+        dispatch(
+          alertActions.success(
+            `반갑습니다 ${data.user.last_name}${data.user.first_name}님`
+          )
+        );
         return true;
       }
     })
     .catch((e) => {
       dispatch(logout());
+      dispatch(alertActions.error(`로그인 정보가 올바르지 않습니다.`));
     });
 };
 

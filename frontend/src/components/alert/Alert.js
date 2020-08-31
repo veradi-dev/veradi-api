@@ -1,23 +1,21 @@
-import React from "react";
-import Alert from "@material-ui/lab/Alert";
-import IconButton from "@material-ui/core/IconButton";
-import CloseIcon from "@material-ui/icons/Close";
+import React, { useEffect } from "react";
+import { connect } from "react-redux";
+import { useAlert } from "react-alert";
 
-export default ({ style, options, message, close }) => {
-  console.log(close);
-  const alertConfig = {
-    style,
-    severity: options.type,
-    action: (
-      <IconButton
-        aria-label="close"
-        color="inherit"
-        size="small"
-        onClick={close}
-      >
-        <CloseIcon />
-      </IconButton>
-    ),
-  };
-  return <Alert {...alertConfig}>{message}</Alert>;
+const Alert = ({ type, message }) => {
+  const alert = useAlert();
+  if (type === "success") {
+    alert.success(message);
+  } else if (type === "info") {
+    alert.info(message);
+  } else if (type === "error") {
+    alert.error(message);
+  }
+  return <React.Fragment />;
 };
+
+const mapStateToProps = (state) => ({
+  type: state.alert.type,
+  message: state.alert.message,
+});
+export default connect(mapStateToProps, {})(Alert);

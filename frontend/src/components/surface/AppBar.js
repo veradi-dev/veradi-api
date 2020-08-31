@@ -1,5 +1,8 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { alertActions } from "../../redux/alert/alertSlice";
+
 import TemporaryDrawer from "../navigation/Drawer";
 import LogoImage from "../../../assets/veradi/logo.png";
 
@@ -41,6 +44,7 @@ const useStyles = makeStyles((theme) => ({
 
 function MenuAppBar({ history, logout }) {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleMenu = (event) => {
@@ -94,7 +98,14 @@ function MenuAppBar({ history, logout }) {
                 onClose={handleClose}
               >
                 <MenuItem onClick={handleClose}>내 계정 관리</MenuItem>
-                <MenuItem onClick={logout}>로그아웃</MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    logout();
+                    dispatch(alertActions.success(`로그아웃 되었습니다.`));
+                  }}
+                >
+                  로그아웃
+                </MenuItem>
               </Menu>
             </div>
           </div>
