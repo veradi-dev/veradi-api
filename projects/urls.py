@@ -9,7 +9,7 @@ router.register("", viewset=QuestionViewSet)
 urlpatterns = [
     path("api/v1/projects/<str:subject>/unit-list/", get_units, name="get_unit"),
     path(
-        "api/v1/projects/question/registration/",
+        "api/v1/projects/questions/registration/",
         QuestionRegisterView.as_view(),
         name="get_question",
     ),

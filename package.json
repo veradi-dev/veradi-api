@@ -12,9 +12,11 @@
   "dependencies": {
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.56",
     "@reduxjs/toolkit": "^1.4.0",
     "axios": "^0.19.2",
     "jsonwebtoken": "^8.5.1",
+    "material-ui-image": "^3.2.3",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-icons": "^3.11.0",
@@ -30,8 +32,10 @@
     "@babel/preset-env": "^7.11.0",
     "@babel/preset-react": "^7.10.4",
     "babel-loader": "^8.1.0",
+    "babel-plugin-root-import": "^6.5.0",
     "file-loader": "^6.0.0",
     "image-webpack-loader": "^6.0.0",
+    "react-alert": "^7.0.2",
     "webpack": "^4.44.1",
     "webpack-bundle-tracker": "0.4.3",
     "webpack-cli": "^3.3.12"

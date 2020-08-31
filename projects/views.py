@@ -33,11 +33,8 @@ class QuestionRegisterView(APIView):
             data = request.data
             subject = data["subject"]
             unit = data["unit"]
+            answer = int(data["answer"])
             images = request.FILES
-            size = data["size"]
-            difficulty = data["difficulty"]
-            novelty = data["novelty"]
-            integrity = data["integrity"]
             unit_obj = Unit.objects.get(subject__name=subject, code=unit)
             question_obj, _ = Question.objects.get_or_create(
                 unit=unit_obj,
@@ -49,16 +46,10 @@ class QuestionRegisterView(APIView):
                 ),
             )
 
-            order = question_obj.histories.get_queryset().__len__() + 1
-
             history_obj = History.objects.create(
                 question=question_obj,
                 writer=User.objects.get(username=1),
-                difficulty=int(difficulty),
-                novelty=int(novelty),
-                integrity=int(integrity),
-                order=order,
-                size=int(size),
+                answer=answer,
             )
 
             for key in images.keys():

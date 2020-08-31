@@ -7,7 +7,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
@@ -19,6 +18,10 @@ const useStyles = makeStyles((theme) => ({
 
   menuButton: {
     marginLeft: theme.spacing(2),
+    marginTop: "auto",
+    marginBottom: "auto",
+    width: "3.5rem",
+    height: "3.5rem",
   },
   toobar: {
     display: "flex",
@@ -65,6 +68,7 @@ function MenuAppBar({ history, logout }) {
               className={classes.menuButton}
               color="default"
               aria-label="menu"
+              size="medium"
             >
               <TemporaryDrawer />
             </IconButton>

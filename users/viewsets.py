@@ -7,4 +7,4 @@ from .serializers import UserSerializer
 class UserViewSet(ModelViewSet):
     serializer_class = UserSerializer
     queryset = get_user_model().objects.all()
-    permission_classes = [IsAuthenticated]
+    permission_classes = []

@@ -58,7 +58,11 @@ const TemporaryDrawer = ({ history }) => {
       </List>
       <Divider />
       <List>
-        <ListItem button key={"searchQuestion"}>
+        <ListItem
+          button
+          key={"searchQuestion"}
+          onClick={() => history.push("/projects/questions")}
+        >
           <ListItemIcon>
             <SearchIcon />
           </ListItemIcon>
@@ -87,7 +91,10 @@ const TemporaryDrawer = ({ history }) => {
           <ListItemIcon>
             <CreateNewFolderIcon />
           </ListItemIcon>
-          <ListItemText primary={"프로젝트 등록"} />
+          <ListItemText
+            primary={"프로젝트 등록"}
+            onClick={() => history.push("/projects/registration")}
+          />
         </ListItem>
       </List>
       <Divider />
