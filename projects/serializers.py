@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Subject, Unit, Question, History, QuestionImage
+from .models import Subject, Unit, Question, History, QuestionImage, Project
 from users.serializers import UserSerializer
 
 
@@ -50,6 +50,24 @@ class QuestionSerializer(serializers.ModelSerializer):
         model = Question
         fields = ("id", "unit", "name", "histories", "created_at", "group")
 
-    def validate(self, attrs):
-        print(attrs)
-        return attrs
+
+class ProjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Project
+        fields = (
+            "subject",
+            "name",
+            "designer",
+            "selector",
+            "editor",
+            "reviewer_1",
+            "reviewer_2",
+            "reviewer_3",
+            "total_due_date",
+            "selector_due_date",
+            "editor_due_date",
+            "illustrator_due_date",
+            "reviewer_1_due_date",
+            "reviewer_2_due_date",
+            "reviewer_3_due_date",
+        )

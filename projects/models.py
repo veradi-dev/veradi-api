@@ -103,6 +103,7 @@ class Project(CoreModel):
     name = models.CharField("모의고사 명", max_length=100)
 
     total_due_date = models.DateTimeField("전체 마감기한", default=timezone.now)
+    designer_due_date = models.DateTimeField("설계 마감기한", default=timezone.now)
     selector_due_date = models.DateTimeField("대상 선정 마감기한", default=timezone.now)
     editor_due_date = models.DateTimeField("편집 마감기한", default=timezone.now)
     illustrator_due_date = models.DateTimeField("일러 마감기한", default=timezone.now)

@@ -4,7 +4,6 @@ import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 
 export default ({ style, options, message, close }) => {
-  console.log(close);
   const alertConfig = {
     style,
     severity: options.type,

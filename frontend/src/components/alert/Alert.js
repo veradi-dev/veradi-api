@@ -2,20 +2,23 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { useAlert } from "react-alert";
 
-const Alert = ({ type, message }) => {
-  const alert = useAlert();
-  if (type === "success") {
-    alert.success(message);
-  } else if (type === "info") {
-    alert.info(message);
-  } else if (type === "error") {
-    alert.error(message);
-  }
+const Alert = ({ alert }) => {
+  const createAlert = useAlert();
+  const { type, message } = alert;
+  useEffect(() => {
+    if (type === "success") {
+      createAlert.success(message);
+    } else if (type === "info") {
+      createAlert.info(message);
+    } else if (type === "error") {
+      createAlert.error(message);
+    }
+  }, [alert]);
+
   return <React.Fragment />;
 };
 
 const mapStateToProps = (state) => ({
-  type: state.alert.type,
-  message: state.alert.message,
+  alert: state.alert,
 });
 export default connect(mapStateToProps, {})(Alert);
