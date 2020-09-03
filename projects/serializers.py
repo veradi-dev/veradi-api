@@ -1,6 +1,11 @@
+import json
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from .models import Subject, Unit, Question, History, QuestionImage, Project
 from users.serializers import UserSerializer
+
+
+User = get_user_model()
 
 
 class SubjectSerializer(serializers.ModelSerializer):
@@ -52,6 +57,14 @@ class QuestionSerializer(serializers.ModelSerializer):
 
 
 class ProjectSerializer(serializers.ModelSerializer):
+    subject = serializers.PrimaryKeyRelatedField(queryset=Subject.objects.all())
+    designer = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    selector = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    editor = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    reviewer_1 = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    reviewer_2 = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    reviewer_3 = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+
     class Meta:
         model = Project
         fields = (

@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Route, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { checkLogedIn, logout } from "../../redux/user/userThunks";
+import ProjectList from "./projects/projects/ProjectList";
 import ProjectRegistration from "./projects/projects/ProjectRegistration";
 import QuestionList from "./projects/questions/QuestionList";
 import QuestionRegistration from "./projects/questions/QuestionRegistration";
@@ -26,6 +27,7 @@ const Home = ({ history, user, checkLogedIn, logout }) => {
         path="/projects/questions/registration"
         component={QuestionRegistration}
       />
+      <Route exact path="/projects" component={ProjectList} />
       <Route
         exact
         path="/projects/registration"

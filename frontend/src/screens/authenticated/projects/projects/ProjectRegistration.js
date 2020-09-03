@@ -101,7 +101,7 @@ const useStyles = makeStyles({
   },
 });
 
-const ProjectRegistration = ({ history, errorAlert }) => {
+const ProjectRegistration = ({ history, successAlert, errorAlert }) => {
   const [subject, setSubject] = useState("");
   const [name, setName] = useState("");
   const [users, setUsers] = useState([]);
@@ -169,6 +169,16 @@ const ProjectRegistration = ({ history, errorAlert }) => {
     axios.post("api/v1/projects/", formData, {
       Authorization: token,
     });
+    // .then((res) => {
+    //   const { status } = res;
+    //   if (status === 200) {
+    //     successAlert(`${name} 프로젝트가 등록되었습니다.`);
+    //     history.push("/projects");
+    //   }
+    // })
+    // .catch((e) => {
+    //   errorAlert(e);
+    // });
   };
   return (
     <FormContainer onSubmit={handleSubmit}>
@@ -564,7 +574,8 @@ const ProjectRegistration = ({ history, errorAlert }) => {
   );
 };
 
+const successAlert = alertActions.success;
 const errorAlert = alertActions.error;
-const mapDispatchToProps = { errorAlert };
+const mapDispatchToProps = { successAlert, errorAlert };
 
 export default connect(() => ({}), mapDispatchToProps)(ProjectRegistration);

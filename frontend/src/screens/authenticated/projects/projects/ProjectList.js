@@ -111,12 +111,12 @@ function Row(props) {
 }
 
 function CollapsibleTable() {
-  const [questions, setQuestions] = useState([]);
+  const [projects, setProjects] = useState([]);
   const [rows, setRows] = useState([]);
   useEffect(() => {
-    axios.get("/api/v1/projects/questions/").then((res) => {
+    axios.get("/api/v1/projects/").then((res) => {
       console.log(res.data);
-      setQuestions(res.data);
+      setProjects(res.data);
     });
   }, []);
 
@@ -127,29 +127,21 @@ function CollapsibleTable() {
           <TableRow>
             <TableCell />
             <TableCell>과목</TableCell>
-            <TableCell align="right">단원</TableCell>
-            <TableCell align="right">문항명</TableCell>
-            <TableCell align="right">출제자</TableCell>
-            <TableCell align="right">출제일</TableCell>
-            <TableCell align="right">그룹</TableCell>
+            <TableCell align="right">프로젝트명</TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
-          {createData(questions).map((row) => (
-            <Row key={row.id} row={row} />
-          ))}
-        </TableBody>
+        <TableBody></TableBody>
       </Table>
     </TableContainer>
   );
 }
 
-const QuestionList = () => {
+const ProjectList = () => {
   return (
-    <FlexEndContainer title="문항 조회">
+    <FlexEndContainer title="프로젝트 조회">
       <CollapsibleTable />
     </FlexEndContainer>
   );
 };
 
-export default QuestionList;
+export default ProjectList;
