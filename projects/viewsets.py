@@ -4,7 +4,11 @@ from django.contrib.auth import get_user_model
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from projects.models import Question, Project, Subject
-from projects.serializers import QuestionSerializer, ProjectSerializer
+from projects.serializers import (
+    QuestionSerializer,
+    ProjectSerializer,
+    ProjectCreateSerializer,
+)
 
 
 User = get_user_model()
@@ -17,7 +21,11 @@ class QuestionViewSet(viewsets.ModelViewSet):
 
 class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
-    serializer_class = ProjectSerializer
+
+    def get_serializer_class(self):
+        if self.action == "create":
+            return ProjectCreateSerializer
+        return ProjectSerializer
 
     def create(self, request, *args, **kwargs):
         directors = json.loads(request.data["directors"])
@@ -31,7 +39,9 @@ class ProjectViewSet(viewsets.ModelViewSet):
             "reviewer_1": int(directors["reviewer_1"]),
             "reviewer_2": int(directors["reviewer_2"]),
             "reviewer_3": int(directors["reviewer_3"]),
-            "total_due_date": dueDates["total_due_date"],
+            "total_due_date": datetime.datetime.strptime(
+                dueDates["total_due_date"], "%Y-%m-%dT%H:%M"
+            ),
             "designer_due_date": datetime.datetime.strptime(
                 dueDates["designer_due_date"], "%Y-%m-%dT%H:%M"
             ),
@@ -60,4 +70,4 @@ class ProjectViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_200_OK)
         else:
             print(serializer.errors)
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)

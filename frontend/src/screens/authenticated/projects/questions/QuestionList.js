@@ -114,7 +114,7 @@ function CollapsibleTable() {
   const [questions, setQuestions] = useState([]);
   const [rows, setRows] = useState([]);
   useEffect(() => {
-    axios.get("/api/v1/projects/questions/").then((res) => {
+    axios.get("/api/v1/questions/").then((res) => {
       console.log(res.data);
       setQuestions(res.data);
     });

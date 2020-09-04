@@ -166,19 +166,20 @@ const ProjectRegistration = ({ history, successAlert, errorAlert }) => {
     formData.append("name", name);
     formData.append("directors", JSON.stringify(directors));
     formData.append("dueDates", JSON.stringify(dueDates));
-    axios.post("api/v1/projects/", formData, {
-      Authorization: token,
-    });
-    // .then((res) => {
-    //   const { status } = res;
-    //   if (status === 200) {
-    //     successAlert(`${name} 프로젝트가 등록되었습니다.`);
-    //     history.push("/projects");
-    //   }
-    // })
-    // .catch((e) => {
-    //   errorAlert(e);
-    // });
+    axios
+      .post("api/v1/projects/", formData, {
+        Authorization: token,
+      })
+      .then((res) => {
+        const { status } = res;
+        if (status === 200) {
+          successAlert(`${name} 프로젝트가 등록되었습니다.`);
+          history.push("/projects");
+        }
+      })
+      .catch((e) => {
+        e.response.data?.non_field_errors?.map((msg) => errorAlert(msg));
+      });
   };
   return (
     <FormContainer onSubmit={handleSubmit}>

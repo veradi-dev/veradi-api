@@ -1,6 +1,7 @@
 import json
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 from .models import Subject, Unit, Question, History, QuestionImage, Project
 from users.serializers import UserSerializer
 
@@ -57,6 +58,36 @@ class QuestionSerializer(serializers.ModelSerializer):
 
 
 class ProjectSerializer(serializers.ModelSerializer):
+    subject = SubjectSerializer(read_only=True)
+    designer = UserSerializer(read_only=True)
+    selector = UserSerializer(read_only=True)
+    editor = UserSerializer(read_only=True)
+    reviewer_1 = UserSerializer(read_only=True)
+    reviewer_2 = UserSerializer(read_only=True)
+    reviewer_3 = UserSerializer(read_only=True)
+
+    class Meta:
+        model = Project
+        fields = (
+            "subject",
+            "name",
+            "designer",
+            "selector",
+            "editor",
+            "reviewer_1",
+            "reviewer_2",
+            "reviewer_3",
+            "total_due_date",
+            "selector_due_date",
+            "editor_due_date",
+            "illustrator_due_date",
+            "reviewer_1_due_date",
+            "reviewer_2_due_date",
+            "reviewer_3_due_date",
+        )
+
+
+class ProjectCreateSerializer(serializers.ModelSerializer):
     subject = serializers.PrimaryKeyRelatedField(queryset=Subject.objects.all())
     designer = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     selector = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
@@ -64,6 +95,13 @@ class ProjectSerializer(serializers.ModelSerializer):
     reviewer_1 = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     reviewer_2 = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     reviewer_3 = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+
+    def validate(self, data):
+        subject = data["subject"]
+        name = data["name"]
+        if Project.objects.get_or_none(subject=subject, name=name) is not None:
+            raise ValidationError(detail="동일한 이름의 프로젝트가 존재합니다.")
+        return data
 
     class Meta:
         model = Project

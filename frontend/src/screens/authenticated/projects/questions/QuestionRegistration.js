@@ -112,7 +112,7 @@ const QuestionRegister = ({ history }) => {
     }
     form_data.append("answer", answer);
     axios
-      .post("/api/v1/projects/questions/registration/", form_data, {
+      .post("/api/v1/questions/registration/", form_data, {
         headers: {
           "content-type": "multipart/form-data",
         },
