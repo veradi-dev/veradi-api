@@ -69,6 +69,7 @@ class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = (
+            "id",
             "subject",
             "name",
             "designer",
@@ -85,6 +86,7 @@ class ProjectSerializer(serializers.ModelSerializer):
             "reviewer_2_due_date",
             "reviewer_3_due_date",
         )
+        read_only_fields = ("id",)
 
 
 class ProjectCreateSerializer(serializers.ModelSerializer):

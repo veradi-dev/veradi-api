@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
 
 const Container = styled.div`
-  width: 80%;
+  width: 90%;
   height: 150vh;
   margin: auto;
   padding: 2rem;

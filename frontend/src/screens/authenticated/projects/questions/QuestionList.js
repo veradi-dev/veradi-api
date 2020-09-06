@@ -112,10 +112,8 @@ function Row(props) {
 
 function CollapsibleTable() {
   const [questions, setQuestions] = useState([]);
-  const [rows, setRows] = useState([]);
   useEffect(() => {
     axios.get("/api/v1/questions/").then((res) => {
-      console.log(res.data);
       setQuestions(res.data);
     });
   }, []);
@@ -136,7 +134,7 @@ function CollapsibleTable() {
         </TableHead>
         <TableBody>
           {createData(questions).map((row) => (
-            <Row key={row.id} row={row} />
+            <Row key={`question${row.id}`} row={row} />
           ))}
         </TableBody>
       </Table>
