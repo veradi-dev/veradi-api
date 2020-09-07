@@ -70,6 +70,9 @@ class History(CoreModel):
         return f"{self.question.name} - {self.writer} {self.created_at}"
 
 
+1
+
+
 class Assessment(CoreModel):
     class Size(models.IntegerChoices):
         small = 1, "소"
@@ -103,13 +106,25 @@ class Project(CoreModel):
     name = models.CharField("모의고사 명", max_length=100)
 
     total_due_date = models.DateTimeField("전체 마감기한", default=timezone.now)
-    designer_due_date = models.DateTimeField("설계 마감기한", default=timezone.now)
-    selector_due_date = models.DateTimeField("대상 선정 마감기한", default=timezone.now)
-    editor_due_date = models.DateTimeField("편집 마감기한", default=timezone.now)
-    illustrator_due_date = models.DateTimeField("일러 마감기한", default=timezone.now)
-    reviewer_1_due_date = models.DateTimeField("1차 피드백 마감기한", default=timezone.now)
-    reviewer_2_due_date = models.DateTimeField("2차 피드백 마감기한", default=timezone.now)
-    reviewer_3_due_date = models.DateTimeField("3차 피드백 마감기한", default=timezone.now)
+    design_due_date = models.DateTimeField("설계 마감기한", default=timezone.now)
+    select_due_date = models.DateTimeField("대상 선정 마감기한", default=timezone.now)
+    edit_due_date = models.DateTimeField("편집 마감기한", default=timezone.now)
+    review_1_due_date = models.DateTimeField("1차 피드백 마감기한", default=timezone.now)
+    illustration_1_due_date = models.DateTimeField("일러 1차 마감기한", default=timezone.now)
+    review_2_due_date = models.DateTimeField("2차 피드백 마감기한", default=timezone.now)
+    illustration_2_due_date = models.DateTimeField("일러 2차 마감기한", default=timezone.now)
+    review_3_due_date = models.DateTimeField("3차 피드백 마감기한", default=timezone.now)
+    illustration_3_due_date = models.DateTimeField("일러 3차 마감기한", default=timezone.now)
+
+    design_complete = models.BooleanField(default=False)
+    select_complete = models.BooleanField(default=False)
+    edit_complete = models.BooleanField(default=False)
+    review_1_complete = models.BooleanField(default=False)
+    illustration_1_complete = models.BooleanField(default=False)
+    review_2_complete = models.BooleanField(default=False)
+    illustration_2_complete = models.BooleanField(default=False)
+    review_3_complete = models.BooleanField(default=False)
+    illustration_3_complete = models.BooleanField(default=False)
 
     designer = models.ForeignKey(
         User,

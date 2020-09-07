@@ -115,13 +115,15 @@ const ProjectRegistration = ({ history, successAlert, errorAlert }) => {
   });
   const [dueDates, setDueDates] = useState({
     total_due_date: "",
-    designer_due_date: "",
-    selector_due_date: "",
-    editor_due_date: "",
-    illustrator_due_date: "",
-    reviewer_1_due_date: "",
-    reviewer_2_due_date: "",
-    reviewer_3_due_date: "",
+    design_due_date: "",
+    select_due_date: "",
+    edit_due_date: "",
+    review_1_due_date: "",
+    illustration_1_due_date: "",
+    review_2_due_date: "",
+    illustration_2_due_date: "",
+    review_3_due_date: "",
+    illustration_3_due_date: "",
   });
   const today = new Date().toISOString().slice(0, 16);
   const classes = useStyles();
@@ -282,7 +284,7 @@ const ProjectRegistration = ({ history, successAlert, errorAlert }) => {
         <InputContainer>
           <AiOutlineCheckCircle
             size={25}
-            color={dueDates.designer_due_date === "" ? "#ebebeb" : "#11992e"}
+            color={dueDates.design_due_date === "" ? "#ebebeb" : "#11992e"}
           />
           <TextField
             type="datetime-local"
@@ -290,8 +292,8 @@ const ProjectRegistration = ({ history, successAlert, errorAlert }) => {
             InputLabelProps={{
               shrink: true,
             }}
-            name="designer_due_date"
-            value={dueDates.designer_due_date}
+            name="design_due_date"
+            value={dueDates.design_due_date}
             onChange={handleDueDatesChange}
             required
           />
@@ -332,7 +334,7 @@ const ProjectRegistration = ({ history, successAlert, errorAlert }) => {
         <InputContainer>
           <AiOutlineCheckCircle
             size={25}
-            color={dueDates.selector_due_date === "" ? "#ebebeb" : "#11992e"}
+            color={dueDates.select_due_date === "" ? "#ebebeb" : "#11992e"}
           />
           <TextField
             type="datetime-local"
@@ -340,8 +342,8 @@ const ProjectRegistration = ({ history, successAlert, errorAlert }) => {
             InputLabelProps={{
               shrink: true,
             }}
-            name="selector_due_date"
-            value={dueDates.selector_due_date}
+            name="select_due_date"
+            value={dueDates.select_due_date}
             onChange={handleDueDatesChange}
             required
           />
@@ -382,7 +384,7 @@ const ProjectRegistration = ({ history, successAlert, errorAlert }) => {
         <InputContainer>
           <AiOutlineCheckCircle
             size={25}
-            color={dueDates.editor_due_date === "" ? "#ebebeb" : "#11992e"}
+            color={dueDates.edit_due_date === "" ? "#ebebeb" : "#11992e"}
           />
           <TextField
             type="datetime-local"
@@ -390,8 +392,8 @@ const ProjectRegistration = ({ history, successAlert, errorAlert }) => {
             InputLabelProps={{
               shrink: true,
             }}
-            name="editor_due_date"
-            value={dueDates.editor_due_date}
+            name="edit_due_date"
+            value={dueDates.edit_due_date}
             onChange={handleDueDatesChange}
             required
           />
@@ -432,7 +434,7 @@ const ProjectRegistration = ({ history, successAlert, errorAlert }) => {
         <InputContainer>
           <AiOutlineCheckCircle
             size={25}
-            color={dueDates.reviewer_1_due_date === "" ? "#ebebeb" : "#11992e"}
+            color={dueDates.review_1_due_date === "" ? "#ebebeb" : "#11992e"}
           />
           <TextField
             type="datetime-local"
@@ -440,8 +442,8 @@ const ProjectRegistration = ({ history, successAlert, errorAlert }) => {
             InputLabelProps={{
               shrink: true,
             }}
-            name="reviewer_1_due_date"
-            value={dueDates.reviewer_1_due_date}
+            name="review_1_due_date"
+            value={dueDates.review_1_due_date}
             onChange={handleDueDatesChange}
             required
           />
@@ -478,11 +480,13 @@ const ProjectRegistration = ({ history, successAlert, errorAlert }) => {
         </InputContainer>
       </Column>
       <Column>
-        <Label>일러스트 마감 기한</Label>
+        <Label>1차 일러스트 마감 기한</Label>
         <InputContainer>
           <AiOutlineCheckCircle
             size={25}
-            color={dueDates.illustrator_due_date === "" ? "#ebebeb" : "#11992e"}
+            color={
+              dueDates.illustration_1_due_date === "" ? "#ebebeb" : "#11992e"
+            }
           />
           <TextField
             type="datetime-local"
@@ -490,8 +494,8 @@ const ProjectRegistration = ({ history, successAlert, errorAlert }) => {
             InputLabelProps={{
               shrink: true,
             }}
-            name="illustrator_due_date"
-            value={dueDates.illustrator_due_date}
+            name="illustration_1_due_date"
+            value={dueDates.illustration_1_due_date}
             onChange={handleDueDatesChange}
             required
           />
@@ -502,7 +506,7 @@ const ProjectRegistration = ({ history, successAlert, errorAlert }) => {
         <InputContainer>
           <AiOutlineCheckCircle
             size={25}
-            color={dueDates.reviewer_2_due_date === "" ? "#ebebeb" : "#11992e"}
+            color={dueDates.review_2_due_date === "" ? "#ebebeb" : "#11992e"}
           />
           <TextField
             type="datetime-local"
@@ -510,8 +514,8 @@ const ProjectRegistration = ({ history, successAlert, errorAlert }) => {
             InputLabelProps={{
               shrink: true,
             }}
-            name="reviewer_2_due_date"
-            value={dueDates.reviewer_2_due_date}
+            name="review_2_due_date"
+            value={dueDates.review_2_due_date}
             onChange={handleDueDatesChange}
             required
           />
@@ -548,11 +552,13 @@ const ProjectRegistration = ({ history, successAlert, errorAlert }) => {
         </InputContainer>
       </Column>
       <Column>
-        <Label>3차 피드백 마감 기한</Label>
+        <Label>2차 일러스트 마감 기한</Label>
         <InputContainer>
           <AiOutlineCheckCircle
             size={25}
-            color={dueDates.reviewer_3_due_date === "" ? "#ebebeb" : "#11992e"}
+            color={
+              dueDates.illustration_2_due_date === "" ? "#ebebeb" : "#11992e"
+            }
           />
           <TextField
             type="datetime-local"
@@ -560,14 +566,55 @@ const ProjectRegistration = ({ history, successAlert, errorAlert }) => {
             InputLabelProps={{
               shrink: true,
             }}
-            name="reviewer_3_due_date"
-            value={dueDates.reviewer_3_due_date}
+            name="illustration_2_due_date"
+            value={dueDates.illustration_2_due_date}
             onChange={handleDueDatesChange}
             required
           />
         </InputContainer>
       </Column>
-
+      <Column>
+        <Label>3차 피드백 마감 기한</Label>
+        <InputContainer>
+          <AiOutlineCheckCircle
+            size={25}
+            color={dueDates.review_3_due_date === "" ? "#ebebeb" : "#11992e"}
+          />
+          <TextField
+            type="datetime-local"
+            className={classes.textField}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            name="review_3_due_date"
+            value={dueDates.review_3_due_date}
+            onChange={handleDueDatesChange}
+            required
+          />
+        </InputContainer>
+      </Column>
+      <Column>
+        <Label>3차 일러스트 마감 기한</Label>
+        <InputContainer>
+          <AiOutlineCheckCircle
+            size={25}
+            color={
+              dueDates.illustration_3_due_date === "" ? "#ebebeb" : "#11992e"
+            }
+          />
+          <TextField
+            type="datetime-local"
+            className={classes.textField}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            name="illustration_3_due_date"
+            value={dueDates.illustration_3_due_date}
+            onChange={handleDueDatesChange}
+            required
+          />
+        </InputContainer>
+      </Column>
       <Button variant="contained" color="primary" type="submit">
         제출
       </Button>

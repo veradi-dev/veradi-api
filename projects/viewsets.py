@@ -42,26 +42,32 @@ class ProjectViewSet(viewsets.ModelViewSet):
             "total_due_date": datetime.datetime.strptime(
                 dueDates["total_due_date"], "%Y-%m-%dT%H:%M"
             ),
-            "designer_due_date": datetime.datetime.strptime(
-                dueDates["designer_due_date"], "%Y-%m-%dT%H:%M"
+            "design_due_date": datetime.datetime.strptime(
+                dueDates["design_due_date"], "%Y-%m-%dT%H:%M"
             ),
-            "selector_due_date": datetime.datetime.strptime(
-                dueDates["selector_due_date"], "%Y-%m-%dT%H:%M"
+            "select_due_date": datetime.datetime.strptime(
+                dueDates["select_due_date"], "%Y-%m-%dT%H:%M"
             ),
-            "editor_due_date": datetime.datetime.strptime(
-                dueDates["editor_due_date"], "%Y-%m-%dT%H:%M"
+            "edit_due_date": datetime.datetime.strptime(
+                dueDates["edit_due_date"], "%Y-%m-%dT%H:%M"
             ),
-            "illustrator_due_date": datetime.datetime.strptime(
-                dueDates["illustrator_due_date"], "%Y-%m-%dT%H:%M"
+            "review_1_due_date": datetime.datetime.strptime(
+                dueDates["review_1_due_date"], "%Y-%m-%dT%H:%M"
             ),
-            "reviewer_1_due_date": datetime.datetime.strptime(
-                dueDates["reviewer_1_due_date"], "%Y-%m-%dT%H:%M"
+            "illustrate_1_due_date": datetime.datetime.strptime(
+                dueDates["illustrate_1_due_date"], "%Y-%m-%dT%H:%M"
             ),
-            "reviewer_2_due_date": datetime.datetime.strptime(
-                dueDates["reviewer_2_due_date"], "%Y-%m-%dT%H:%M"
+            "review_2_due_date": datetime.datetime.strptime(
+                dueDates["review_2_due_date"], "%Y-%m-%dT%H:%M"
             ),
-            "reviewer_3_due_date": datetime.datetime.strptime(
-                dueDates["reviewer_3_due_date"], "%Y-%m-%dT%H:%M"
+            "illustrate_2_due_date": datetime.datetime.strptime(
+                dueDates["illustrate_2_due_date"], "%Y-%m-%dT%H:%M"
+            ),
+            "review_3_due_date": datetime.datetime.strptime(
+                dueDates["review_3_due_date"], "%Y-%m-%dT%H:%M"
+            ),
+            "illustrate_3_due_date": datetime.datetime.strptime(
+                dueDates["illustrate_2_due_date"], "%Y-%m-%dT%H:%M"
             ),
         }
         serializer = self.get_serializer(data=data)
