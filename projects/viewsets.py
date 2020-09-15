@@ -6,7 +6,8 @@ from rest_framework.response import Response
 from projects.models import Question, Project, Subject
 from projects.serializers import (
     QuestionSerializer,
-    ProjectSerializer,
+    ProjectListSerializer,
+    ProjectDetailSerializer,
     ProjectCreateSerializer,
 )
 
@@ -25,7 +26,9 @@ class ProjectViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == "create":
             return ProjectCreateSerializer
-        return ProjectSerializer
+        if self.action == "retrieve":
+            return ProjectDetailSerializer
+        return ProjectListSerializer
 
     def create(self, request, *args, **kwargs):
         directors = json.loads(request.data["directors"])
@@ -75,5 +78,4 @@ class ProjectViewSet(viewsets.ModelViewSet):
             serializer.save()
             return Response(status=status.HTTP_200_OK)
         else:
-            print(serializer.errors)
             return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)

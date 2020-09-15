@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -20,10 +20,11 @@ const createRow = (project) => ({
   subject: subjectCodeConverter(project.subject.name),
   name: project.name,
   totalDueDate: project.total_due_date,
+  project,
 });
 
-const Row = ({ id, subject, name, totalDueDate }) => {
-  const history = useHistory();
+const Row = ({ id, subject, name, totalDueDate, project }) => {
+  // const history = useHistory();
   const date = new Date(totalDueDate);
   return (
     <React.Fragment>
@@ -34,12 +35,7 @@ const Row = ({ id, subject, name, totalDueDate }) => {
           {date.toLocaleString().slice(0, -3)}
         </TableCell>
         <TableCell align="right">
-          <Button
-            onClick={() => history.push(`/projects/management/${id}`)}
-            size="small"
-          >
-            자세히
-          </Button>
+          <Link to={`/projects/${id}`}>자세히</Link>
         </TableCell>
       </TableRow>
     </React.Fragment>

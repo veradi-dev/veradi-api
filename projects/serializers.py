@@ -57,7 +57,21 @@ class QuestionSerializer(serializers.ModelSerializer):
         fields = ("id", "unit", "name", "histories", "created_at", "group")
 
 
-class ProjectSerializer(serializers.ModelSerializer):
+class ProjectListSerializer(serializers.ModelSerializer):
+    subject = SubjectSerializer(read_only=True)
+
+    class Meta:
+        model = Project
+        fields = (
+            "id",
+            "subject",
+            "name",
+            "total_due_date",
+        )
+        read_only_fields = ("id",)
+
+
+class ProjectDetailSerializer(serializers.ModelSerializer):
     subject = SubjectSerializer(read_only=True)
     designer = UserSerializer(read_only=True)
     selector = UserSerializer(read_only=True)
@@ -65,6 +79,19 @@ class ProjectSerializer(serializers.ModelSerializer):
     reviewer_1 = UserSerializer(read_only=True)
     reviewer_2 = UserSerializer(read_only=True)
     reviewer_3 = UserSerializer(read_only=True)
+    total_completed = serializers.SerializerMethodField()
+
+    def get_total_completed(self, obj):
+        return (
+            obj.select_completed
+            and obj.edit_completed
+            and obj.review_1_completed
+            and obj.illustration_1_completed
+            and obj.review_2_completed
+            and obj.illustration_2_completed
+            and obj.review_3_completed
+            and obj.illustration_3_completed
+        )
 
     class Meta:
         model = Project
@@ -88,15 +115,15 @@ class ProjectSerializer(serializers.ModelSerializer):
             "illustration_2_due_date",
             "review_3_due_date",
             "illustration_3_due_date",
-            "design_complete",
-            "select_complete",
-            "edit_complete",
-            "review_1_complete",
-            "illustration_1_complete",
-            "review_2_complete",
-            "illustration_2_complete",
-            "review_3_complete",
-            "illustration_3_complete",
+            "select_completed",
+            "edit_completed",
+            "review_1_completed",
+            "illustration_1_completed",
+            "review_2_completed",
+            "illustration_2_completed",
+            "review_3_completed",
+            "illustration_3_completed",
+            "total_completed",
         )
         read_only_fields = ("id",)
 

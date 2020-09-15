@@ -116,15 +116,14 @@ class Project(CoreModel):
     review_3_due_date = models.DateTimeField("3차 피드백 마감기한", default=timezone.now)
     illustration_3_due_date = models.DateTimeField("일러 3차 마감기한", default=timezone.now)
 
-    design_complete = models.BooleanField(default=False)
-    select_complete = models.BooleanField(default=False)
-    edit_complete = models.BooleanField(default=False)
-    review_1_complete = models.BooleanField(default=False)
-    illustration_1_complete = models.BooleanField(default=False)
-    review_2_complete = models.BooleanField(default=False)
-    illustration_2_complete = models.BooleanField(default=False)
-    review_3_complete = models.BooleanField(default=False)
-    illustration_3_complete = models.BooleanField(default=False)
+    select_completed = models.BooleanField(default=False)
+    edit_completed = models.BooleanField(default=False)
+    review_1_completed = models.BooleanField(default=False)
+    illustration_1_completed = models.BooleanField(default=False)
+    review_2_completed = models.BooleanField(default=False)
+    illustration_2_completed = models.BooleanField(default=False)
+    review_3_completed = models.BooleanField(default=False)
+    illustration_3_completed = models.BooleanField(default=False)
 
     designer = models.ForeignKey(
         User,

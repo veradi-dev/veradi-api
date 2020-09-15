@@ -3,7 +3,7 @@ import { Route, Switch } from "react-router-dom";
 import { connect } from "react-redux";
 import { checkLogedIn, logout } from "../../redux/user/userThunks";
 import ProjectList from "./projects/projects/ProjectList";
-import ProjectManage from "./projects/projects/ProjectManage";
+import ProjectDetail from "./projects/projects/ProjectDetail";
 import ProjectRegistration from "./projects/projects/ProjectRegistration";
 import QuestionList from "./projects/questions/QuestionList";
 import QuestionRegistration from "./projects/questions/QuestionRegistration";
@@ -32,14 +32,10 @@ const Home = ({ history, user, checkLogedIn, logout }) => {
         <Route exact path="/projects" component={ProjectList} />
         <Route
           exact
-          path="/projects/management/:id"
-          component={ProjectManage}
-        />
-        <Route
-          exact
           path="/projects/registration"
           component={ProjectRegistration}
         />
+        <Route exact path="/projects/:id" component={ProjectDetail} />
       </Switch>
     </div>
   );
