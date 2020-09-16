@@ -70,14 +70,21 @@ function Row(props) {
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <TableCell component="th" scope="row">
-          {row.subject}
-        </TableCell>
-        <TableCell align="right">{row.unit}</TableCell>
-        <TableCell align="right">{row.title}</TableCell>
-        <TableCell align="right">{row.writer}</TableCell>
-        <TableCell align="right">{row.createdAt}</TableCell>
-        <TableCell align="right">{row.group}</TableCell>
+        {row.subject ? (
+          <TableCell component="th" scope="row">
+            {row.subject}
+          </TableCell>
+        ) : null}
+        {row.unit ? <TableCell align="right">{row.unit}</TableCell> : null}
+        {row.title ? <TableCell align="right">{row.title}</TableCell> : null}
+        {row.writer ? <TableCell align="right">{row.writer}</TableCell> : null}
+        {row.answer ? <TableCell align="right">{row.answer}</TableCell> : null}
+        {row.createdAt ? (
+          <TableCell align="right">{row.createdAt}</TableCell>
+        ) : null}
+        {row.group ? <TableCell align="right">{row.group}</TableCell> : null}
+        {row.step ? <TableCell align="right">{row.step}</TableCell> : null}
+        {row.delete ? <TableCell align="right">{row.delete}</TableCell> : null}
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
@@ -90,7 +97,7 @@ function Row(props) {
                 <React.Fragment>
                   <Image
                     src={image.file}
-                    imageStyle={{ width: "40%", height: "inherit" }}
+                    imageStyle={{ width: "60%", height: "inherit" }}
                   />
                   <Divider />
                 </React.Fragment>
@@ -103,9 +110,18 @@ function Row(props) {
   );
 }
 
-export default function CollapsibleTable({ columns, rows }) {
+import Toolbar from "@material-ui/core/Toolbar";
+
+export default function CollapsibleTable({ title, columns, rows }) {
   return (
     <TableContainer component={Paper}>
+      {title ? (
+        <Toolbar>
+          <Typography variant="h6" id="tableTitle" component="div">
+            {title}
+          </Typography>
+        </Toolbar>
+      ) : null}
       <Table aria-label="collapsible table">
         <TableHead>
           <TableRow>

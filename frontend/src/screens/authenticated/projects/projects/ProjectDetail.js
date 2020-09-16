@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { makeStyles } from "@material-ui/styles";
+import DeleteIcon from "@material-ui/icons/Delete";
+import IconButton from "@material-ui/core/IconButton";
 import FlexEndContainer from "~/frontend/src/components/layout/FlexEndContainer";
 import HorizontalStepper from "~/frontend/src/components/stepper/HorizontalStepper";
 import MaterialTable from "material-table";
-import CollapsibleTable, {
-  createData,
-} from "~/frontend/src/components/table/QuestionTable";
+import CollapsibleTable from "~/frontend/src/components/table/QuestionTable";
 import axios from "axios";
 
 const useStyles = makeStyles({
@@ -21,7 +21,7 @@ const useStyles = makeStyles({
     marginRight: "1%",
   },
   questionManagement: {
-    flexGrow: 1,
+    flexGrow: 2,
   },
 });
 
@@ -79,11 +79,37 @@ function getSteps(project) {
   });
 }
 
+const getQuestions = (project) => {
+  const questions = project.questions;
+  return questions.map((question) => {
+    const recentHistory = question.histories[question.histories.length - 1];
+    return {
+      id: question.id,
+      unit: question.unit.name,
+      title: question.name,
+      images: recentHistory.images,
+      answer: recentHistory.answer,
+      step: "추가 검토 필요",
+      delete: (
+        <IconButton>
+          <DeleteIcon />
+        </IconButton>
+      ),
+    };
+  });
+};
+
 const ProjectDetail = () => {
   const { id } = useParams();
   const [project, setProject] = useState(null);
   const [steps, setSteps] = useState([]);
   const [questions, setQuestions] = useState([]);
+  const columns = [
+    { name: "단원", align: "right" },
+    { name: "문항명", align: "right" },
+    { name: "정답", align: "right" },
+    { name: "단계", align: "right" },
+  ];
   const classes = useStyles();
   useEffect(() => {
     axios
@@ -91,6 +117,7 @@ const ProjectDetail = () => {
       .then((res) => {
         setProject(res.data);
         setSteps(getSteps(res.data));
+        setQuestions(getQuestions(res.data));
       })
       .catch((e) => {
         console.log(e.response);
@@ -130,18 +157,10 @@ const ProjectDetail = () => {
           />
         </div>
         <div className={classes.questionManagement}>
-          <MaterialTable
-            columns={[
-              { title: "이름", field: "name", type: "string" },
-              { title: "직원코드", field: "code", type: "string" },
-            ]}
-            data={[
-              {
-                name: "한상수",
-                code: "1",
-              },
-            ]}
-            title="프로젝트 문항 조회"
+          <CollapsibleTable
+            title="문항 조회"
+            columns={columns}
+            rows={questions}
           />
         </div>
       </div>

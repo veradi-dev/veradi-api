@@ -45,7 +45,7 @@ class HistorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = History
-        fields = ("question", "writer", "images", "answer")
+        fields = ("question", "writer", "images", "answer", "created_at")
 
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -73,6 +73,7 @@ class ProjectListSerializer(serializers.ModelSerializer):
 
 class ProjectDetailSerializer(serializers.ModelSerializer):
     subject = SubjectSerializer(read_only=True)
+    questions = QuestionSerializer(many=True)
     designer = UserSerializer(read_only=True)
     selector = UserSerializer(read_only=True)
     editor = UserSerializer(read_only=True)
@@ -99,6 +100,7 @@ class ProjectDetailSerializer(serializers.ModelSerializer):
             "id",
             "subject",
             "name",
+            "questions",
             "designer",
             "selector",
             "editor",
