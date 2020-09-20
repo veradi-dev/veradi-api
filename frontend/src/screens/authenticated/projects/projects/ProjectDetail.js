@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, createRef } from "react";
 import { useParams } from "react-router-dom";
 import { makeStyles } from "@material-ui/styles";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -79,26 +79,6 @@ function getSteps(project) {
   });
 }
 
-const getQuestions = (project) => {
-  const questions = project.questions;
-  return questions.map((question) => {
-    const recentHistory = question.histories[question.histories.length - 1];
-    return {
-      id: question.id,
-      unit: question.unit.name,
-      title: question.name,
-      images: recentHistory.images,
-      answer: recentHistory.answer,
-      step: "추가 검토 필요",
-      delete: (
-        <IconButton>
-          <DeleteIcon />
-        </IconButton>
-      ),
-    };
-  });
-};
-
 const ProjectDetail = () => {
   const { id } = useParams();
   const [project, setProject] = useState(null);
@@ -111,6 +91,41 @@ const ProjectDetail = () => {
     { name: "단계", align: "right" },
   ];
   const classes = useStyles();
+
+  const getQuestions = (project) => {
+    const questions = project.questions;
+    return questions.map((question) => {
+      const recentHistory = question.histories[question.histories.length - 1];
+      const questionId = question.id;
+      return {
+        id: questionId,
+        unit: question.unit.name,
+        title: question.name,
+        images: recentHistory.images,
+        answer: recentHistory.answer,
+        step: "추가 검토 필요",
+        delete: (
+          <IconButton
+            onClick={() => {
+              if (confirm("프로젝트에서 문항을 삭제하시겠습니까?")) {
+                setQuestions((prevState) => {
+                  axios.post("/api/v1/projects/11/toggleQuestions/", {
+                    questionId: questionId,
+                  });
+                  return prevState.filter(
+                    (question) => question.id !== questionId
+                  );
+                });
+              }
+            }}
+          >
+            <DeleteIcon />
+          </IconButton>
+        ),
+      };
+    });
+  };
+
   useEffect(() => {
     axios
       .get(`api/v1/projects/${id}`)
@@ -123,7 +138,6 @@ const ProjectDetail = () => {
         console.log(e.response);
       });
   }, []);
-
   return (
     <FlexEndContainer title="프로젝트 상황판">
       <HorizontalStepper steps={steps} />

@@ -2,6 +2,7 @@ import json
 import datetime
 from django.contrib.auth import get_user_model
 from rest_framework import viewsets, status
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from projects.models import Question, Project, Subject
 from projects.serializers import (
@@ -79,3 +80,10 @@ class ProjectViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_200_OK)
         else:
             return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(methods=["post"], detail=True)
+    def toggleQuestions(self, request, pk=None):
+        question_id = request.data["questionId"]
+        project = self.get_queryset().get(id=pk)
+        # project.questions.add(question_id) if
+        return Response()
