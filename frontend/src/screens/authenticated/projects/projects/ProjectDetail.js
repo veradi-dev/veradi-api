@@ -7,7 +7,9 @@ import FlexEndContainer from "~/frontend/src/components/layout/FlexEndContainer"
 import HorizontalStepper from "~/frontend/src/components/stepper/HorizontalStepper";
 import MaterialTable from "material-table";
 import CollapsibleTable from "~/frontend/src/components/table/QuestionTable";
+
 import axios from "axios";
+import { deleteQuestionInProject } from "~/frontend/src/api/projects";
 
 const useStyles = makeStyles({
   managementColumn: {
@@ -108,13 +110,15 @@ const ProjectDetail = () => {
           <IconButton
             onClick={() => {
               if (confirm("프로젝트에서 문항을 삭제하시겠습니까?")) {
-                setQuestions((prevState) => {
-                  axios.post("/api/v1/projects/11/toggleQuestions/", {
-                    questionId: questionId,
+                deleteQuestionInProject({
+                  projectId: id,
+                  questionId: questionId,
+                }).then(() => {
+                  setQuestions((prevState) => {
+                    return prevState.filter(
+                      (question) => question.id !== questionId
+                    );
                   });
-                  return prevState.filter(
-                    (question) => question.id !== questionId
-                  );
                 });
               }
             }}
@@ -143,19 +147,6 @@ const ProjectDetail = () => {
       <HorizontalStepper steps={steps} />
       <div className={classes.managementColumn}>
         <div className={classes.teamMemberManagement}>
-          <MaterialTable
-            columns={[
-              { title: "이름", field: "name", type: "string" },
-              { title: "직원코드", field: "code", type: "string" },
-            ]}
-            data={[
-              {
-                name: "한상수",
-                code: "1",
-              },
-            ]}
-            title="팀원 조회"
-          />
           <MaterialTable
             columns={[
               { title: "이름", field: "name", type: "string" },

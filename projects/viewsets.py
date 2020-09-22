@@ -82,8 +82,11 @@ class ProjectViewSet(viewsets.ModelViewSet):
             return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @action(methods=["post"], detail=True)
-    def toggleQuestions(self, request, pk=None):
-        question_id = request.data["questionId"]
-        project = self.get_queryset().get(id=pk)
-        # project.questions.add(question_id) if
-        return Response()
+    def deleteQuestions(self, request, pk=None):
+        try:
+            question_obj = Question.objects.get(id=request.data["questionId"])
+            project_obj = self.get_queryset().get(id=pk)
+            project_obj.questions.remove(question_obj)
+            return Response(status=status.HTTP_200_OK)
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
