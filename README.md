@@ -1,4 +1,5 @@
 # veradi-api
+
 version1
 
 #environment version
@@ -7,3 +8,5 @@ django=3.1
 
 #pip-list
 requirements.txt
+
+브랜치 앱 실험
