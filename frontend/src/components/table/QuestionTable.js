@@ -15,7 +15,7 @@ import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import Image from "material-ui-image";
 import { subjectCodeConverter } from "~/frontend/src/utils/codeConverter";
-import { Divider } from "@material-ui/core";
+import { Button, Divider } from "@material-ui/core";
 
 const useRowStyles = makeStyles({
   root: {
@@ -96,6 +96,7 @@ function Row(props) {
               {row.images.map((image) => (
                 <React.Fragment>
                   <Image
+                    key={`questionImage${image.history}`}
                     src={image.file}
                     imageStyle={{ width: "60%", height: "inherit" }}
                   />
@@ -127,7 +128,10 @@ export default function CollapsibleTable({ title, columns, rows }) {
           <TableRow>
             <TableCell />
             {columns.map((column) => (
-              <TableCell key={column.name} align={column.align}>
+              <TableCell
+                key={`questionTableHeadKey${column.name}`}
+                align={column.align}
+              >
                 {column.name}
               </TableCell>
             ))}
@@ -135,7 +139,7 @@ export default function CollapsibleTable({ title, columns, rows }) {
         </TableHead>
         <TableBody>
           {rows.map((row) => (
-            <Row key={`question${row.id}`} row={row} />
+            <Row key={`questionTableRowKey${row.id}`} row={row} />
           ))}
         </TableBody>
       </Table>

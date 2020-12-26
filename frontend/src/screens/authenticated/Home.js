@@ -3,7 +3,7 @@ import { Route, Switch } from "react-router-dom";
 import { connect } from "react-redux";
 import { checkLogedIn, logout } from "../../redux/user/userThunks";
 import ProjectList from "./projects/projects/ProjectList";
-import ProjectDetail from "./projects/projects/ProjectDetail";
+import ProjectDetail from "./projects/projects/ProjectDetail/index";
 import ProjectRegistration from "./projects/projects/ProjectRegistration";
 import QuestionList from "./projects/questions/QuestionList";
 import QuestionRegistration from "./projects/questions/QuestionRegistration";
