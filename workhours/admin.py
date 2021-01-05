@@ -1,3 +1,7 @@
 from django.contrib import admin
+from .models import EnterLog
 
-# Register your models here.
+
+@admin.register(EnterLog)
+class EnterLogAdmin(admin.ModelAdmin):
+    pass
