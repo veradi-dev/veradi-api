@@ -89,7 +89,6 @@ const useStyles = makeStyles({
     // borderWidth: "1px",
     // borderStyle: "solid",
     // borderColor: "-internal-light-dark(rgb(118, 118, 118), rgb(195, 195, 195))",
-    fontSize: "large",
   },
   textField: {
     marginLeft: "2rem",
