@@ -3,7 +3,7 @@ from django.utils import timezone
 from django.db import models
 from django.contrib.auth import get_user_model
 from core.models import CoreModel
-from .handle_log import seconds_to_time
+from utils import seconds_to_time
 
 
 User = get_user_model()
@@ -55,6 +55,7 @@ class WorkHour(CoreModel):
         else:
             return False
 
+    @property
     def start(self):
         # enter log 중 가장 과거 객체의 datetime을 가져온다.
         # mode 1이 있으면 가장 과거의 1을 가져온다.
@@ -64,6 +65,7 @@ class WorkHour(CoreModel):
                 return enter_log.datetime
         return enter_logs[0].datetime
 
+    @property
     def end(self):
         # enter log 중 가장 최근 객체의 datetime을 가져온다.
         # mode 2가 있으면 2를 가져온다.
@@ -73,6 +75,7 @@ class WorkHour(CoreModel):
                 return enter_log.datetime
         return enter_logs[0].datetime
 
+    @property
     def status(self):
         """
         return:
@@ -104,7 +107,7 @@ class WorkHour(CoreModel):
         else:
             return (4, "출 / 퇴근 기록이 모두 없습니다.")
 
-    def result(self):
+    def data(self):
         """
         status code 가 1 (정상적으로 출 퇴근 기록이 있는 경우):
         Return: dict
@@ -114,19 +117,19 @@ class WorkHour(CoreModel):
         Return: dict
         {status, message}
         """
-        status_code = self.status()[0]
-        message = self.status()[1]
+        status_code = self.status[0]
+        message = self.status[1]
         if status_code == 1:
-            hours, minutes, seconds = seconds_to_time((self.end().datetime - self.start().datetime).seconds)
+            hours, minutes, seconds = seconds_to_time((self.end - self.start).seconds)
             return {"status": status_code, "message": message, "hours": hours, "minutes": minutes, "seconds": seconds}
         else:
             # 에러 메시지 Return
             return {"status": status_code, "message": message}
 
     def __str__(self):
-        if self.status()[0] == 1:
+        if self.status[0] == 1:
             return f"{self.user.get_full_name()} " \
-                   f"{self.start().strftime('%Y.%m.%d %H:%M:%S')} ~ {self.end().strftime('%Y.%m.%d %H:%M:%S')} " \
-                   f"{self.result()['hours']}시간{self.result()['minutes']}분 근무"
+                   f"{self.start.strftime('%Y.%m.%d %H:%M:%S')} ~ {self.end.strftime('%Y.%m.%d %H:%M:%S')} " \
+                   f"{self.data()['hours']}시간{self.data()['minutes']}분 근무"
         else:
-            return f"{self.user.get_full_name()} {self.status()[1]}"
+            return f"{self.user.get_full_name()} {self.status[1]}"

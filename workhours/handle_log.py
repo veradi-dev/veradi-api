@@ -1,21 +1,18 @@
 import os
 import datetime
-
-import pandas as pd
 import pandas.io.sql as sqlio
 import psycopg2
-
 from django.db.models import Q
 from .models import EnterLog, WorkHour
 
 
 def generate_EnterLog(name, code):
     """
-	DATABASE 의 enter_log table 에서
-	user 의 가장 최신의 EnterLog 가 생성된 시점 이후의 출입 데이터를 가져온 후,
-	EnterLog model objects 를 생성한다.
-	중복 데이터가 존재한다면 아무것도 하지 않는다.
-	"""
+    DATABASE 의 enter_log table 에서
+    user 의 가장 최신의 EnterLog 가 생성된 시점 이후의 출입 데이터를 가져온 후,
+    EnterLog model objects 를 생성한다.
+    중복 데이터가 존재한다면 아무것도 하지 않는다.
+    """
     HOST = os.environ.get("DATABASEHOST")
     PORT = os.environ.get("DATABASEPORT")
     DBNAME = os.environ.get("DATABASENAME")
@@ -55,17 +52,6 @@ def generate_EnterLog(name, code):
         )
 
 
-def seconds_to_time(seconds):
-    """
-    seconds(초) 를 받아서
-    (hours, minutes, seconds) 의 Tuple 형태로 Return
-    """
-    seconds = int(seconds)
-    hours, seconds = divmod(seconds, 3600)
-    minutes, seconds = divmod(seconds, 60)
-    return hours, minutes, seconds
-
-
 def six_hour_later(a, b):
     """
     a, b: EnterLog object
@@ -84,6 +70,8 @@ def generate_workhours(user):
     user: Django User Object
     return 뭐 할지는 미정
     """
+    # # EnterLog 객체들을 생성한다.
+    # generate_EnterLog(user.get_full_name, user.code)
 
     # 사용자의 지금까지 만들어진 Workhour 중 가장 최근의 객체를 가져온다.
     latest_workhour = user.workhours.get_queryset().latest("created_at")
