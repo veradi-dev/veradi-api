@@ -15,32 +15,62 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='WorkHour',
+            name="WorkHour",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='workhours', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="workhours",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
-            options={
-                'ordering': ['-created_at'],
-            },
+            options={"ordering": ["-created_at"],},
         ),
         migrations.CreateModel(
-            name='EnterLog',
+            name="EnterLog",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('date', models.DateField()),
-                ('time', models.TimeField()),
-                ('name', models.CharField(max_length=10)),
-                ('code', models.CharField(max_length=10)),
-                ('mode', models.IntegerField(choices=[(1, '출근'), (2, '퇴근'), (3, '출입')])),
-                ('workhour', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='enter_logs', to='workhours.workhour')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                ("date", models.DateField()),
+                ("time", models.TimeField()),
+                ("name", models.CharField(max_length=10)),
+                ("code", models.CharField(max_length=10)),
+                (
+                    "mode",
+                    models.IntegerField(choices=[(1, "출근"), (2, "퇴근"), (3, "출입")]),
+                ),
+                (
+                    "workhour",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="enter_logs",
+                        to="workhours.workhour",
+                    ),
+                ),
             ],
-            options={
-                'abstract': False,
-            },
+            options={"abstract": False,},
         ),
     ]

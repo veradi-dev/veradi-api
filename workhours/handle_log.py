@@ -85,7 +85,9 @@ def generate_workhours(user):
     )
     enter_logs = EnterLog.objects.filter(
         datetime_query, name=user.get_full_name(), code=user.code
-    ).order_by("created_at") # 과거의 EnterLog 부터 최근의 EnterLog 순서로 채워진다.
+    ).order_by(
+        "created_at"
+    )  # 과거의 EnterLog 부터 최근의 EnterLog 순서로 채워진다.
 
     # 불러온 EnterLog 객체를 대상으로 Workhour을 추가 / 수정한다.
     for enter_log in enter_logs:

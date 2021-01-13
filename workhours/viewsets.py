@@ -7,4 +7,3 @@ class WorkHourViewset(viewsets.ModelViewSet):
     serializer_class = WorkHourSerializer
     queryset = WorkHour.objects.all()
     permission_classes = []
-
