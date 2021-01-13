@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.db.models import Q
 from rest_framework import viewsets
 from rest_framework import status
 from rest_framework.response import Response
@@ -27,7 +28,8 @@ class WorkHourViewset(viewsets.ModelViewSet):
         try:
             target_user = User.objects.get(pk=request.GET.get("user"))
         except User.DoesNotExist:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            data = {"message": "해당 유저가 없습니다."}
+            return Response(status=status.HTTP_400_BAD_REQUEST, data=data)
 
         # month를 가져온다. month는 1~12 의 정수여야 한다. month가 없거나 1~12에 속하지 않는 경우 400
         month = request.GET.get("month")
@@ -35,13 +37,25 @@ class WorkHourViewset(viewsets.ModelViewSet):
             month = int(month)
             if not 0 < month < 13:
                 raise ValueError
-        except (ValueError, TypeError):
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+        except (ValueError, TypeError) as e:
+            data = {"message": "올바르지 않은 월(Month)입니다."}
+            return Response(status=status.HTTP_400_BAD_REQUEST, data=data)
 
-        # user이 target_user과 같을 경우
-        if user == target_user:
-            workhours = user.workhours.get_queryset().filter(month=month)
-        return Response(status=status.HTTP_200_OK)
+        # user == target_user 이거나 target_user의 position보다 user의 position이 높고,
+        # 그리고 user.team == target_user.team 인 경우
+        if (
+            target_user.position <= user.position and user.team == target_user.team
+        ) or user == target_user:
+            workhours = [
+                workhour
+                for workhour in user.workhours.get_queryset()
+                if workhour.start.date().month == month
+            ]
+            serializer = self.get_serializer(workhours, many=True)
+            return Response(status=status.HTTP_200_OK, data=serializer.data)
+        else:
+            # user이 target_user가 아니고, target_user의 position이 user보다 높거나 같은 팀이 아니면 403
+            return Response(status=status.HTTP_403_FORBIDDEN)
 
     def get_permissions(self):
         """
@@ -49,7 +63,7 @@ class WorkHourViewset(viewsets.ModelViewSet):
         """
         permission_classes = []
         if self.action == "list":
-            pass
+            permission_classes = [IsAuthenticated]
         elif self.action == "create":
             pass
         elif self.action == "retrieve":
