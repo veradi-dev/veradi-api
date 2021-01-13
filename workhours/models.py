@@ -44,13 +44,17 @@ class WorkHour(CoreModel):
     class Meta:
         ordering = ["-created_at"]
 
+    @property
     def complete(self):
         # Workhour 객체는 마지막 EnterLog으로부터 현 6시간이 지났거나 마지막 EnterLog의 mode가 2일때, 종결된 상태이다.
         # 종결되었을때: True 반환
         # 진행중일때: False 반환
-        now = timezone.now()
-        latest_enterlog = self.enter_logs.get_queryset().latest('-created_at')
-        if now - latest_enterlog.datetime > datetime.timedelta(hours=6) or latest_enterlog.mode == 2:
+        now = timezone.now().timestamp()
+        latest_enterlog = self.enter_logs.get_queryset().latest("created_at")
+        if (
+            now - latest_enterlog.datetime.timestamp() >= 21600
+            or latest_enterlog.mode == 2
+        ):
             return True
         else:
             return False
@@ -74,6 +78,12 @@ class WorkHour(CoreModel):
             if enter_log.mode == 2:
                 return enter_log.datetime
         return enter_logs[0].datetime
+
+    @property
+    def total(self):
+        if self.status[0] != 1:
+            return False
+        return (self.end - self.start).seconds
 
     @property
     def status(self):
@@ -121,15 +131,23 @@ class WorkHour(CoreModel):
         message = self.status[1]
         if status_code == 1:
             hours, minutes, seconds = seconds_to_time((self.end - self.start).seconds)
-            return {"status": status_code, "message": message, "hours": hours, "minutes": minutes, "seconds": seconds}
+            return {
+                "status": status_code,
+                "message": message,
+                "hours": hours,
+                "minutes": minutes,
+                "seconds": seconds,
+            }
         else:
             # 에러 메시지 Return
             return {"status": status_code, "message": message}
 
     def __str__(self):
         if self.status[0] == 1:
-            return f"{self.user.get_full_name()} " \
-                   f"{self.start.strftime('%Y.%m.%d %H:%M:%S')} ~ {self.end.strftime('%Y.%m.%d %H:%M:%S')} " \
-                   f"{self.data()['hours']}시간{self.data()['minutes']}분 근무"
+            return (
+                f"{self.user.get_full_name()} "
+                f"{self.start.strftime('%Y.%m.%d %H:%M:%S')} ~ {self.end.strftime('%Y.%m.%d %H:%M:%S')} "
+                f"{self.data()['hours']}시간{self.data()['minutes']}분 근무"
+            )
         else:
             return f"{self.user.get_full_name()} {self.status[1]}"

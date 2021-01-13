@@ -3,7 +3,6 @@ import datetime
 import pandas.io.sql as sqlio
 import psycopg2
 from django.db.models import Q
-from .models import EnterLog, WorkHour
 
 
 def generate_EnterLog(name, code):
@@ -18,6 +17,7 @@ def generate_EnterLog(name, code):
     DBNAME = os.environ.get("DATABASENAME")
     USERNAME = os.environ.get("DATABASEUSERNAME")
     PWD = os.environ.get("DATABASEPASSWORD")
+    from .models import EnterLog
 
     try:
         latest = EnterLog.objects.filter(name=name, code=code).latest("created")
@@ -57,12 +57,14 @@ def six_hour_later(a, b):
     a, b: EnterLog object
     a와 b의 시간 차이가 6시간 이상이면 False, 이내이면 True 를 반환한다.
     """
+    from .models import EnterLog
+
     assert a.__class__ == EnterLog and b.__class__ == EnterLog, "Invalid argument type"
 
     a_abstime = datetime.datetime.combine(a.date, a.time).timestamp()
     b_abstime = datetime.datetime.combine(b.date, b.time).timestamp()
 
-    return abs(a_abstime - b_abstime) / 21600 <= 1
+    return abs(a_abstime - b_abstime) / 21600 >= 1
 
 
 def generate_workhours(user):
@@ -74,10 +76,26 @@ def generate_workhours(user):
     # generate_EnterLog(user.get_full_name, user.code)
 
     # 사용자의 지금까지 만들어진 Workhour 중 가장 최근의 객체를 가져온다.
-    latest_workhour = user.workhours.get_queryset().latest("created_at")
+    from .models import EnterLog, WorkHour
+
+    try:
+        latest_workhour = user.workhours.get_queryset().latest("created_at")
+    except WorkHour.DoesNotExist:
+        # 없으면 하나 만든다
+        latest_workhour = WorkHour.objects.create(user=user)
 
     # latest_workhour 에 포함된 가장 최근의 EnterLog 객체를 가져온다.
-    latest_enterlog = latest_workhour.enter_logs.get_queryset().latest("create_at")
+    try:
+        latest_enterlog = latest_workhour.enter_logs.get_queryset().latest("created_at")
+    except EnterLog.DoesNotExist:
+        # 없으면 사용자의 모든 EnterLog 중 workhour와 연결되지 않은 EnterLog 중 가장 과거의 객체를 가져온다.
+        try:
+            latest_enterlog = EnterLog.objects.filter(
+                name=user.get_full_name(), code=user.code, workhour=None
+            ).earliest("created_at")
+        except EnterLog.DoesNotExist:
+            # 그것도 없으면 할 수 있는게 없다
+            return
 
     # latest_enterlog의 생성일시보다 이후에 생성된 해당 사용자의 모든 enterlog를 불러온다.
     datetime_query = Q(date__gte=latest_enterlog.datetime.date()) & ~Q(
@@ -85,7 +103,9 @@ def generate_workhours(user):
     )
     enter_logs = EnterLog.objects.filter(
         datetime_query, name=user.get_full_name(), code=user.code
-    ).order_by("created_at") # 과거의 EnterLog 부터 최근의 EnterLog 순서로 채워진다.
+    ).order_by(
+        "created_at"
+    )  # 과거의 EnterLog 부터 최근의 EnterLog 순서로 채워진다.
 
     # 불러온 EnterLog 객체를 대상으로 Workhour을 추가 / 수정한다.
     for enter_log in enter_logs:

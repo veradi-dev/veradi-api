@@ -6,12 +6,11 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('workhours', '0001_initial'),
+        ("workhours", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='enterlog',
-            options={'ordering': ['date', 'time']},
+            name="enterlog", options={"ordering": ["date", "time"]},
         ),
     ]

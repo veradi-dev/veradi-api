@@ -10,12 +10,13 @@ class EnterLogSerializer(serializers.ModelSerializer):
 
 
 class WorkHourSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
+    user = UserSerializer(read_only=True)
     enter_logs = EnterLogSerializer(many=True)
     status = serializers.SerializerMethodField()
     message = serializers.SerializerMethodField()
     start = serializers.SerializerMethodField()
     end = serializers.SerializerMethodField()
+    complete = serializers.SerializerMethodField()
 
     def get_status(self, obj):
         return obj.status[0]
@@ -29,6 +30,18 @@ class WorkHourSerializer(serializers.ModelSerializer):
     def get_end(self, obj):
         return obj.end
 
+    def get_complete(self, obj):
+        return obj.complete
+
     class Meta:
         model = WorkHour
-        fields = ('user', 'enter_logs', 'status', 'message', 'start', 'end')
+        fields = (
+            "user",
+            "enter_logs",
+            "status",
+            "message",
+            "start",
+            "end",
+            "total",
+            "complete",
+        )
