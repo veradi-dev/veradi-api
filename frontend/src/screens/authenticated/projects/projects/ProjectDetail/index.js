@@ -8,7 +8,6 @@ import Switch from "@material-ui/core/Switch";
 import FlexEndContainer from "~/frontend/src/components/layout/FlexEndContainer";
 import HorizontalStepper from "~/frontend/src/components/stepper/HorizontalStepper";
 import MaterialTable from "material-table";
-import CollapsibleTable from "./QuestionsTable";
 import getSteps from "~/frontend/src/utils/getSteps";
 import axios from "axios";
 import { deleteQuestionInProject } from "~/frontend/src/api/projects";

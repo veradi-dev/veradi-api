@@ -53,7 +53,7 @@ const TemporaryDrawer = ({ history }) => {
           <ListItemIcon>
             <AnnouncementIcon />
           </ListItemIcon>
-          <ListItemText primary={"공지사항"} />
+          <ListItemText primary={"ㅁㄴㅇㅎ"} />
         </ListItem>
       </List>
       <Divider />
