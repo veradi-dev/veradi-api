@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Chart from './Chart';
 import Deposits from './Deposits';
-import Orders from './Noticelist';
+import Noticelist from './Noticelist';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from "clsx";
 const Dashboard = () => {
@@ -26,7 +26,7 @@ const Dashboard = () => {
           <Grid container spacing={3}>
             <Grid item xs={12} md={8} lg={9}>
               <Paper className={classes.paper}>
-                <Orders />
+                <Noticelist />
               </Paper>
             </Grid>
             <Grid item xs={12} md={4} lg={3}>

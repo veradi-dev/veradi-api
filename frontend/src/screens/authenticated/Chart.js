@@ -25,7 +25,7 @@ export default function Chart() {
 
   return (
     <React.Fragment>
-      <Title>Today</Title>
+      <Title>2021년 1월 근무 시간</Title>
       <ResponsiveContainer>
         <LineChart
           data={data}
