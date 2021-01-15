@@ -29,7 +29,7 @@ export const mainListItems = (
     <Link to="/workhour" style={{ textDecoration: 'none', color: 'black' }}>
     <ListItem button>
       <ListItemIcon>
-        <PeopleIcon />
+        <BarChartIcon />
       </ListItemIcon>
       <ListItemText primary="근무시간 조회" />
     </ListItem>
@@ -37,7 +37,7 @@ export const mainListItems = (
     <Link to="/team" style={{ textDecoration: 'none', color: 'black' }}>
     <ListItem button>
       <ListItemIcon>
-        <BarChartIcon />
+        <PeopleIcon />
       </ListItemIcon>
       <ListItemText primary="팀 관리" />
     </ListItem>
