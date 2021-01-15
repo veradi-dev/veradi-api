@@ -164,7 +164,7 @@ const Home = ({ history, user, checkLogedIn, logout }) => {
             <MenuIcon />
           </IconButton>
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            대시보드
+            VERADI
           </Typography>
           <IconButton color="inherit">
             <Badge badgeContent={4} color="secondary">

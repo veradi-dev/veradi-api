@@ -8,7 +8,6 @@ import Orders from './Orders';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from "clsx";
 const Dashboard = () => {
-    const drawerWidth = 240;
     const useStyles = makeStyles((theme) => ({
       paper: {
         padding: theme.spacing(2),
