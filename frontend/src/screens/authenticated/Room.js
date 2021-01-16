@@ -13,17 +13,21 @@ const Room = () => {
           flexDirection: 'column',
         },
         fixedHeight: {
-          height: 240,
+          height: 500,
         },
       }));
       const classes = useStyles();
       const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
     return (
     <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <Paper className={classes.paper}>
-          </Paper>
-        </Grid>
+        <Grid item xs={12} md={6} lg={6}>
+              <Paper className={fixedHeightPaper}>
+              </Paper>
+            </Grid>
+            <Grid item xs={12} md={6} lg={6}>
+              <Paper className={fixedHeightPaper}>
+              </Paper>
+            </Grid>
       </Grid>
     );
   };

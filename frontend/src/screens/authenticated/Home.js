@@ -29,10 +29,10 @@ import Link from '@material-ui/core/Link';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import { mainListItems } from './listItems';
+import NavItem from './listItems';
 import Box from '@material-ui/core/Box';
-
-
+import MenuAppBar from "../../components/surface/AppBar";
+import LogoImage from "../../../assets/veradi/logo.png";
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -68,6 +68,8 @@ const useStyles = makeStyles((theme) => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
+    background:'linear-gradient(-37deg, rgb(162, 228, 192), rgb(67, 102, 137))'
+    //;
   },
   appBarShift: {
     marginLeft: drawerWidth,
@@ -85,6 +87,10 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     flexGrow: 1,
+  },
+  logo: {
+    width: "2.5rem",
+    cursor: "pointer",
   },
   drawerPaper: {
     position: 'relative',
@@ -163,9 +169,15 @@ const Home = ({ history, user, checkLogedIn, logout }) => {
           >
             <MenuIcon />
           </IconButton>
+          <img
+            src={LogoImage}
+            className={classes.logo}
+            onClick={() => history.push("/")}
+          />
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
             VERADI
           </Typography>
+
           <IconButton color="inherit">
             <Badge badgeContent={4} color="secondary">
               <NotificationsIcon />
@@ -186,7 +198,7 @@ const Home = ({ history, user, checkLogedIn, logout }) => {
           </IconButton>
         </div>
         <Divider />
-        <List>{mainListItems}</List>
+        <List><NavItem></NavItem></List>
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />

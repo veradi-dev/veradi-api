@@ -8,14 +8,31 @@ import PeopleIcon from '@material-ui/icons/People';
 import BarChartIcon from '@material-ui/icons/BarChart';
 import LayersIcon from '@material-ui/icons/Layers';
 import {Link} from 'react-router-dom';
-export const mainListItems = (
-  <div>
+import {
+  Avatar,
+  Box,
+  Typography,
+  makeStyles,
+  ListItemAvatar 
+} from '@material-ui/core';
+
+const useStyles = makeStyles((theme) => ({
+}));
+const user = {
+  jobTitle: '기술개발팀 기술개발부',
+  name: '조은학'
+};
+
+const NavItem = () => {
+  const classes = useStyles();
+  return (
+    <div>
     <Link to="/" style={{ textDecoration: 'none', color: 'black' }}>
     <ListItem button>
       <ListItemIcon>
         <DashboardIcon />
       </ListItemIcon>
-      <ListItemText primary="대시보드" />
+      <ListItemText primary="홈" />
     </ListItem>
     </Link>
     <Link to="/notice" style={{ textDecoration: 'none', color: 'black' }}>
@@ -59,4 +76,7 @@ export const mainListItems = (
     </ListItem>
     </Link>
   </div>
-);
+  );
+};
+
+export default NavItem;

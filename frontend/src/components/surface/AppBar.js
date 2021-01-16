@@ -32,10 +32,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     backgroundColor: "white",
   },
-  logo: {
-    width: "2.5rem",
-    cursor: "pointer",
-  },
+
   options: {
     display: "flex",
     flexDirection: "row-reverse",
