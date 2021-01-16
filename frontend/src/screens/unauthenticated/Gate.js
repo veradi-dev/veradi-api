@@ -4,16 +4,14 @@ import { connect } from "react-redux";
 import { login } from "../../redux/user/userThunks";
 import LogoImage from "../../../assets/veradi/logo.png";
 import CircularProgress from "@material-ui/core/CircularProgress";
-
+import {Link} from 'react-router-dom';
 const bulb = keyframes`
   0%{
     transform: scale(1)
   }
-  
   50%{
     transform: scale(20)
   }
-
   100%{
     transform: scale(1)
   );
@@ -159,7 +157,11 @@ const Gate = ({ history, isAuthenticated, login }) => {
               value={userInput.code}
             />
             <SubmitButton type="submit">로그인</SubmitButton>
+            <br/>
           </LoginForm>
+          <Link to="/signup" style={{ textDecoration: 'none', color: 'black' }}>
+          <SubmitButton type="submit">회원가입</SubmitButton>
+          </Link>
         </>
       )}
     </Container>

@@ -5,8 +5,10 @@ import ListItemText from '@material-ui/core/ListItemText';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import PeopleIcon from '@material-ui/icons/People';
-import BarChartIcon from '@material-ui/icons/BarChart';
+import EmojiObjectsIcon from '@material-ui/icons/EmojiObjects';
 import LayersIcon from '@material-ui/icons/Layers';
+import SearchIcon from '@material-ui/icons/Search';
+import NotificationsIcon from '@material-ui/icons/Notifications';
 import {Link} from 'react-router-dom';
 import {
   Avatar,
@@ -38,7 +40,7 @@ const NavItem = () => {
     <Link to="/notice" style={{ textDecoration: 'none', color: 'black' }}>
     <ListItem button>
       <ListItemIcon>
-        <ShoppingCartIcon />
+        <NotificationsIcon />
       </ListItemIcon>
       <ListItemText primary="공지사항" />
     </ListItem>
@@ -46,7 +48,7 @@ const NavItem = () => {
     <Link to="/workhour" style={{ textDecoration: 'none', color: 'black' }}>
     <ListItem button>
       <ListItemIcon>
-        <BarChartIcon />
+        <SearchIcon />
       </ListItemIcon>
       <ListItemText primary="근무시간 조회" />
     </ListItem>
@@ -62,7 +64,7 @@ const NavItem = () => {
     <Link to="/room" style={{ textDecoration: 'none', color: 'black' }}>
     <ListItem button>
       <ListItemIcon>
-        <LayersIcon />
+        <EmojiObjectsIcon />
       </ListItemIcon>
       <ListItemText primary="회의실 예약" />
     </ListItem>

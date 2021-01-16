@@ -13,6 +13,7 @@ import Paper from '@material-ui/core/Paper';
 import Chart from './Chart';
 import Deposits from './Deposits';
 import Orders from './Noticelist';
+import { useDispatch } from "react-redux";
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import MainNav from './Mainnav';
@@ -33,6 +34,9 @@ import NavItem from './listItems';
 import Box from '@material-ui/core/Box';
 import MenuAppBar from "../../components/surface/AppBar";
 import LogoImage from "../../../assets/veradi/logo.png";
+import AccountCircle from "@material-ui/icons/AccountCircle";
+import MenuItem from "@material-ui/core/MenuItem";
+import Menu from "@material-ui/core/Menu";
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -54,6 +58,7 @@ const useStyles = makeStyles((theme) => ({
   },
   toolbar: {
     paddingRight: 24, // keep right padding when drawer closed
+    background:'linear-gradient(-37deg, rgb(162, 228, 192), rgb(67, 102, 137))'
   },
   toolbarIcon: {
     display: 'flex',
@@ -68,7 +73,6 @@ const useStyles = makeStyles((theme) => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    background:'linear-gradient(-37deg, rgb(162, 228, 192), rgb(67, 102, 137))'
     //;
   },
   appBarShift: {
@@ -93,6 +97,7 @@ const useStyles = makeStyles((theme) => ({
     cursor: "pointer",
   },
   drawerPaper: {
+    backgroundColor:'rgb(237, 245, 241)',
     position: 'relative',
     whiteSpace: 'nowrap',
     width: drawerWidth,
@@ -145,6 +150,16 @@ const Home = ({ history, user, checkLogedIn, logout }) => {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+    const dispatch = useDispatch();
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const menuopen = Boolean(anchorEl);
+  const handleMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   useEffect(() => {
     checkLogedIn();
   }, []);
@@ -183,6 +198,40 @@ const Home = ({ history, user, checkLogedIn, logout }) => {
               <NotificationsIcon />
             </Badge>
           </IconButton>
+
+          <div>
+              <IconButton
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleMenu}
+                color="default"
+              >
+                <AccountCircle style={{ fontSize: 30 }} />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorEl}
+                keepMounted
+                transformOrigin={{
+                  vertical: "bottom",
+                  horizontal: "right",
+                }}
+                open={menuopen}
+                onClose={handleClose}
+              >
+                <MenuItem onClick={handleClose}>내 계정 관리</MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    logout();
+                    dispatch(alertActions.success(`로그아웃 되었습니다.`));
+                  }}
+                >
+                  로그아웃
+                </MenuItem>
+              </Menu>
+            </div>
+
         </Toolbar>
       </AppBar>
       <Drawer
