@@ -18,17 +18,20 @@ class ConferenceRoom(CoreModel):
 
 
 class Reservation(CoreModel):
+    # 회의실은 1번부터 3번까지 있다.
     room = models.ForeignKey(
         "ConferenceRoom",
         verbose_name="회의실 번호",
         related_name="reservations",
         on_delete=models.CASCADE,
     )
+    # 날짜
     date = models.DateField()
+    # 24시간을 30분 단위로 자른것.
     start_time = models.IntegerField(
         "회의 시작 일시 ",
-        validators=[validators.MinValueValidator(0), validators.MaxValueValidator(23)],
-    )  # 회의실은 1번부터 3번까지 있다.
+        validators=[validators.MinValueValidator(0), validators.MaxValueValidator(47)],
+    )
     proposer = models.ForeignKey(User, related_name="+", on_delete=models.CASCADE)
 
     class Meta:
