@@ -12,8 +12,12 @@ const Button = styled.button`
   background-color: ${props => (props.time.booked? "#a8a7a7" : props.time.active? "#53990e" :"#f0f7f4")} ;
 `;
 
+
+//https://jsramblings.com/how-to-use-media-queries-with-styled-components/
+//https://kiarash-z.github.io/react-modern-calendar-datepicker/docs/responsive-guide
 const Text = styled.text`
   font-weight: 600;
+  
   font-size: 11px;
   color: #000000
 `;
