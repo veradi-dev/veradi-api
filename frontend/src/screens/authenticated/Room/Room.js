@@ -13,6 +13,7 @@ import Switch from '@material-ui/core/Switch';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
+import Button from '@material-ui/core/Button';
 const initialState = {
   times: [
     {id:0, time:"00:00" ,active:false, team:null, booked:false},
@@ -119,7 +120,6 @@ const Room = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { times } = state;
   const onToggle = useCallback(id => {
-    console.log('asdgasdg');
     dispatch({type: 'TOGGLE',id});
   }, []);
 
@@ -168,7 +168,7 @@ const Room = () => {
             <Grid item xs={12} md={6} lg={6}>
               <Paper className={fixedHeightPaper}>
               <Typography component="div">
-        <Grid component="label" container alignItems="center" spacing={1}>
+        <Grid component="label" container alignItems="center" justify="center" spacing={1}>
           <Grid item>오전</Grid>
           <Grid item>
             <AntSwitch checked={morningstate.ismorning} onChange={handleChange} name="ismorning" />
@@ -176,17 +176,33 @@ const Room = () => {
           <Grid item>오후</Grid>
         </Grid>
       </Typography>
-      {morningstate.ismorning ? <Container>
+      {morningstate.ismorning ? <Box
+                  alignItems="center"
+                  display="flex"
+                  flexDirection="column"
+                  flexWrap="wrap"
+                  p={2}
+                >
     <TimeBtn times={times.slice(24,48)} onToggle={onToggle}></TimeBtn>
     <div>
-    <button text={`예약하기`} onClick={() => alert("예약되었습니다!")}></button>
+    <Button variant="contained" color="primary" onClick={() => alert("예약되었습니다!")}>
+      예약하기
+    </Button>
     </div>
-  </Container>: <Container>
+  </Box>: <Box
+                  alignItems="center"
+                  display="flex"
+                  flexDirection="column"
+                  flexWrap="wrap"
+                  p={2}
+                >
       <TimeBtn times={times.slice(0,24)} onToggle={onToggle}></TimeBtn>
       <div>
-      <button text={`예약하기`} onClick={() => alert("예약되었습니다!")}></button>
+      <Button variant="contained" color="primary" onClick={() => alert("예약되었습니다!")}>
+      예약하기
+    </Button>
       </div>
-    </Container>
+    </Box>
     }
               </Paper>
             </Grid>

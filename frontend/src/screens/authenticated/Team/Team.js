@@ -21,6 +21,7 @@ const Team = () => {
     <Grid container spacing={3}>
         <Grid item xs={12}>
           <Paper className={classes.paper}>
+          준비중인 페이지입니다.
           </Paper>
         </Grid>
       </Grid>

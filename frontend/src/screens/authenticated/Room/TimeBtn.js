@@ -2,17 +2,19 @@ import React from 'react';
 import styled from "styled-components";
 
 const Button = styled.button`
-  margin-bottom: 5px;
-  border-radius: 32px;
+  margin-bottom: 2px;
+  margin-right: 2px;
+  border-radius: 15px;
   padding: 12.5px 0px;
   align-items: center;
-  width: 25%;
-  background-color: ${props => (props.time.booked? "#808080" : props.time.active? "#3CFBFF" :"#FFFFFF")} ;
+  border:${props => (props.time.booked? 'transparent' : props.time.active? "#53990e" :"#f0f7f4")} ;
+  width: 24%;
+  background-color: ${props => (props.time.booked? "#a8a7a7" : props.time.active? "#53990e" :"#f0f7f4")} ;
 `;
 
 const Text = styled.text`
   font-weight: 600;
-  font-size: 16px;
+  font-size: 11px;
   color: #000000
 `;
 //

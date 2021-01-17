@@ -23,7 +23,6 @@ import Badge from '@material-ui/core/Badge';
 import Link from '@material-ui/core/Link';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import NotificationsIcon from '@material-ui/icons/Notifications';
 import NavItem from '../listItems';
 import Box from '@material-ui/core/Box';
 import LogoImage from "../../../../assets/veradi/logo.png";
@@ -187,12 +186,6 @@ const Home = ({ history, user, checkLogedIn, logout }) => {
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
             VERADI
           </Typography>
-
-          <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
 
           <div>
               <IconButton
