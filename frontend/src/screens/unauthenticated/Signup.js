@@ -1,5 +1,6 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
+import Avatar from '@material-ui/core/Avatar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import Link from '@material-ui/core/Link';
@@ -8,7 +9,8 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import LogoImage from "../../../assets/veradi/logo.png";
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -31,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+    background:'linear-gradient(-37deg, rgb(162, 228, 192), rgb(67, 102, 137))'
   },
   form: {
     width: '100%', // Fix IE 11 issue.
@@ -39,6 +41,10 @@ const useStyles = makeStyles((theme) => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
+  },
+  logo: {
+    width: "2.5rem",
+    cursor: "pointer",
   },
 }));
 
@@ -49,6 +55,13 @@ export default function SignUp() {
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
+      <Avatar className={classes.avatar}>
+          <img
+            src={LogoImage}
+            className={classes.logo}
+            onClick={() => history.push("/")}
+          />
+        </Avatar>
         <Typography component="h1" variant="h5">
           회원가입
         </Typography>
