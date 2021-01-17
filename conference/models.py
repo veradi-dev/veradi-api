@@ -34,5 +34,12 @@ class Reservation(CoreModel):
     )
     proposer = models.ForeignKey(User, related_name="+", on_delete=models.CASCADE)
 
+    def get_start_time(self):
+        hour, min = divmod(self.start_time, 2)
+        return f"{hour}:{min*30}"
+
+    def __str__(self):
+        return f"{self.proposer.get_team_name()}팀 {self.date} {self.get_start_time()}"
+
     class Meta:
         unique_together = ["date", "start_time"]

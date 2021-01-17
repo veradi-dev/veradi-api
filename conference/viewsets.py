@@ -73,31 +73,36 @@ class ConferenceViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(reservations, many=True)
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
-    # def create(self, request):
-    #     """
-    #     특정 일(date)의 회의실 예약 기록을 보내준다.
-    #
-    #     method: POST
-    #     data type:
-    #         {
-    #             room: '1'
-    #             date: '2021-01-16'
-    #             start_time: '10'
-    #             proposer: '1'
-    #         }
-    #
-    #     response:
-    #         [
-    #             {
-    #                 "room": 1,
-    #                 "date": "2021-01-17",
-    #                 "start_time": 4,
-    #                 "proposer": 1,
-    #                 "team": "기술개발 본부팀"
-    #             }
-    #         ]
-    #     """
-    #     print("OK..")
-    #     serializer = self.get_serializer(data=request.data)
-    #     print("OK..")
-    #     return Response()
+    def create(self, request):
+        """
+        특정 일(date)의 회의실 예약 기록을 보내준다.
+
+        method: POST
+        data type:
+            {
+                room: '1'
+                date: '2021-01-16'
+                start_time: '10'
+                proposer: '1'
+            }
+
+        response:
+            [
+                {
+                    "room": 1,
+                    "date": "2021-01-17",
+                    "start_time": 4,
+                    "proposer": 1,
+                    "team": "기술개발 본부팀"
+                }
+            ]
+        """
+        serializer = self.get_serializer(
+            data=request.data, context={"request", request}
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        headers = self.get_success_headers(serializer.data)
+        return Response(
+            serializer.data, status=status.HTTP_201_CREATED, headers=headers
+        )
