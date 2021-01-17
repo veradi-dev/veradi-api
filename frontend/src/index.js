@@ -6,7 +6,8 @@ import { store, persistor } from "./redux/index";
 import { transitions, positions, Provider as AlertProvider } from "react-alert";
 import AlertTemplate from "./components/alert/AlertTemplate";
 import App from "./App";
-
+import './index.css';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 // react-alert optional configuration
 const options = {
   // you can also just use 'bottom center'
@@ -17,11 +18,19 @@ const options = {
   transition: transitions.SCALE,
 };
 
+const theme = createMuiTheme({
+  typography: {
+    fontFamily: 'NanumBarunGothic',
+  },
+});
+
 ReactDOM.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
       <AlertProvider template={AlertTemplate} {...options}>
+      <MuiThemeProvider theme={theme}>
         <App />
+        </MuiThemeProvider>
       </AlertProvider>
     </PersistGate>
   </Provider>,
