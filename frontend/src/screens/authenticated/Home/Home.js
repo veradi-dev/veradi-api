@@ -1,22 +1,16 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import { checkLogedIn, logout } from "../../redux/user/userThunks";
-import ProjectList from "./projects/projects/ProjectList";
-import ProjectDetail from "./projects/projects/ProjectDetail/index";
-import ProjectRegistration from "./projects/projects/ProjectRegistration";
-import QuestionList from "./projects/questions/QuestionList";
-import QuestionRegistration from "./projects/questions/QuestionRegistration";
-import { Route, Switch } from "react-router-dom";
+import { checkLogedIn, logout } from "../../../redux/user/userThunks";
+import ProjectList from "../projects/projects/ProjectList";
+import ProjectDetail from "../projects/projects/ProjectDetail/index";
+import ProjectRegistration from "../projects/projects/ProjectRegistration";
+import QuestionList from "../projects/questions/QuestionList";
+import QuestionRegistration from "../projects/questions/QuestionRegistration";
 import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import Chart from './Chart';
-import Deposits from './Deposits';
-import Orders from './Noticelist';
 import { useDispatch } from "react-redux";
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
-import MainNav from './Mainnav';
+import MainNav from '../Mainnav';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
@@ -30,13 +24,14 @@ import Link from '@material-ui/core/Link';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import NavItem from './listItems';
+import NavItem from '../listItems';
 import Box from '@material-ui/core/Box';
-import MenuAppBar from "../../components/surface/AppBar";
-import LogoImage from "../../../assets/veradi/logo.png";
+import LogoImage from "../../../../assets/veradi/logo.png";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
+import { alertActions } from "../../../redux/alert/alertSlice";
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -150,7 +145,7 @@ const Home = ({ history, user, checkLogedIn, logout }) => {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const menuopen = Boolean(anchorEl);
   const handleMenu = (event) => {

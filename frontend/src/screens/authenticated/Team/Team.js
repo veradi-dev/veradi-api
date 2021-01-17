@@ -1,10 +1,9 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import Orders from './Noticelist';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
-const Project = () => {
+const Team = () => {
     const useStyles = makeStyles((theme) => ({
         paper: {
           padding: theme.spacing(2),
@@ -22,11 +21,10 @@ const Project = () => {
     <Grid container spacing={3}>
         <Grid item xs={12}>
           <Paper className={classes.paper}>
-            준비중인 페이지입니다.
           </Paper>
         </Grid>
       </Grid>
     );
   };
   
-  export default Project;
+  export default Team;

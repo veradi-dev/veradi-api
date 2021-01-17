@@ -1,7 +1,7 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import Orders from './Noticelist';
+import Orders from '../Notice/Noticelist';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 const Messenger = () => {

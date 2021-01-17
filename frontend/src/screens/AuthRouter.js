@@ -1,6 +1,6 @@
 import React from "react";
 import { HashRouter as Router, Route, Switch } from "react-router-dom";
-import Home from "./authenticated/Home";
+import Home from "./authenticated/Home/Home";
 import Gate from "./unauthenticated/Gate";
 import Signup from "./unauthenticated/Signup";
 

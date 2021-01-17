@@ -10,6 +10,7 @@ import LayersIcon from '@material-ui/icons/Layers';
 import SearchIcon from '@material-ui/icons/Search';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import {Link} from 'react-router-dom';
+
 import {
   Avatar,
   Box,

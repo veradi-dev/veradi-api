@@ -1,27 +1,20 @@
 import React from 'react';
-import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import Chart from './Chart';
-import Deposits from './Deposits';
-import Noticelist from './Noticelist';
+import Noticelist from '../Notice/Noticelist';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from "clsx";
-import InsertChartIcon from '@material-ui/icons/InsertChartOutlined';
 import {
   Avatar,
   Box,
   Typography,
-  Card,
-  CardContent,
 } from '@material-ui/core';
-
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Title from './Title';
+import Title from '../Title';
 const Dashboard = () => {
     const useStyles = makeStyles((theme) => ({
       paper: {

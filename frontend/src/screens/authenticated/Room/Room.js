@@ -7,7 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import 'react-calendar/dist/Calendar.css';
 import { Box } from '@material-ui/core';
 import './Room.css';
-import Title from './Title';
+import Title from '../Title';
 const Room = () => {
     const useStyles = makeStyles((theme) => ({
         paper: {
@@ -24,6 +24,10 @@ const Room = () => {
       const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
       const [value, onChange] = useState(new Date());
       console.log(value);
+      const getreservation = (value) => {
+        console.log(value);
+            };
+    
     return (
     <Grid container spacing={3}>
         <Grid item xs={12} md={6} lg={6}>
@@ -38,7 +42,7 @@ const Room = () => {
               <Calendar
                 onChange={onChange}
                 value={value}
-                onclick={(value)=>useEffect(onChange(value))}
+                onclick={getreservation}
               />
               </Box>
               </Paper>
