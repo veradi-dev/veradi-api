@@ -45,7 +45,7 @@ export default function Noticelist({label}) {
   return (
     <React.Fragment>
       <Title>{label} 공지사항</Title>
-      <Link to={`/noticecreate/${label}`} label="전체">
+      <Link to={`/noticecreate/${label}`}>
       <Button>작성하기</Button>
       </Link>
       <Table className={classes.table} size="small">
