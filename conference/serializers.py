@@ -27,7 +27,7 @@ class ReservationSerializer(serializers.ModelSerializer):
         hour, minute = divmod(start_time, 2)
         minute *= 30
         d_datetime = timezone.datetime.combine(
-            date, datetime.time(hour, minute), tzinfo=timezone.timedelta(hours=9)
+            date, datetime.time(hour, minute), tzinfo=timezone.timezone(timezone.timedelta(hours=9))
         )
         if d_datetime < timezone.localtime():
             raise serializers.ValidationError({"error": "예약이 불가능한 시간입니다."})
