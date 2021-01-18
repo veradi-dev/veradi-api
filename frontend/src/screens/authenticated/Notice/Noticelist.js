@@ -1,6 +1,5 @@
   
 import React from 'react';
-import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -11,7 +10,8 @@ import Title from '../Title';
 import PaginationItem from "@material-ui/lab/PaginationItem";
 import Pagination from "@material-ui/lab/Pagination";
 import Typography from "@material-ui/core/Typography";
-
+import Button from '@material-ui/core/Button';
+import {Link} from 'react-router-dom';
 // Generate Order Data
 function createData(id, title, name, date) {
   return {id, title, name, date};
@@ -43,6 +43,9 @@ export default function Noticelist() {
   const classes = useStyles();
   return (
     <React.Fragment>
+      <Link to="/noticecreate">
+      <Button>작성하기</Button>
+      </Link>
       <Table className={classes.table} size="small">
         <TableHead>
           <TableRow>
@@ -65,11 +68,6 @@ export default function Noticelist() {
           ))}
         </TableBody>
       </Table>
-      <div className={classes.seeMore}>
-        <Link color="primary" href="#" onClick={preventDefault}>
-          더보기
-        </Link>
-      </div>
     </React.Fragment>
   );
 }
