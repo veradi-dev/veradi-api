@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from "styled-components";
+import { device } from '../../interactive/device';
+
 
 const Button = styled.button`
   margin-bottom: 2px;
@@ -15,11 +17,34 @@ const Button = styled.button`
 
 //https://jsramblings.com/how-to-use-media-queries-with-styled-components/
 //https://kiarash-z.github.io/react-modern-calendar-datepicker/docs/responsive-guide
+
+
+
 const Text = styled.text`
-  font-weight: 600;
+  font-weight: 300;
+  color: #000000;
+  @media ${device.desktop} {
+    font-size: 20px;
+  }
+  @media ${device.desktopL} { 
+    font-size: 20px;
+  }
+  @media ${device.laptop} { 
+    font-size: 20px;
+  }
+  @media ${device.laptopL} { 
+    font-size: 20px;
+  }
+  @media ${device.mobileS} { //작은폰
+    font-size: 10px;
+  }
+  @media ${device.mobileM} { //모바일????
+    font-size: 11px;
+  }
+  @media ${device.mobileL} { //데스크탑
+    font-size: 15px;
+  }
   
-  font-size: 11px;
-  color: #000000
 `;
 //
 const Time = React.memo(function User({ time, onToggle }) {
