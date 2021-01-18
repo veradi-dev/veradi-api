@@ -7,6 +7,7 @@ import clsx from "clsx";
 import {
   Avatar,
   Box,
+  Icon,
   Typography,
 } from '@material-ui/core';
 import Table from '@material-ui/core/Table';
@@ -15,6 +16,8 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Title from '../Title';
+import DirectionsRunIcon from '@material-ui/icons/DirectionsRun';
+import HomeIcon from '@material-ui/icons/Home';
 const Dashboard = () => {
     const useStyles = makeStyles((theme) => ({
       paper: {
@@ -50,16 +53,29 @@ const Dashboard = () => {
         id:1,
         status: 'working',
         name: '오지석',
-        starttime: '12/15',
+        starttime: '12/20 20:01',
       },
       {
         id:2,
-        status: 'home',
+        status: 'working',
         name: '조은학',
-        starttime: '12/20',
+        starttime: '12/20 15:10',
+      },
+      {
+        id:3,
+        status: 'home',
+        name: '호날두',
+        starttime: null,
+      },
+      {
+        id:4,
+        status: 'home',
+        name: '메시',
+        starttime: null,
       },
     ];
 
+  //let iconName = `${isAndroid ? "md-" : "ios-"}`;
     const classes = useStyles();
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
     const smallfixedHeightPaper = clsx(classes.paper, classes.smallfixedHeight);
@@ -128,9 +144,9 @@ const Dashboard = () => {
                   <TableBody>
                     {workers.map((worker) => (
                       <TableRow key={worker.id}>
-                        <TableCell>{worker.status}</TableCell>
-                        <TableCell>{worker.name}</TableCell>
-                        <TableCell>{worker.starttime}</TableCell>
+                        <TableCell align="center">{worker.status==='working' ?  <DirectionsRunIcon color="primary" style={{ fontSize: 20 }}/> : <HomeIcon color="secondary" style={{ fontSize: 20 }}/>}</TableCell>
+                        <TableCell align="center">{worker.name}</TableCell>
+                        <TableCell align="center">{worker.starttime}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -148,3 +164,5 @@ const Dashboard = () => {
   };
   
   export default Dashboard;
+
+  //<HomeIcon color="secondary" style={{ fontSize: 20 }}/>
