@@ -1,17 +1,13 @@
 import React from 'react';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
 import Noticelist from './Noticelist';
 import Noticecreate from './Noticecreate';
-import clsx from 'clsx';
-import SwipeableViews from 'react-swipeable-views';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
+import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import Title from '../Title';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -20,8 +16,8 @@ function TabPanel(props) {
     <div
       role="tabpanel"
       hidden={value !== index}
-      id={`full-width-tabpanel-${index}`}
-      aria-labelledby={`full-width-tab-${index}`}
+      id={`nav-tabpanel-${index}`}
+      aria-labelledby={`nav-tab-${index}`}
       {...other}
     >
       {value === index && (
@@ -33,84 +29,66 @@ function TabPanel(props) {
   );
 }
 
+TabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.any.isRequired,
+  value: PropTypes.any.isRequired,
+};
+
 function a11yProps(index) {
   return {
-    id: `full-width-tab-${index}`,
-    'aria-controls': `full-width-tabpanel-${index}`,
+    id: `nav-tab-${index}`,
+    'aria-controls': `nav-tabpanel-${index}`,
   };
+}
+
+function LinkTab(props) {
+  return (
+    <Tab
+      component="a"
+      onClick={(event) => {
+        event.preventDefault();
+      }}
+      {...props}
+    />
+  );
 }
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
-    width: 500,
   },
 }));
 
-const NoticeLayout = () => {
-    const useStyles = makeStyles((theme) => ({
-        paper: {
-          padding: theme.spacing(2),
-          display: 'flex',
-          overflow: 'auto',
-          flexDirection: 'column',
-        },
-        fixedHeight: {
-          height: 240,
-        },
-      }));
-      const classes = useStyles();
-      const theme = useTheme();
-      const [value, setValue] = React.useState(0);
+export default function NoticeLayout() {
+  const classes = useStyles();
+  const [value, setValue] = React.useState(0);
 
-      const handleChange = (event, newValue) => {
-        setValue(newValue);
-      };
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
 
-      const handleChangeIndex = (index) => {
-        setValue(index);
-      };
-      const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-    return (
-    <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <Paper className={classes.paper}>
-          <Title>공지사항</Title>
-          <div className={classes.root}>
-      <AppBar position="static" color="default">
+  return (
+    <div className={classes.root}>
+      <AppBar position="static">
         <Tabs
+          variant="fullWidth"
           value={value}
           onChange={handleChange}
-          indicatorColor="primary"
-          textColor="primary"
-          variant="fullWidth"
-          aria-label="full width tabs example"
+          aria-label="nav tabs example"
         >
-          <Tab label="전체" {...a11yProps(0)} />
-          <Tab label="지구과학팀" {...a11yProps(1)} />
-          <Tab label="생명과학팀" {...a11yProps(2)} />
+          <LinkTab label="전체" href="/drafts" {...a11yProps(0)} />
+          <LinkTab label="생명과학팀" href="/trash" {...a11yProps(1)} />
+          <LinkTab label="지구과학팀" href="/spam" {...a11yProps(2)} />
         </Tabs>
       </AppBar>
-      <SwipeableViews
-        axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-        index={value}
-        onChangeIndex={handleChangeIndex}
-      >
-        <TabPanel value={value} index={0} dir={theme.direction}>
-          <Noticelist></Noticelist>
-        </TabPanel>
-        <TabPanel value={value} index={1} dir={theme.direction}>
-          <Noticelist></Noticelist>
-        </TabPanel>
-        <TabPanel value={value} index={2} dir={theme.direction}>
-          <Noticelist></Noticelist>
-        </TabPanel>
-      </SwipeableViews>
+      <TabPanel value={value} index={0}>
+      </TabPanel>
+      <TabPanel value={value} index={1}>
+      </TabPanel>
+      <TabPanel value={value} index={2}>
+      </TabPanel>
     </div>
-          </Paper>
-        </Grid>
-      </Grid>
-    );
-  };
-  
-  export default NoticeLayout;
+  );
+}

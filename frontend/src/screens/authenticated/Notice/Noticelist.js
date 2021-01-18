@@ -6,12 +6,13 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Title from '../Title';
 import PaginationItem from "@material-ui/lab/PaginationItem";
 import Pagination from "@material-ui/lab/Pagination";
 import Typography from "@material-ui/core/Typography";
 import Button from '@material-ui/core/Button';
 import {Link} from 'react-router-dom';
+
+import Title from '../Title';
 // Generate Order Data
 function createData(id, title, name, date) {
   return {id, title, name, date};
@@ -39,11 +40,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 //https://medium.com/@ankita.singh170190/material-ui-table-with-pagination-component-9f53a3380245
-export default function Noticelist() {
+export default function Noticelist({label}) {
   const classes = useStyles();
   return (
     <React.Fragment>
-      <Link to="/noticecreate">
+      <Title>{label} 공지사항</Title>
+      <Link to={`/noticecreate/${label}`} label="전체">
       <Button>작성하기</Button>
       </Link>
       <Table className={classes.table} size="small">
@@ -52,18 +54,18 @@ export default function Noticelist() {
 		  	    <TableCell align="center" width="10%">
             <Typography variant="subtitle2">번호</Typography>
               </TableCell>
-            <TableCell align="center" width="60%" >제목</TableCell>
-            <TableCell align="center" width="15%" >작성자</TableCell>
-            <TableCell align="center" width="15%" >작성일</TableCell>
+            <TableCell align="center" width="50%" >제목</TableCell>
+            <TableCell align="center" width="20%" >작성자</TableCell>
+            <TableCell align="center" width="20%" >작성일</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {rows.map((row) => (
             <TableRow key={row.id}>
               <TableCell align="center" width="10%">{row.id}</TableCell>
-              <TableCell width="60%">{row.title}</TableCell>
-              <TableCell align="center" width="15%">{row.name}</TableCell>
-              <TableCell align="center" width="15%">{row.date}</TableCell>
+              <TableCell width="50%">{row.title}</TableCell>
+              <TableCell align="center" width="20%">{row.name}</TableCell>
+              <TableCell align="center" width="20%">{row.date}</TableCell>
             </TableRow>
           ))}
         </TableBody>

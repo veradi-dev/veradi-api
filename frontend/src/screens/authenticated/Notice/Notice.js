@@ -1,10 +1,13 @@
+  
 import React from 'react';
+
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-
+import Noticelist from './Noticelist';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
-const Noticedetail = () => {
+import NoticeLayout from './NoticeLayout';
+const Notice = () => {
     const useStyles = makeStyles((theme) => ({
         paper: {
           padding: theme.spacing(2),
@@ -19,14 +22,15 @@ const Noticedetail = () => {
       const classes = useStyles();
       const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
     return (
-    <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <Paper className={classes.paper}>
-          준비중인 페이지입니다.
-          </Paper>
+      <Grid container spacing={3}>
+          <Grid item xs={12}>
+            <Paper className={classes.paper}>
+            <NoticeLayout></NoticeLayout>
+            <Noticelist label="전체"></Noticelist>
+            </Paper>
         </Grid>
       </Grid>
     );
   };
   
-  export default Noticedetail;
+  export default Notice;
