@@ -38,7 +38,7 @@ const NavItem = () => {
       <ListItemText primary="홈" />
     </ListItem>
     </Link>
-    <Link to="/notice" style={{ textDecoration: 'none', color: 'black' }}>
+    <Link to="/notice/:pageNumber" style={{ textDecoration: 'none', color: 'black' }}>
     <ListItem button>
       <ListItemIcon>
         <NotificationsIcon />
