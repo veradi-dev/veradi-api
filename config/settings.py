@@ -48,6 +48,7 @@ PROJECT_APPS = [
     "users.apps.UsersConfig",
     "projects.apps.ProjectsConfig",
     "workhours.apps.WorkhoursConfig",
+    "conference.apps.ConferenceConfig",
 ]
 THIRD_PARTY_APPS = ["rest_framework", "knox", "webpack_loader"]
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
