@@ -101,8 +101,21 @@ class ConferenceViewSet(viewsets.ModelViewSet):
             data=request.data, context={"request", request}
         )
         serializer.is_valid(raise_exception=True)
-        serializer.save()
+        self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(
             serializer.data, status=status.HTTP_201_CREATED, headers=headers
         )
+
+    def update(self, request, *args, **kwargs):
+        # 업데이트 기능 지원 안함. 삭제했다 새로 만들어야 함.
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        # 회의실 예약 기록을 삭제할 수 있는 사람
+        # 1. 본인 2. 해당 팀의 상급자
+        if request.user.position < instance.proposer.position:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)

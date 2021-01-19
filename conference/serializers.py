@@ -35,6 +35,9 @@ class ReservationSerializer(serializers.ModelSerializer):
         # super().create()에서 reservation을 생성하고 return 한다.
         return super().create(validated_data)
 
+    def update(self, request, pk=None):
+        pass
+
     class Meta:
         model = Reservation
         fields = ("room", "date", "start_time", "proposer", "team")
