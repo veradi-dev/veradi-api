@@ -75,6 +75,38 @@ const Dashboard = () => {
       },
     ];
 
+
+    function createData(id, title, name, date) {
+      return {id, title, name, date};
+    };
+    
+    const rows = [
+      createData('1', '제목 테스트입니다', '조은학', '20200501'),
+      createData('2', '제목 테스트입니다', '조은학', '20200501'),
+      createData('3', '제목 테스트입니다', '조은학', '20200501'),
+      createData('4', '제목 테스트입니다', '조은학', '20200501'),
+      createData('5', '제목 테스트입니다', '조은학', '20200501'),
+      createData('6', '제목 테스트입니다', '조은학', '20200501'),
+      createData('7', '제목 테스트입니다', '조은학', '20200501'),
+      createData('8', '제목 테스트입니다', '조은학', '20200501'),
+      createData('9', '제목 테스트입니다', '조은학', '20200501'),
+      createData('10', '제목 테스트입니다', '조은학', '20200501'),
+      createData('11', '제목 테스트입니다', '조은학', '20200501'),
+      createData('12', '제목 테스트입니다', '조은학', '20200501'),
+      createData('13', '제목 테스트입니다', '조은학', '20200501'),
+      createData('14', '제목 테스트입니다', '조은학', '20200501'),
+      createData('15', '제목 테스트입니다', '조은학', '20200501'),
+      createData('16', '제목 테스트입니다', '조은학', '20200501'),
+      createData('17', '제목 테스트입니다', '조은학', '20200501'),
+      createData('18', '제목 테스트입니다', '조은학', '20200501'),
+      createData('19', '제목 테스트입니다', '조은학', '20200501'),
+      createData('20', '제목 테스트입니다', '조은학', '20200501'),
+      createData('21', '제목 테스트입니다', '조은학', '20200501'),
+      createData('22', '제목 테스트입니다', '조은학', '20200501'),
+      createData('23', '제목 테스트입니다', '조은학', '20200501'),
+      createData('24', '제목 테스트입니다', '조은학', '20200501'),
+    
+    ];
   //let iconName = `${isAndroid ? "md-" : "ios-"}`;
     const classes = useStyles();
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
@@ -156,7 +188,31 @@ const Dashboard = () => {
             </Grid>
             <Grid item xs={12}>
               <Paper className={fixedHeightPaper}>
-                <Noticelist />
+              <React.Fragment>
+      <Title>전체 공지사항</Title>
+      <Table className={classes.table} size="small">
+        <TableHead>
+          <TableRow>
+		  	    <TableCell align="center" width="10%">
+            <Typography variant="subtitle2">번호</Typography>
+              </TableCell>
+            <TableCell align="center" width="50%" >제목</TableCell>
+            <TableCell align="center" width="20%" >작성자</TableCell>
+            <TableCell align="center" width="20%" >작성일</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+        {rows.map((row) => (
+            <TableRow key={row.id}>
+              <TableCell align="center" width="10%">{row.id}</TableCell>
+              <TableCell width="50%">{row.title}</TableCell>
+              <TableCell align="center" width="20%">{row.name}</TableCell>
+              <TableCell align="center" width="20%">{row.date}</TableCell>
+            </TableRow>
+             ))}
+        </TableBody>
+      </Table>
+    </React.Fragment>
               </Paper>
             </Grid>
           </Grid>

@@ -14,6 +14,12 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
+import FormLabel from '@material-ui/core/FormLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import Checkbox from '@material-ui/core/Checkbox';
 const initialState = {
   times: [
     {id:0, time:"00:00" ,active:false, team:null, booked:false},
@@ -117,6 +123,12 @@ const Room = () => {
   const [morningstate, setmorning] = React.useState({
     ismorning: true,
   });
+  const [room, setroom] = React.useState({
+    room1: true,
+    room2: false,
+  });
+  const { room1, room2 } = room;
+
   const [state, dispatch] = useReducer(reducer, initialState);
   const { times } = state;
   const onToggle = useCallback(id => {
@@ -127,6 +139,9 @@ const Room = () => {
     setmorning({ ...morningstate, [event.target.name]: event.target.checked });
     console.log(morningstate);
   };
+  const handleRoom = (event) => {
+    setroom({ ...room, [event.target.name]: event.target.checked });
+  };
     const useStyles = makeStyles((theme) => ({
         paper: {
           padding: theme.spacing(2),
@@ -135,8 +150,9 @@ const Room = () => {
           flexDirection: 'column',
         },
         fixedHeight: {
-          height: 400,
+          height: 500,
         },
+        
       }));
       const classes = useStyles();
       const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
@@ -167,8 +183,22 @@ const Room = () => {
             </Grid>
             <Grid item xs={12} md={6} lg={6}>
               <Paper className={fixedHeightPaper}>
+              
               <Typography component="div">
         <Grid component="label" container alignItems="center" justify="center" spacing={1}>
+        <FormControl required component="fieldset" className={classes.formControl}>
+        <FormLabel component="legend">장소는 한 곳만 골라주세요</FormLabel>
+        <FormGroup>
+          <FormControlLabel
+            control={<Checkbox checked={room1} color="primary" onChange={handleRoom} name="room1" />}
+            label="회의실"
+          />
+          <FormControlLabel
+            control={<Checkbox checked={room2} color="primary" onChange={handleRoom} name="room2" />}
+            label="탕비실"
+          />
+        </FormGroup>
+      </FormControl>
           <Grid item>오전</Grid>
           <Grid item>
             <AntSwitch checked={morningstate.ismorning} onChange={handleChange} name="ismorning" />

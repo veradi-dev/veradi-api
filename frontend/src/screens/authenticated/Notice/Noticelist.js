@@ -14,13 +14,14 @@ import Box from '@material-ui/core/Box';
 import {Link, useParams} from 'react-router-dom';
 import Title from '../Title';
 // Generate Order Data
-function createData(id, title, name, date) {
-  return {id, title, name, date};
-};
+
 
 const USER_PATH = "/notice";
 const ROWS_PER_PAGE = 10;
 
+function createData(id, title, name, date) {
+  return {id, title, name, date};
+};
 
 const rows = [
   createData('1', '제목 테스트입니다', '조은학', '20200501'),
