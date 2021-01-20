@@ -10,6 +10,7 @@ import LayersIcon from '@material-ui/icons/Layers';
 import SearchIcon from '@material-ui/icons/Search';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import {Link} from 'react-router-dom';
+
 import {
   Avatar,
   Box,
@@ -37,7 +38,7 @@ const NavItem = () => {
       <ListItemText primary="홈" />
     </ListItem>
     </Link>
-    <Link to="/notice" style={{ textDecoration: 'none', color: 'black' }}>
+    <Link to="/notice/1" style={{ textDecoration: 'none', color: 'black' }}>
     <ListItem button>
       <ListItemIcon>
         <NotificationsIcon />
@@ -53,20 +54,20 @@ const NavItem = () => {
       <ListItemText primary="근무시간 조회" />
     </ListItem>
     </Link>
-    <Link to="/team" style={{ textDecoration: 'none', color: 'black' }}>
-    <ListItem button>
-      <ListItemIcon>
-        <PeopleIcon />
-      </ListItemIcon>
-      <ListItemText primary="팀 관리" />
-    </ListItem>
-    </Link>
     <Link to="/room" style={{ textDecoration: 'none', color: 'black' }}>
     <ListItem button>
       <ListItemIcon>
         <EmojiObjectsIcon />
       </ListItemIcon>
       <ListItemText primary="회의실 예약" />
+    </ListItem>
+    </Link>
+    <Link to="/team" style={{ textDecoration: 'none', color: 'black' }}>
+    <ListItem button>
+      <ListItemIcon>
+        <PeopleIcon />
+      </ListItemIcon>
+      <ListItemText primary="팀 관리" />
     </ListItem>
     </Link>
     <Link to="/project" style={{ textDecoration: 'none', color: 'black' }}>

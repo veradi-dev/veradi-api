@@ -65,7 +65,6 @@ const Input = styled.input`
   &::placeholder {
     opacity: 0.5;
   }
-
   &:focus {
     outline: 1px solid rgba(196, 255, 225);
     border: 1px solid rgba(196, 255, 225);
