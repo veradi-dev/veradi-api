@@ -1,29 +1,15 @@
 from django.contrib.auth import get_user_model
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from django import forms
-from . import models
+from .models import Team, Department
 
 User = get_user_model()
 
 
-class CustomUserModelForm(forms.ModelForm):
-    class Meta:
-        model = User
-        fields = "__all__"
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.user = kwargs["instance"]
-        if self.user.department is not None:
-            self.fields["team"].queryset = models.Team.objects.filter(
-                name__contains=self.user.department.name
-            )
-
-
-@admin.register(models.User)
+@admin.register(User)
 class UserAdmin(UserAdmin):
-    form = CustomUserModelForm
+    # form = CustomUserModelForm
+    readonly_fields = ("get_department_name",)
     # 외부 패널
     list_display = (
         "username",
@@ -37,7 +23,12 @@ class UserAdmin(UserAdmin):
     # 내부 패널
     fieldsets = (
         ("계정 정보", {"fields": ("username", "password", "last_login", "date_joined")}),
-        ("권한", {"fields": ("is_active", "is_staff", "is_superuser"),}),
+        (
+            "권한",
+            {
+                "fields": ("is_active", "is_staff", "is_superuser"),
+            },
+        ),
         (
             "베라디 인적 사항",
             {
@@ -47,7 +38,7 @@ class UserAdmin(UserAdmin):
                     "email",
                     "code",
                     "approved",
-                    "department",
+                    "get_department_name",
                     "rank",
                     "team",
                     "position",
@@ -57,11 +48,11 @@ class UserAdmin(UserAdmin):
     )
 
 
-@admin.register(models.Department)
+@admin.register(Department)
 class DepartmentAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(models.Team)
+@admin.register(Team)
 class TeamAdmin(admin.ModelAdmin):
     pass
