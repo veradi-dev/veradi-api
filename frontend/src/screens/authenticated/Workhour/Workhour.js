@@ -161,6 +161,12 @@ const Workhour = ({user}) => {
 
         {personresult ?
             <div>
+              <Typography
+            color="textSecondary"
+            variant="h6"
+          >
+            조은학님
+          </Typography>
             <Table size="small">
                 <TableHead>
                 <TableRow>
@@ -180,9 +186,6 @@ const Workhour = ({user}) => {
                 </TableBody>
             </Table>
           </div> : <div></div> }
-
-
-         
             </React.Fragment>
           </Paper>
         </Grid>

@@ -169,7 +169,7 @@ const Dashboard = ({user}) => {
             <Grid item xs={12} md={6} lg={6}>
               <Paper className={fixedHeightPaper}>
               <React.Fragment>
-                <Title>{user.team}</Title>
+                <Title>{user.team} 근무현황</Title>
                 <Table size="small">
                   <TableHead>
                   </TableHead>

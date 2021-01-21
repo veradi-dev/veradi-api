@@ -15,6 +15,7 @@ const MainNav = () => {
                   <Route exact path="/workhour" component={ Workhour }/>
                   <Route exact path="/team" component={ Team }/>
                   <Route exact path="/room" component={ Room }/>
+                  <Route exact path="/cancelroom" component={ Room }/>
                   <Route exact path="/project" component={ Project }/>
             </Switch>
 		</>

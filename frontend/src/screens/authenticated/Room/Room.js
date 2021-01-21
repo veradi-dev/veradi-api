@@ -120,6 +120,7 @@ function reducer(state, action) {
 }
 
 const Room = () => {
+  const [reserveresult, setreserveresult]=useState(false);
   const [morningstate, setmorning] = React.useState({
     ismorning: true,
   });
@@ -130,16 +131,16 @@ const Room = () => {
     dispatch({type: 'TOGGLE',id});
   }, []);
   const [value, onChange] = useState(new Date());
-  const handleChange = (event) => {
-    setmorning({ ...morningstate, [event.target.name]: event.target.checked });
-  };
   const handleRoom = (event) => {
     setroom(event.target.value);
   };
+  const handleChange = (event) => {
+    setmorning({ ...morningstate, [event.target.name]: event.target.checked });
+  };
+  
     const useStyles = makeStyles((theme) => ({
         paper: {
           padding: theme.spacing(2),
-          display: 'flex',
           overflow: 'auto',
           flexDirection: 'column',
         },
@@ -159,12 +160,17 @@ const Room = () => {
     <Grid container spacing={3}>
         <Grid item xs={12} md={6} lg={6}>
               <Paper className={fixedHeightPaper}>
+              <span className="cancelbtn">
+                <Button variant="contained" color="primary" onClick={() => alert("예약되었습니다!")}>
+                예약취소하기
+              </Button>
+              </span>
               <Title>회의실 예약</Title>
               <FormControl component="fieldset">
                 <FormLabel component="legend">회의실</FormLabel>
                 <RadioGroup aria-label="room" name="room" value={room} onChange={handleRoom}>
-                  <FormControlLabel value="room1" control={<Radio  color="primary" />} label="회의실" />
-                  <FormControlLabel value="room2" control={<Radio  color="primary"/>} label="탕비실" />
+                  <FormControlLabel value="room1" control={<Radio color="primary" />} label="회의실" />
+                  <FormControlLabel value="room2" control={<Radio color="primary"/>} label="탕비실" />
                 </RadioGroup>
               </FormControl>
               <Box

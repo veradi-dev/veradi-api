@@ -31,3 +31,7 @@
 .reservebtn {
   margin-top: 10%;
 }
+
+.cancelbtn {
+  float: right;
+}
