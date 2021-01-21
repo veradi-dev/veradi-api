@@ -16,8 +16,8 @@ import Title from '../Title';
 import axios from 'axios';
 import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
-import NativeSelect from '@material-ui/core/NativeSelect';
 import FormControl from '@material-ui/core/FormControl';
+import { connect } from "react-redux";
 function createData(id, title, name, date) {
   return {id, title, name, date};
 }
@@ -36,7 +36,7 @@ function preventDefault(event) {
 }
 
 
-const Workhour = () => {
+const Workhour = ({user}) => {
   const [Workhours, setWorkhours] = useState([]);
 
   useEffect(() => {
@@ -48,7 +48,7 @@ const Workhour = () => {
     axios.get("/api/v1/workhours", {
       params:{
         user:'1',
-        month:'01'
+        month:'1'
       }
     }).then((res) => {
       setWorkhours(res.data);
@@ -142,7 +142,7 @@ const Workhour = () => {
         <Grid item  xs={12} md={4} lg={4}>
           <Paper className={classes.paper}>
                 <React.Fragment>
-            <Title>팀원 근무시간</Title>
+            <Title>{user.team} 팀원 근무시간</Title>
             <TextField id="outlined-search" label="팀원을 검색하세요" type="search" variant="outlined" size="small"/>
             <Table size="small">
                 <TableHead>
@@ -168,7 +168,7 @@ const Workhour = () => {
         <Grid item xs={12} md={4} lg={4}>
           <Paper className={classes.paper}>
                 <React.Fragment>
-            <Title>팀 평균 근무시간</Title>
+            <Title>{user.team} 평균 근무시간</Title>
         <FormControl variant="outlined" className={classes.formControl}>
         <InputLabel htmlFor="outlined-year-native-simple">년도</InputLabel>
         <Select
@@ -227,7 +227,11 @@ const Workhour = () => {
     );
   };
   
-  export default Workhour;
+
+  const mapStateToProps = (state) => ({
+    user: state.user,
+  });
+  export default connect(mapStateToProps)(Workhour);
   /*
   
             <div className={classes.seeMore}>

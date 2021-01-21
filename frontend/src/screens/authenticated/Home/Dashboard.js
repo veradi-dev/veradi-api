@@ -16,9 +16,10 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Title from '../Title';
+import { connect } from "react-redux";
 import DirectionsRunIcon from '@material-ui/icons/DirectionsRun';
 import HomeIcon from '@material-ui/icons/Home';
-const Dashboard = () => {
+const Dashboard = ({user}) => {
     const useStyles = makeStyles((theme) => ({
       paper: {
         padding: theme.spacing(2),
@@ -42,11 +43,11 @@ const Dashboard = () => {
         width: 30
       }
     }));
-    const user = {
+    /*const users = {
       //avatar: '/static/images/avatars/avatar_6.png',
       jobTitle: '기술개발부 기술개발팀',
       name: '조은학'
-    };
+    };*/
 
     const workers = [
       {
@@ -125,20 +126,19 @@ const Dashboard = () => {
                 >
                   <Avatar
                     className={classes.avatar}
-                    src={user.avatar}
                   />
                   <Typography
                     className={classes.name}
                     color="textPrimary"
                     variant="h6"
                   >
-                    {user.name}
+                    {user.last_name+user.first_name}
                   </Typography>
                   <Typography
                     color="textSecondary"
                     variant="h6"
                   >
-                    {user.jobTitle}
+                    {user.team}
                   </Typography>
                 </Box>
               </Paper>
@@ -169,7 +169,7 @@ const Dashboard = () => {
             <Grid item xs={12} md={6} lg={6}>
               <Paper className={fixedHeightPaper}>
               <React.Fragment>
-                <Title>기술개발팀</Title>
+                <Title>{user.team}</Title>
                 <Table size="small">
                   <TableHead>
                   </TableHead>
@@ -219,6 +219,10 @@ const Dashboard = () => {
     );
   };
   
-  export default Dashboard;
+
+  const mapStateToProps = (state) => ({
+    user: state.user,
+  });
+  export default connect(mapStateToProps)(Dashboard);
 
   //<HomeIcon color="secondary" style={{ fontSize: 20 }}/>

@@ -18,8 +18,8 @@ import FormLabel from '@material-ui/core/FormLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import Checkbox from '@material-ui/core/Checkbox';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
 const initialState = {
   times: [
     {id:0, time:"00:00" ,active:false, team:null, booked:false},
@@ -123,24 +123,18 @@ const Room = () => {
   const [morningstate, setmorning] = React.useState({
     ismorning: true,
   });
-  const [room, setroom] = React.useState({
-    room1: true,
-    room2: false,
-  });
-  const { room1, room2 } = room;
-
+  const [room, setroom] = React.useState('room1');
   const [state, dispatch] = useReducer(reducer, initialState);
   const { times } = state;
   const onToggle = useCallback(id => {
     dispatch({type: 'TOGGLE',id});
   }, []);
-
+  const [value, onChange] = useState(new Date());
   const handleChange = (event) => {
     setmorning({ ...morningstate, [event.target.name]: event.target.checked });
-    console.log(morningstate);
   };
   const handleRoom = (event) => {
-    setroom({ ...room, [event.target.name]: event.target.checked });
+    setroom(event.target.value);
   };
     const useStyles = makeStyles((theme) => ({
         paper: {
@@ -156,8 +150,7 @@ const Room = () => {
       }));
       const classes = useStyles();
       const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-      const [value, onChange] = useState(new Date());
-      console.log(value);
+      //console.log(value);
       const getreservation = (value) => {
         console.log(value);
             };
@@ -167,6 +160,13 @@ const Room = () => {
         <Grid item xs={12} md={6} lg={6}>
               <Paper className={fixedHeightPaper}>
               <Title>회의실 예약</Title>
+              <FormControl component="fieldset">
+                <FormLabel component="legend">회의실</FormLabel>
+                <RadioGroup aria-label="room" name="room" value={room} onChange={handleRoom}>
+                  <FormControlLabel value="room1" control={<Radio  color="primary" />} label="회의실" />
+                  <FormControlLabel value="room2" control={<Radio  color="primary"/>} label="탕비실" />
+                </RadioGroup>
+              </FormControl>
               <Box
                   alignItems="center"
                   display="flex"
@@ -183,22 +183,8 @@ const Room = () => {
             </Grid>
             <Grid item xs={12} md={6} lg={6}>
               <Paper className={fixedHeightPaper}>
-              
               <Typography component="div">
         <Grid component="label" container alignItems="center" justify="center" spacing={1}>
-        <FormControl required component="fieldset" className={classes.formControl}>
-        <FormLabel component="legend">장소는 한 곳만 골라주세요</FormLabel>
-        <FormGroup>
-          <FormControlLabel
-            control={<Checkbox checked={room1} color="primary" onChange={handleRoom} name="room1" />}
-            label="회의실"
-          />
-          <FormControlLabel
-            control={<Checkbox checked={room2} color="primary" onChange={handleRoom} name="room2" />}
-            label="탕비실"
-          />
-        </FormGroup>
-      </FormControl>
           <Grid item>오전</Grid>
           <Grid item>
             <AntSwitch checked={morningstate.ismorning} onChange={handleChange} name="ismorning" />
@@ -241,3 +227,20 @@ const Room = () => {
   };
   
   export default Room;
+
+
+  /*
+  
+        <FormControl required component="fieldset" className={classes.formControl}>
+        <FormLabel component="legend">장소는 한 곳만 골라주세요</FormLabel>
+        <FormGroup>
+          <FormControlLabel
+            control={<Checkbox checked={room1} color="primary" onChange={handleRoom} name="room1" />}
+            label="회의실"
+          />
+          <FormControlLabel
+            control={<Checkbox checked={room2} color="primary" onChange={handleRoom} name="room2" />}
+            label="탕비실"
+          />
+        </FormGroup>
+      </FormControl>*/
