@@ -18,6 +18,7 @@ import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
 import { connect } from "react-redux";
+import SearchBar from "material-ui-search-bar";
 function createData(id, title, name, date) {
   return {id, title, name, date};
 }
@@ -29,28 +30,28 @@ const rows = [
   createData('12/4', '14:30', '16:30'),
 ];
 
-
+const monthworkhour=
+  {
+    "avg_per_date": 720, // 단위는 초(seconds)
+    "avg_per_person": 10800 // 단위는 초(seconds)
+  }
   
-function preventDefault(event) {
-  event.preventDefault();
-}
-
-
+const secondtohour=(seconds)=> {
+  let hour = parseInt(seconds/3600);
+  let min = parseInt((seconds%3600)/60);
+  let sec = seconds%60;
+  return hour+"시간"+min+"분"
+  }
 const Workhour = ({user}) => {
   const [Workhours, setWorkhours] = useState([]);
 
-  useEffect(() => {
-    const headers = {
-			'Access-Control-Allow-Origin': '*',        
-			'Accept': 'application/json',
-			'Content-Type': 'application/x-www-form-urlencoded',
-			}
-    axios.get("/api/v1/workhours", {
-      params:{
-        user:'1',
-        month:'1'
-      }
-    }).then((res) => {
+  /*useEffect(() => {
+    // console.log(user.token);
+    // const headers = {
+    //   Authorization: 'Token bee2aa204fa6f7cceaea15c1074eb86fb0e14d6d3a38955d61ffd75c258bf5e6',
+    //   'Content-Type': 'application/json'
+    //   }
+    axios.get(`/api/v1/workhours?user=1&month=1`, {'headers':{'Authorization':'Token ' + `${user.token}`}}).then((res) => {
       setWorkhours(res.data);
       console.log(res.data);
     }).catch((err)=>{
@@ -68,7 +69,7 @@ const Workhour = ({user}) => {
 				console.dir("내부 서버 오류입니다. 잠시만 기다려주세요.");
 			}
 			});
-	}, []);
+	}, []);*/
 
     const useStyles = makeStyles((theme) => ({
         paper: {
@@ -92,15 +93,22 @@ const Workhour = ({user}) => {
       }));
       const classes = useStyles();
       const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-
+      const [searchname, setsearchname]=useState('');
       const [state, setState] = React.useState({
         year: '2020',
         month: '1',
       });
-    
+      const handlesearch = (e) => {
+        setsearchname(e.target.value);
+      };
       const searchavg = (e) =>{
         e.preventDefault();
         console.log(state);
+
+      }
+
+      const searchteamperson = (searchname) =>{
+        console.log(searchname);
 
       }
 
@@ -117,7 +125,7 @@ const Workhour = ({user}) => {
         <Grid item xs={12} md={4} lg={4}>
           <Paper className={classes.paper}>
                 <React.Fragment>
-            <Title>근무시간</Title>
+            <Title>{user.last_name+user.first_name}님의 근무시간</Title>
             <Table size="small">
                 <TableHead>
                 <TableRow>
@@ -143,7 +151,11 @@ const Workhour = ({user}) => {
           <Paper className={classes.paper}>
                 <React.Fragment>
             <Title>{user.team} 팀원 근무시간</Title>
-            <TextField id="outlined-search" label="팀원을 검색하세요" type="search" variant="outlined" size="small"/>
+            <SearchBar
+    value={searchname}
+    onChange={handlesearch}
+    onRequestSearch={() => searchteamperson(searchname)}
+  />
             <Table size="small">
                 <TableHead>
                 <TableRow>
@@ -169,7 +181,11 @@ const Workhour = ({user}) => {
           <Paper className={classes.paper}>
                 <React.Fragment>
             <Title>{user.team} 평균 근무시간</Title>
-        <FormControl variant="outlined" className={classes.formControl}>
+
+
+            <Grid container spacing={1}>
+            <Grid item xs={10}>
+            <FormControl variant="outlined" className={classes.formControl}>
         <InputLabel htmlFor="outlined-year-native-simple">년도</InputLabel>
         <Select
           native
@@ -213,12 +229,37 @@ const Workhour = ({user}) => {
           <option value={12}>12월</option>
           </Select>
       </FormControl>
-      <Button onClick={searchavg} color="primary" variant="contained">검색</Button>
+            </Grid>
+            <Grid item xs={2}>
+            <Button onClick={searchavg} color="primary" variant="contained">검색</Button>
+            </Grid>
+            </Grid>
+        
+      
+                      <Typography
+                        color="textSecondary"
+                        variant="h6"
+                      >
+                        {user.team} 각 개인의 근무시간의 총합의 평균
+                      </Typography>
                       <Typography
                         color="textPrimary"
                         variant="h5"
                       >
-                        111시간 11분
+                        {secondtohour(monthworkhour.avg_per_person)}
+                      </Typography>
+                      
+                      <Typography
+                        color="textSecondary"
+                        variant="h6"
+                      >
+                        {user.team} 일별 평균
+                      </Typography>
+                      <Typography
+                        color="textPrimary"
+                        variant="h5"
+                      >
+                        {secondtohour(monthworkhour.avg_per_date)}
                       </Typography>
             </React.Fragment>
           </Paper>
@@ -242,3 +283,15 @@ const Workhour = ({user}) => {
             */
 
             //https://dev.to/asimdahall/simple-search-form-in-react-using-hooks-42pg
+
+
+
+            
+            // <Grid container spacing={1}>
+            // <Grid item xs={10}>
+            // <TextField fullWidth='true' id="outlined-search" label="팀원을 검색하세요" type="search" variant="outlined" size="small"/>
+            // </Grid>
+            // <Grid item xs={2}>
+            // <Button fullWidth='true' onClick={searchteamperson} color="primary" variant="contained">검색</Button>
+            // </Grid>
+            // </Grid>
