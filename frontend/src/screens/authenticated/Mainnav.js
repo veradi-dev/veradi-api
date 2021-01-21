@@ -9,9 +9,9 @@ const MainNav = () => {
 		<>
             <Switch>
                   <Route exact path="/" component={ Dashboard }/>
-                  <Route exact path="/notice/:pageNumber" component={ Notice }/>
-                  <Route exact path="/noticecreate/:team" component={ Noticecreate }/>
-                  <Route exact path="/noticedetail" component={ Noticedetail }/>
+                  <Route exact path="/notice/:team/noticelist/:pageNumber" component={ Notice }/>
+                  <Route exact path="/notice/:team/create" component={ Noticecreate }/>
+                  <Route exact path="/notice/:team/noticedetail" component={ Noticedetail }/>
                   <Route exact path="/workhour" component={ Workhour }/>
                   <Route exact path="/team" component={ Team }/>
                   <Route exact path="/room" component={ Room }/>

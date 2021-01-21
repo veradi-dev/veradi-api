@@ -65,20 +65,20 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 //https://medium.com/@ankita.singh170190/material-ui-table-with-pagination-component-9f53a3380245
-const Noticelist=({label})=> {
+const Noticelist=({user, label})=> {
   const classes = useStyles();
   const { pageNumber = 1 } = useParams();
   return (
     <React.Fragment>
       <Title>{label} 공지사항</Title>
-      <Link to={`/noticecreate/${label}`}>
+      <Link to={`/notice/${label}/create`}>
       <Button>작성하기</Button>
       </Link>
       <Table className={classes.table} size="small">
         <TableHead>
           <TableRow>
 		  	    <TableCell align="center" width="10%">
-            <Typography variant="subtitle2">번호</Typography>
+            <Typography component={'span'} variant="subtitle2">번호</Typography>
               </TableCell>
             <TableCell align="center" width="50%" >제목</TableCell>
             <TableCell align="center" width="20%" >작성자</TableCell>

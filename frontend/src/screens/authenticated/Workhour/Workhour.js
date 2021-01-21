@@ -181,10 +181,13 @@ const Workhour = ({user}) => {
           <Paper className={classes.paper}>
                 <React.Fragment>
             <Title>{user.team} 평균 근무시간</Title>
-
-
-            <Grid container spacing={1}>
-            <Grid item xs={10}>
+            <Grid
+              container
+              direction="row"
+              justify="space-evenly"
+              alignItems="center"
+            >
+            <Grid>
             <FormControl variant="outlined" className={classes.formControl}>
         <InputLabel htmlFor="outlined-year-native-simple">년도</InputLabel>
         <Select
@@ -201,8 +204,6 @@ const Workhour = ({user}) => {
           <option value={2022}>2022</option>
         </Select>
       </FormControl>
-      
-
       <FormControl variant="outlined" className={classes.formControl}>
         <InputLabel htmlFor="name-native-error">월</InputLabel>
         <Select
@@ -230,12 +231,10 @@ const Workhour = ({user}) => {
           </Select>
       </FormControl>
             </Grid>
-            <Grid item xs={2}>
+            <Grid>
             <Button onClick={searchavg} color="primary" variant="contained">검색</Button>
             </Grid>
             </Grid>
-        
-      
                       <Typography
                         color="textSecondary"
                         variant="h6"
