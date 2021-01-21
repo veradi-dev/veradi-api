@@ -18,7 +18,7 @@ import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
 import { connect } from "react-redux";
-import SearchBar from "material-ui-search-bar";
+import './Workhour.css';
 function createData(id, title, name, date) {
   return {id, title, name, date};
 }
@@ -93,25 +93,26 @@ const Workhour = ({user}) => {
       }));
       const classes = useStyles();
       const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-      const [searchname, setsearchname]=useState('');
       const [state, setState] = React.useState({
         year: '2020',
         month: '1',
       });
-      const handlesearch = (e) => {
-        setsearchname(e.target.value);
-      };
+      const [personresult, setpersonresult] = React.useState(false);
+      const [result, setresult] = React.useState(false);
       const searchavg = (e) =>{
         e.preventDefault();
         console.log(state);
-
+        setresult(true);
       }
-
-      const searchteamperson = (searchname) =>{
-        console.log(searchname);
-
+      const searchteamperson = (e) =>{
+        e.preventDefault();
+        console.log(state);
+        setpersonresult(true);
       }
-
+      const [text, settext] = useState('');
+	  const onChange = (e) => {
+		settext(e.target.value);
+	  };
 
       const handleChange = (event) => {
         const name = event.target.name;
@@ -151,11 +152,15 @@ const Workhour = ({user}) => {
           <Paper className={classes.paper}>
                 <React.Fragment>
             <Title>{user.team} 팀원 근무시간</Title>
-            <SearchBar
-    value={searchname}
-    onChange={handlesearch}
-    onRequestSearch={() => searchteamperson(searchname)}
-  />
+            
+        <span className="searchbtn">
+        <input className="commentinput" value={text} onChange={onChange} placeholder="팀원 이름을 입력하세요">
+				</input>
+        <Button onClick={searchteamperson} color="primary" variant="contained">검색</Button>
+        </span>
+
+        {personresult ?
+            <div>
             <Table size="small">
                 <TableHead>
                 <TableRow>
@@ -174,6 +179,10 @@ const Workhour = ({user}) => {
                 ))}
                 </TableBody>
             </Table>
+          </div> : <div></div> }
+
+
+         
             </React.Fragment>
           </Paper>
         </Grid>
@@ -235,31 +244,34 @@ const Workhour = ({user}) => {
             <Button onClick={searchavg} color="primary" variant="contained">검색</Button>
             </Grid>
             </Grid>
-                      <Typography
-                        color="textSecondary"
-                        variant="h6"
-                      >
-                        {user.team} 각 개인의 근무시간의 총합의 평균
-                      </Typography>
-                      <Typography
-                        color="textPrimary"
-                        variant="h5"
-                      >
-                        {secondtohour(monthworkhour.avg_per_person)}
-                      </Typography>
-                      
-                      <Typography
-                        color="textSecondary"
-                        variant="h6"
-                      >
-                        {user.team} 일별 평균
-                      </Typography>
-                      <Typography
-                        color="textPrimary"
-                        variant="h5"
-                      >
-                        {secondtohour(monthworkhour.avg_per_date)}
-                      </Typography>
+            {result ?
+            <div>
+            <Typography
+            color="textSecondary"
+            variant="h6"
+          >
+            {user.team} 각 개인의 근무시간의 총합의 평균
+          </Typography>
+          <Typography
+            color="textPrimary"
+            variant="h5"
+          >
+            {secondtohour(monthworkhour.avg_per_person)}
+          </Typography>
+          
+          <Typography
+            color="textSecondary"
+            variant="h6"
+          >
+            {user.team} 일별 평균
+          </Typography>
+          <Typography
+            color="textPrimary"
+            variant="h5"
+          >
+            {secondtohour(monthworkhour.avg_per_date)}
+          </Typography>
+          </div> : <div></div> }
             </React.Fragment>
           </Paper>
         </Grid>

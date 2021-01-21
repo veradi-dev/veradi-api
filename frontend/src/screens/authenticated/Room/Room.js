@@ -201,10 +201,13 @@ const Room = () => {
                 >
     <TimeBtn times={times.slice(24,48)} onToggle={onToggle}></TimeBtn>
     <div>
+    </div>
+    <span className="reservebtn">
     <Button variant="contained" color="primary" onClick={() => alert("예약되었습니다!")}>
       예약하기
     </Button>
-    </div>
+    </span>
+    
   </Box>: <Box
                   alignItems="center"
                   display="flex"
@@ -214,10 +217,13 @@ const Room = () => {
                 >
       <TimeBtn times={times.slice(0,24)} onToggle={onToggle}></TimeBtn>
       <div>
+      </div>
+        <span className="reservebtn">
       <Button variant="contained" color="primary" onClick={() => alert("예약되었습니다!")}>
       예약하기
     </Button>
-      </div>
+    </span>
+      
     </Box>
     }
               </Paper>
