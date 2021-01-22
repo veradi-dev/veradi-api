@@ -5,43 +5,67 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import clsx from 'clsx';
 import Link from '@material-ui/core/Link';
-import InputLabel from '@material-ui/core/InputLabel';
 import { makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
+import { DataGrid } from '@material-ui/data-grid';
 import Title from '../Title';
 import axios from 'axios';
-import TextField from '@material-ui/core/TextField';
-import Select from '@material-ui/core/Select';
-import FormControl from '@material-ui/core/FormControl';
 import { connect } from "react-redux";
 import './Workhour.css';
-function createData(id, title, name, date) {
-  return {id, title, name, date};
+import Findyearmon from './../../../components/Findyearmon';
+import Workhourtable from './../../../components/Workhourtable';
+
+// const columns = [
+//   { field: 'date', headerName: '날짜', width: 100 },
+//   { field: 'starttime', headerName: '출근시간', width: 110 },
+//   { field: 'endtime', headerName: '퇴근시간', width: 110 },
+//   { field: 'status',headerName: '상태',type: 'number',width: 100,},
+// ];
+
+// const rows = 
+// // [
+// // ];
+
+function createData(id, date, starttime, endtime, status) {
+  return { id, date, starttime, endtime, status };
 }
 
-const rows = [
-  createData('12/1', '15:30', '16:30'),
-  createData('12/2', '12:30', '16:30'),
-  createData('12/3', '13:30', '16:30'),
-  createData('12/4', '14:30', '16:30'),
+ const rows = [
+  createData('1', '12/1', '15:30', '16:30','1'),
+  createData('2', '12/2', '12:30', '16:30','1'),
+  createData('3', '12/3', '13:30', '16:30','2'),
+  createData('4', '12/4', '14:30', '16:30','3'),
+  createData('5', '12/1', '15:30', '16:30','2'),
+  createData('6', '12/2', '12:30', '16:30','1'),
+  createData('7', '12/3', '13:30', '16:30','1'),
+  createData('8', '12/4', '14:30', '16:30','1')
+ ];
+const headCells = [
+  { id: 'date', numeric: false, disablePadding: true, label: '날짜' },
+  { id: 'starttime', numeric: false, disablePadding: false, label: '출근시간' },
+  { id: 'endtime', numeric: false, disablePadding: false, label: '퇴근시간' },
+  { id: 'status', numeric: true, disablePadding: false, label: '상태' },
 ];
 
-const monthworkhour=
-  {
-    "avg_per_date": 720, // 단위는 초(seconds)
-    "avg_per_person": 10800 // 단위는 초(seconds)
-  }
-  
-const secondtohour=(seconds)=> {
-  let hour = parseInt(seconds/3600);
-  let min = parseInt((seconds%3600)/60);
-  let sec = seconds%60;
-  return hour+"시간"+min+"분"
-  }
+
+// function createData(name, calories, fat, carbs, protein) {
+//   return { name, calories, fat, carbs, protein };
+// }
+
+// const rows = [
+//   createData('Cupcake', 305, 3.7, 67, 4.3),
+//   createData('Donut', 452, 25.0, 51, 4.9),
+//   createData('Eclair', 262, 16.0, 24, 6.0),
+//   createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
+//   createData('Gingerbread', 356, 16.0, 49, 3.9),
+//   createData('Honeycomb', 408, 3.2, 87, 6.5),
+//   createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
+//   createData('Jelly Bean', 375, 0.0, 94, 0.0),
+//   createData('KitKat', 518, 26.0, 65, 7.0),
+//   createData('Lollipop', 392, 0.2, 98, 0.0),
+//   createData('Marshmallow', 318, 0, 81, 2.0),
+//   createData('Nougat', 360, 19.0, 9, 37.0),
+//   createData('Oreo', 437, 18.0, 63, 4.0),
+// ];
 const Workhour = ({user}) => {
   const [Workhours, setWorkhours] = useState([]);
 
@@ -93,16 +117,15 @@ const Workhour = ({user}) => {
       }));
       const classes = useStyles();
       const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-      const [state, setState] = React.useState({
+      const [date, setdate] = React.useState({
         year: '2020',
         month: '1',
       });
-      const [personresult, setpersonresult] = React.useState(false);
-      const [result, setresult] = React.useState(false);
+      const [personalresult, setpersonalresult] = React.useState(false);
       const searchavg = (e) =>{
         e.preventDefault();
-        console.log(state);
-        setresult(true);
+        console.log(date);
+        setpersonalresult(true);
       }
       const searchteamperson = (e) =>{
         e.preventDefault();
@@ -114,85 +137,12 @@ const Workhour = ({user}) => {
 		settext(e.target.value);
 	  };
 
-      const handleChange = (event) => {
-        const name = event.target.name;
-        setState({
-          ...state,
-          [name]: event.target.value,
-        });
-      };
     return (
     <Grid container spacing={3}>
-        <Grid item xs={12} md={4} lg={4}>
+        <Grid item xs={12} md={6} lg={6}>
           <Paper className={classes.paper}>
                 <React.Fragment>
             <Title>{user.last_name+user.first_name}님의 근무시간</Title>
-            <Table size="small">
-                <TableHead>
-                <TableRow>
-                    <TableCell align="center">날짜</TableCell>
-                    <TableCell align="center">출근시간</TableCell>
-                    <TableCell align="center">퇴근시간</TableCell>
-                </TableRow>
-                </TableHead>
-                <TableBody>
-                {rows.map((row) => (
-                    <TableRow key={row.id}>
-                    <TableCell align="center">{row.id}</TableCell>
-                    <TableCell align="center">{row.title}</TableCell>
-                    <TableCell align="center">{row.name}</TableCell>
-                    </TableRow>
-                ))}
-                </TableBody>
-            </Table>
-            </React.Fragment>
-          </Paper>
-        </Grid>
-        <Grid item  xs={12} md={4} lg={4}>
-          <Paper className={classes.paper}>
-                <React.Fragment>
-            <Title>{user.team} 팀원 근무시간</Title>
-            
-        <span className="searchbtn">
-        <input className="commentinput" value={text} onChange={onChange} placeholder="팀원 이름을 입력하세요">
-				</input>
-        <Button onClick={searchteamperson} color="primary" variant="contained">검색</Button>
-        </span>
-
-        {personresult ?
-            <div>
-              <Typography
-            color="textSecondary"
-            variant="h6"
-          >
-            조은학님
-          </Typography>
-            <Table size="small">
-                <TableHead>
-                <TableRow>
-                    <TableCell align="center">날짜</TableCell>
-                    <TableCell align="center">출근시간</TableCell>
-                    <TableCell align="center">퇴근시간</TableCell>
-                </TableRow>
-                </TableHead>
-                <TableBody>
-                {rows.map((row) => (
-                    <TableRow key={row.id}>
-                    <TableCell align="center">{row.id}</TableCell>
-                    <TableCell align="center">{row.title}</TableCell>
-                    <TableCell align="center">{row.name}</TableCell>
-                    </TableRow>
-                ))}
-                </TableBody>
-            </Table>
-          </div> : <div></div> }
-            </React.Fragment>
-          </Paper>
-        </Grid>
-        <Grid item xs={12} md={4} lg={4}>
-          <Paper className={classes.paper}>
-                <React.Fragment>
-            <Title>{user.team} 평균 근무시간</Title>
             <Grid
               container
               direction="row"
@@ -200,81 +150,25 @@ const Workhour = ({user}) => {
               alignItems="center"
             >
             <Grid>
-            <FormControl variant="outlined" className={classes.formControl}>
-        <InputLabel htmlFor="outlined-year-native-simple">년도</InputLabel>
-        <Select
-          native
-          value={state.year}
-          onChange={handleChange}
-          label="year"
-          inputProps={{
-            name: 'year',
-            id: 'outlined-year-native-simple',
-          }} >
-          <option value={2020}>2020</option>
-          <option value={2021}>2021</option>
-          <option value={2022}>2022</option>
-        </Select>
-      </FormControl>
-      <FormControl variant="outlined" className={classes.formControl}>
-        <InputLabel htmlFor="name-native-error">월</InputLabel>
-        <Select
-          native
-          value={state.month}
-          onChange={handleChange}
-          label="month"
-          inputProps={{
-            name: 'month',
-            id: 'outlined-age-native-simple',
-          }}
-        >
-          <option value={1}>1월</option>
-          <option value={2}>2월</option>
-          <option value={3}>3월</option>
-          <option value={4}>4월</option>
-          <option value={5}>5월</option>
-          <option value={6}>6월</option>
-          <option value={7}>7월</option>
-          <option value={8}>8월</option>
-          <option value={9}>9월</option>
-          <option value={10}>10월</option>
-          <option value={11}>11월</option>
-          <option value={12}>12월</option>
-          </Select>
-      </FormControl>
+            <Findyearmon date={date} setdate={setdate}></Findyearmon>
             </Grid>
             <Grid>
             <Button onClick={searchavg} color="primary" variant="contained">검색</Button>
             </Grid>
             </Grid>
-            {result ?
-            <div>
-            <Typography
-            color="textSecondary"
-            variant="h6"
-          >
-            {user.team} 각 개인의 근무시간의 총합의 평균
-          </Typography>
-          <Typography
-            color="textPrimary"
-            variant="h5"
-          >
-            {secondtohour(monthworkhour.avg_per_person)}
-          </Typography>
-          
-          <Typography
-            color="textSecondary"
-            variant="h6"
-          >
-            {user.team} 일별 평균
-          </Typography>
-          <Typography
-            color="textPrimary"
-            variant="h5"
-          >
-            {secondtohour(monthworkhour.avg_per_date)}
-          </Typography>
-          </div> : <div></div> }
+            {personalresult ? 
+            <Workhourtable rows={rows} headCells={headCells}></Workhourtable>
+            : <div></div> }
+            </React.Fragment>
+          </Paper>
+        </Grid>
+        <Grid item  xs={12} md={6} lg={6}>
+          <Paper className={classes.paper}>
+                <React.Fragment>
+            <Title>이상한 결과</Title>
+            {personalresult ? 
+            <Workhourtable rows={rows} headCells={headCells}></Workhourtable>
+            : <div></div> }
             </React.Fragment>
           </Paper>
         </Grid>
