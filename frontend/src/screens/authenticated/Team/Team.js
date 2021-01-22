@@ -11,6 +11,8 @@ import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
+import Teamleadertable from './Teamleadertable';
+import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
 import Title from '../Title';
 import axios from 'axios';
@@ -18,7 +20,7 @@ import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
 import { connect } from "react-redux";
-import './Workhour.css';
+import './Team.css';
 
 const Team = ({user}) => {
   const [Workhours, setWorkhours] = useState([]);
@@ -49,20 +51,11 @@ const Team = ({user}) => {
 			});
 	}, []);*/
 
-  function createData(id, title, name, date) {
-    return {id, title, name, date};
-  }
-  
-  const rows = [
-    createData('12/1', '15:30', '16:30'),
-    createData('12/2', '12:30', '16:30'),
-    createData('12/3', '13:30', '16:30'),
-    createData('12/4', '14:30', '16:30'),
-  ];
+
   const monthworkhour=
     {
-      "avg_per_date": 720, // 단위는 초(seconds)
-      "avg_per_person": 10800 // 단위는 초(seconds)
+      "avg_per_date": 720, // 단위는 초(seconds)
+      "avg_per_person": 10800 // 단위는 초(seconds)
     }
     
   const secondtohour=(seconds)=> {
@@ -128,24 +121,7 @@ const Team = ({user}) => {
           <Paper className={classes.paper}>
                 <React.Fragment>
             <Title>근무시간 이의제기 목록</Title>
-            <Table size="small">
-                <TableHead>
-                <TableRow>
-                    <TableCell align="center">신청자</TableCell>
-                    <TableCell align="center">이상한 날짜</TableCell>
-                    <TableCell align="center">신청일</TableCell>
-                </TableRow>
-                </TableHead>
-                <TableBody>
-                {rows.map((row) => (
-                    <TableRow key={row.id}>
-                    <TableCell align="center">{row.id}</TableCell>
-                    <TableCell align="center">{row.title}</TableCell>
-                    <TableCell align="center">{row.name}</TableCell>
-                    </TableRow>
-                ))}
-                </TableBody>
-            </Table>
+            <Teamleadertable></Teamleadertable>
             </React.Fragment>
           </Paper>
         </Grid>

@@ -179,7 +179,7 @@ const EnhancedTableToolbar = (props) => {
     id="datetime-local"
     label="출근시간"
     type="datetime-local"
-    defaultValue="2017-05-24T10:30"
+    defaultValue={new Date().getDate()+"-"+(new Date().getMonth()+1)+"-"+new Date().getFullYear()}
     className={classes.textField}
     InputLabelProps={{
       shrink: true,
@@ -191,7 +191,7 @@ const EnhancedTableToolbar = (props) => {
     id="datetime-local"
     label="퇴근시간"
     type="datetime-local"
-    defaultValue="2017-05-24T10:30"
+    defaultValue={new Date().getDate()+"-"+(new Date().getMonth()+1)+"-"+new Date().getFullYear()}
     className={classes.textField}
     InputLabelProps={{
       shrink: true,
