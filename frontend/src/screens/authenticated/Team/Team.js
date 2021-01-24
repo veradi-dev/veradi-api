@@ -58,6 +58,19 @@ const Team = ({user}) => {
       "avg_per_person": 10800 // 단위는 초(seconds)
     }
     
+    function createData(id, date, starttime, endtime, status) {
+      return { id, date, starttime, endtime, status };
+    }
+    const rows = [
+      createData('1', '12/1', '15:30', '16:30','1'),
+      createData('2', '12/2', '12:30', '16:30','1'),
+      createData('3', '12/3', '13:30', '16:30','2'),
+      createData('4', '12/4', '14:30', '16:30','3'),
+      createData('5', '12/1', '15:30', '16:30','2'),
+      createData('6', '12/2', '12:30', '16:30','1'),
+      createData('7', '12/3', '13:30', '16:30','1'),
+      createData('8', '12/4', '14:30', '16:30','1')
+     ];
   const secondtohour=(seconds)=> {
     let hour = parseInt(seconds/3600);
     let min = parseInt((seconds%3600)/60);
@@ -155,9 +168,9 @@ const Team = ({user}) => {
                 <TableBody>
                 {rows.map((row) => (
                     <TableRow key={row.id}>
-                    <TableCell align="center">{row.id}</TableCell>
-                    <TableCell align="center">{row.title}</TableCell>
-                    <TableCell align="center">{row.name}</TableCell>
+                    <TableCell align="center">{row.date}</TableCell>
+                    <TableCell align="center">{row.starttime}</TableCell>
+                    <TableCell align="center">{row.endtime}</TableCell>
                     </TableRow>
                 ))}
                 </TableBody>
