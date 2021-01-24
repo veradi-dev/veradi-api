@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "webpack --watch",
-    "build": "webpack --mode production ./frontend/src/index.js --output ./frontend/static/frontend/main.js"
+    "build": "webpack --mode production --entry ./frontend/src/index.js --output-path ./frontend/static/frontend/"
   },
   "dependencies": {
     "@material-ui/core": "^4.11.0",
