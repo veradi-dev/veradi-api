@@ -43,18 +43,6 @@ function a11yProps(index) {
   };
 }
 
-function LinkTab(props) {
-  return (
-    <Tab
-      component="a"
-      onClick={(event) => {
-        event.preventDefault();
-      }}
-      {...props}
-    />
-  );
-}
-
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -70,18 +58,30 @@ export default function NoticeLayout({user}) {
     setValue(newValue);
   };
 
+  function LinkTab(props) {
+    return (
+      <Tab
+        component="a"
+        onClick={(event) => {
+          event.preventDefault();
+        }}
+        {...props}
+      />
+    );
+  }
+
   return (
     <div className={classes.root}>
       <AppBar position="static">
-        <Tabs
-          variant="fullWidth"
-          value={value}
-          onChange={handleChange}
-          aria-label="nav tabs example"
-        >
-          <LinkTab label="전체" {...a11yProps(0)} />
-          <LinkTab label={user.team} {...a11yProps(1)} />\
-        </Tabs>
+      <Tabs
+      variant="fullWidth"
+      value={value}
+      onChange={handleChange}
+      aria-label="nav tabs example"
+      >
+      <LinkTab label="전체" {...a11yProps(0)} />
+      <LinkTab label={user.team} {...a11yProps(1)} />\
+      </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
         <Noticelist user={user} label="전체"></Noticelist>
