@@ -14,6 +14,8 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import Button from '@material-ui/core/Button';
+import './Teamleadertable.css';
 
 const useRowStyles = makeStyles({
   root: {
@@ -81,7 +83,16 @@ function Row(props) {
                   ))}
                 </TableBody>
               </Table>
+              <div className="btn-grid">
+              <span className="allowbtn">
+        <Button color="primary" variant="contained">승인</Button>
+        </span>
+        <span className="allowbtn">
+        <Button color="secondary" variant="contained">거절</Button>
+        </span>
+        </div>
             </Box>
+            
           </Collapse>
         </TableCell>
       </TableRow>
