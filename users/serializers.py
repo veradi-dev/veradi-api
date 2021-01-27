@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
+from .models import Team
 
 
 User = get_user_model()
@@ -39,11 +40,15 @@ class UserSerializer(serializers.ModelSerializer):
             "rank",
             "team",
             "position",
-            "email_verified",
-            "approved",
         )
         read_only_fields = (
             "id",
             "username",
             "code",
         )
+
+
+class TeamSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Team
+        fields = ("department", "name")

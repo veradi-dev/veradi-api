@@ -40,8 +40,6 @@ class User(AbstractUser):
     )
     position = models.IntegerField(_("직책"), choices=Position.choices, default=1)
 
-    approved = models.BooleanField(_("가입 승인"), default=False)
-
     # User Model Manager
     objects = managers.CustomUserManager()
 
