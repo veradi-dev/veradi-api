@@ -20,8 +20,18 @@ class Notice(CoreModel):
      - updated_at
     """
 
-    writer = models.ForeignKey(User, verbose_name="글쓴이", related_name='+', on_delete=models.CASCADE)
-    team = models.ForeignKey(Team, verbose_name="영역", related_name='notices', on_delete=models.SET_NULL, null=True, default=None, blank=True)
+    writer = models.ForeignKey(
+        User, verbose_name="글쓴이", related_name="+", on_delete=models.CASCADE
+    )
+    team = models.ForeignKey(
+        Team,
+        verbose_name="영역",
+        related_name="notices",
+        on_delete=models.SET_NULL,
+        null=True,
+        default=None,
+        blank=True,
+    )
     title = models.CharField("제목", max_length=300)
     contents = models.CharField("내용", max_length=5000)
 
