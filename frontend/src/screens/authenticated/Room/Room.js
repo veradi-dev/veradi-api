@@ -14,6 +14,15 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
+import FormLabel from '@material-ui/core/FormLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import axios from "axios";
+import { connect } from "react-redux";
+import Position from './../../../components/Position';
 const initialState = {
   times: [
     {id:0, time:"00:00" ,active:false, team:null, booked:false},
@@ -113,44 +122,84 @@ function reducer(state, action) {
   }
 }
 
-const Room = () => {
+const Room = ({user}) => {
+  useEffect(() => {
+    axios.get(`/api/v1/conference?year=2021&month=1&day=17`, {'headers':{'Authorization':'Token ' + `${user.token}`}}).then((res) => {
+      setWorkhours(res.data);
+      console.log("asdg",res.data);
+    }).catch((err)=>{
+      const status = err?.response?.status;
+      if (status === undefined) {
+        console.dir("데이터를 불러오던 중 예기치 못한 예외가 발생하였습니다.\n" + JSON.stringify(err));
+      }
+      else if (status === 400) {
+        console.dir("400에러");
+      }
+      else if (status === 401) {
+        console.dir("401에러");
+      }
+      else if (status === 500) {
+        console.dir("내부 서버 오류입니다. 잠시만 기다려주세요.");
+      }
+      });
+  }, []);
+
+
+  const [reserveresult, setreserveresult]=useState(false);
   const [morningstate, setmorning] = React.useState({
     ismorning: true,
   });
+  const [room, setroom] = React.useState('room1');
   const [state, dispatch] = useReducer(reducer, initialState);
   const { times } = state;
   const onToggle = useCallback(id => {
     dispatch({type: 'TOGGLE',id});
   }, []);
-
+  const [value, onChange] = useState(new Date());
+  const handleRoom = (event) => {
+    setroom(event.target.value);
+  };
   const handleChange = (event) => {
     setmorning({ ...morningstate, [event.target.name]: event.target.checked });
-    console.log(morningstate);
   };
+  
     const useStyles = makeStyles((theme) => ({
         paper: {
           padding: theme.spacing(2),
-          display: 'flex',
           overflow: 'auto',
           flexDirection: 'column',
         },
         fixedHeight: {
-          height: 400,
+          height: 500,
         },
+        
       }));
       const classes = useStyles();
       const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-      const [value, onChange] = useState(new Date());
-      console.log(value);
+      //console.log(value);
       const getreservation = (value) => {
         console.log(value);
             };
     
     return (
     <Grid container spacing={3}>
+      {Position(user)>1 ? 
+          <React.Fragment>
         <Grid item xs={12} md={6} lg={6}>
               <Paper className={fixedHeightPaper}>
+              <span className="cancelbtn">
+                <Button variant="contained" color="primary" onClick={() => alert("예약되었습니다!")}>
+                예약취소하기
+              </Button>
+              </span>
               <Title>회의실 예약</Title>
+              <FormControl component="fieldset">
+                <FormLabel component="legend">회의실</FormLabel>
+                <RadioGroup aria-label="room" name="room" value={room} onChange={handleRoom}>
+                  <FormControlLabel value="room1" control={<Radio color="primary" />} label="회의실" />
+                  <FormControlLabel value="room2" control={<Radio color="primary"/>} label="탕비실" />
+                </RadioGroup>
+              </FormControl>
               <Box
                   alignItems="center"
                   display="flex"
@@ -185,10 +234,13 @@ const Room = () => {
                 >
     <TimeBtn times={times.slice(24,48)} onToggle={onToggle}></TimeBtn>
     <div>
+    </div>
+    <span className="reservebtn">
     <Button variant="contained" color="primary" onClick={() => alert("예약되었습니다!")}>
       예약하기
     </Button>
-    </div>
+    </span>
+    
   </Box>: <Box
                   alignItems="center"
                   display="flex"
@@ -198,16 +250,44 @@ const Room = () => {
                 >
       <TimeBtn times={times.slice(0,24)} onToggle={onToggle}></TimeBtn>
       <div>
+      </div>
+        <span className="reservebtn">
       <Button variant="contained" color="primary" onClick={() => alert("예약되었습니다!")}>
       예약하기
     </Button>
-      </div>
+    </span>
+      
     </Box>
     }
               </Paper>
             </Grid>
+            </React.Fragment>:<Grid item xs={12}>
+      <Paper className={classes.paper}>
+        타스크장 이상만 회의실을 예약할 수 있습니다.
+      </Paper>
+    </Grid>
+}
       </Grid>
     );
   };
+  const mapStateToProps = (state) => ({
+    user: state.user,
+  });
+  export default connect(mapStateToProps)(Room);
+
+
+  /*
   
-  export default Room;
+        <FormControl required component="fieldset" className={classes.formControl}>
+        <FormLabel component="legend">장소는 한 곳만 골라주세요</FormLabel>
+        <FormGroup>
+          <FormControlLabel
+            control={<Checkbox checked={room1} color="primary" onChange={handleRoom} name="room1" />}
+            label="회의실"
+          />
+          <FormControlLabel
+            control={<Checkbox checked={room2} color="primary" onChange={handleRoom} name="room2" />}
+            label="탕비실"
+          />
+        </FormGroup>
+      </FormControl>*/

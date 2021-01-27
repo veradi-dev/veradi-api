@@ -33,6 +33,7 @@ class EditorComponent extends Component{
 
     render(){
         const { value, onChange } = this.props;
+        console.log(value);
         return(
             <div style={{height: "650px"}}>
                 <ReactQuill 
@@ -45,5 +46,6 @@ class EditorComponent extends Component{
             </div>
         )
     }
+    
 }
 export default EditorComponent
