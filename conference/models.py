@@ -39,7 +39,7 @@ class Reservation(CoreModel):
         return f"{hour}:{min*30}"
 
     def __str__(self):
-        return f"{self.proposer.get_team_name()}팀 {self.date} {self.get_start_time()}"
+        return f"{self.proposer.get_team_name()} {self.date} {self.get_start_time()}"
 
     class Meta:
-        unique_together = ["date", "start_time"]
+        unique_together = ["room", "date", "start_time"]

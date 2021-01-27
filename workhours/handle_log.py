@@ -78,6 +78,7 @@ def generate_workhours(user):
     # 사용자의 지금까지 만들어진 Workhour 중 가장 최근의 객체를 가져온다.
     from .models import EnterLog, WorkHour
 
+    workhours = []
     try:
         latest_workhour = user.workhours.get_queryset().latest("created_at")
     except WorkHour.DoesNotExist:
@@ -115,6 +116,9 @@ def generate_workhours(user):
         # if 문이 끝난 후, latest_enterlog 객체를 업데이트 한다.
         if six_hour_later(latest_enterlog, enter_log) or latest_enterlog.mode == 2:
             latest_workhour = WorkHour.objects.create(user=user)
+            workhours.append(latest_workhour)
         enter_log.workhour = latest_workhour
         enter_log.save()
         latest_enterlog = enter_log
+
+    return workhours

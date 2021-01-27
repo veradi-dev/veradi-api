@@ -31,6 +31,16 @@ class WorkHourViewset(viewsets.ModelViewSet):
             data = {"message": "해당 유저가 없습니다."}
             return Response(status=status.HTTP_400_BAD_REQUEST, data=data)
 
+        # year를 가져온다. year는 2021 이상 의 정수여야 한다. year가 없거나 2021 이상에 속하지 않는 경우 400
+        year = request.GET.get("year")
+        try:
+            year = int(year)
+            if not 2021 <= year:
+                raise ValueError
+        except (ValueError, TypeError) as e:
+            data = {"message": "올바르지 않은 년(Year)입니다."}
+            return Response(status=status.HTTP_400_BAD_REQUEST, data=data)
+
         # month를 가져온다. month는 1~12 의 정수여야 한다. month가 없거나 1~12에 속하지 않는 경우 400
         month = request.GET.get("month")
         try:
@@ -49,6 +59,7 @@ class WorkHourViewset(viewsets.ModelViewSet):
             workhour
             for workhour in user.workhours.get_queryset()
             if workhour.start.date().month == month
+            and workhour.start.date().year == year
         ]
         serializer = self.get_serializer(workhours, many=True)
         return Response(status=status.HTTP_200_OK, data=serializer.data)
