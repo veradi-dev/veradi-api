@@ -69,7 +69,7 @@ const headCells = [
 const Workhour = ({user}) => {
   const [Workhours, setWorkhours] = useState([]);
 
-  /*useEffect(() => {
+  useEffect(() => {
     // console.log(user.token);
     // const headers = {
     //   Authorization: 'Token bee2aa204fa6f7cceaea15c1074eb86fb0e14d6d3a38955d61ffd75c258bf5e6',
@@ -77,7 +77,7 @@ const Workhour = ({user}) => {
     //   }
     axios.get(`/api/v1/workhours?user=1&month=1`, {'headers':{'Authorization':'Token ' + `${user.token}`}}).then((res) => {
       setWorkhours(res.data);
-      console.log(res.data);
+      console.log("asdg",res.data);
     }).catch((err)=>{
 			const status = err?.response?.status;
 			if (status === undefined) {
@@ -93,7 +93,7 @@ const Workhour = ({user}) => {
 				console.dir("내부 서버 오류입니다. 잠시만 기다려주세요.");
 			}
 			});
-	}, []);*/
+	}, []);
 
     const useStyles = makeStyles((theme) => ({
         paper: {
@@ -127,16 +127,6 @@ const Workhour = ({user}) => {
         console.log(date);
         setpersonalresult(true);
       }
-      const searchteamperson = (e) =>{
-        e.preventDefault();
-        console.log(state);
-        setpersonresult(true);
-      }
-      const [text, settext] = useState('');
-	  const onChange = (e) => {
-		settext(e.target.value);
-	  };
-
     return (
     <Grid container spacing={3}>
         <Grid item xs={12} md={6} lg={6}>

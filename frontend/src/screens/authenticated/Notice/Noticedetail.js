@@ -5,6 +5,8 @@ import Typography from '@material-ui/core/Typography';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
+import Button from '@material-ui/core/Button';
+import './Noticedetail.css';
 const Noticedetail = () => {
     const useStyles = makeStyles((theme) => ({
         paper: {
@@ -45,7 +47,13 @@ const Noticedetail = () => {
         <Typography align="left" color="inherit" variant="body1" component="div">
         body2. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur unde suscipit, quam beatae rerum inventore consectetur, neque doloribus, cupiditate numquam dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam.
         </Typography>
+        <div className="btn-grid">
+        <Button color="primary" variant="contained">수정하기</Button>
+        <Button color="primary" variant="contained">삭제하기</Button>
+        </div>
           </Paper>
+
+          
         </Grid>
       </Grid>
     );

@@ -21,6 +21,8 @@ import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
 import { connect } from "react-redux";
 import './Team.css';
+import Position from './../../../components/Position';
+import Findyearmon from './../../../components/Findyearmon';
 
 const Team = ({user}) => {
   const [Workhours, setWorkhours] = useState([]);
@@ -100,7 +102,7 @@ const Team = ({user}) => {
       }));
       const classes = useStyles();
       const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-      const [state, setState] = React.useState({
+      const [date, setdate] = React.useState({
         year: '2020',
         month: '1',
       });
@@ -129,146 +131,114 @@ const Team = ({user}) => {
         });
       };
     return (
-    <Grid container spacing={3}>
-        <Grid item xs={12} md={4} lg={4}>
-          <Paper className={classes.paper}>
-                <React.Fragment>
-            <Title>근무시간 이의제기 목록</Title>
-            <Teamleadertable></Teamleadertable>
-            </React.Fragment>
-          </Paper>
-        </Grid>
-        <Grid item  xs={12} md={4} lg={4}>
-          <Paper className={classes.paper}>
-                <React.Fragment>
-            <Title>{user.team} 팀원 근무시간</Title>
-            
-        <span className="searchbtn">
-        <input className="commentinput" value={text} onChange={onChange} placeholder="팀원 이름을 입력하세요">
-				</input>
-        <Button onClick={searchteamperson} color="primary" variant="contained">검색</Button>
-        </span>
-
-        {personresult ?
-            <div>
-              <Typography
-            color="textSecondary"
-            variant="h6"
-          >
-            조은학님
-          </Typography>
-            <Table size="small">
-                <TableHead>
-                <TableRow>
-                    <TableCell align="center">날짜</TableCell>
-                    <TableCell align="center">출근시간</TableCell>
-                    <TableCell align="center">퇴근시간</TableCell>
-                </TableRow>
-                </TableHead>
-                <TableBody>
-                {rows.map((row) => (
-                    <TableRow key={row.id}>
-                    <TableCell align="center">{row.date}</TableCell>
-                    <TableCell align="center">{row.starttime}</TableCell>
-                    <TableCell align="center">{row.endtime}</TableCell>
-                    </TableRow>
-                ))}
-                </TableBody>
-            </Table>
-          </div> : <div></div> }
-            </React.Fragment>
-          </Paper>
-        </Grid>
-        <Grid item xs={12} md={4} lg={4}>
-          <Paper className={classes.paper}>
-                <React.Fragment>
-            <Title>{user.team} 평균 근무시간</Title>
-            <Grid
-              container
-              direction="row"
-              justify="space-evenly"
-              alignItems="center"
-            >
-            <Grid>
-            <FormControl variant="outlined" className={classes.formControl}>
-        <InputLabel htmlFor="outlined-year-native-simple">년도</InputLabel>
-        <Select
-          native
-          value={state.year}
-          onChange={handleChange}
-          label="year"
-          inputProps={{
-            name: 'year',
-            id: 'outlined-year-native-simple',
-          }} >
-          <option value={2020}>2020</option>
-          <option value={2021}>2021</option>
-          <option value={2022}>2022</option>
-        </Select>
-      </FormControl>
-      <FormControl variant="outlined" className={classes.formControl}>
-        <InputLabel htmlFor="name-native-error">월</InputLabel>
-        <Select
-          native
-          value={state.month}
-          onChange={handleChange}
-          label="month"
-          inputProps={{
-            name: 'month',
-            id: 'outlined-age-native-simple',
-          }}
-        >
-          <option value={1}>1월</option>
-          <option value={2}>2월</option>
-          <option value={3}>3월</option>
-          <option value={4}>4월</option>
-          <option value={5}>5월</option>
-          <option value={6}>6월</option>
-          <option value={7}>7월</option>
-          <option value={8}>8월</option>
-          <option value={9}>9월</option>
-          <option value={10}>10월</option>
-          <option value={11}>11월</option>
-          <option value={12}>12월</option>
-          </Select>
-      </FormControl>
-            </Grid>
-            <Grid>
-            <Button onClick={searchavg} color="primary" variant="contained">검색</Button>
-            </Grid>
-            </Grid>
-            {result ?
-            <div>
-            <Typography
-            color="textSecondary"
-            variant="h6"
-          >
-            {user.team} 각 개인의 근무시간의 총합의 평균
-          </Typography>
-          <Typography
-            color="textPrimary"
-            variant="h5"
-          >
-            {secondtohour(monthworkhour.avg_per_person)}
-          </Typography>
-          
-          <Typography
-            color="textSecondary"
-            variant="h6"
-          >
-            {user.team} 일별 평균
-          </Typography>
-          <Typography
-            color="textPrimary"
-            variant="h5"
-          >
-            {secondtohour(monthworkhour.avg_per_date)}
-          </Typography>
-          </div> : <div></div> }
-            </React.Fragment>
-          </Paper>
-        </Grid>
+        <Grid container spacing={3}>
+          {Position(user)>2 ? 
+          <React.Fragment>
+      <Grid item xs={12} md={4} lg={4}>
+        <Paper className={classes.paper}>
+              <React.Fragment>
+          <Title>근무시간 이의제기 목록</Title>
+          <Teamleadertable></Teamleadertable>
+          </React.Fragment>
+        </Paper>
       </Grid>
+      <Grid item  xs={12} md={4} lg={4}>
+        <Paper className={classes.paper}>
+              <React.Fragment>
+          <Title>{user.team} 팀원 근무시간</Title>
+          
+      <span className="searchbtn">
+      <input className="commentinput" value={text} onChange={onChange} placeholder="팀원 이름을 입력하세요">
+      </input>
+      <Button onClick={searchteamperson} color="primary" variant="contained">검색</Button>
+      </span>
+
+      {personresult ?
+          <div>
+            <Typography
+          color="textSecondary"
+          variant="h6"
+        >
+          조은학님
+        </Typography>
+          <Table size="small">
+              <TableHead>
+              <TableRow>
+                  <TableCell align="center">날짜</TableCell>
+                  <TableCell align="center">출근시간</TableCell>
+                  <TableCell align="center">퇴근시간</TableCell>
+              </TableRow>
+              </TableHead>
+              <TableBody>
+              {rows.map((row) => (
+                  <TableRow key={row.id}>
+                  <TableCell align="center">{row.date}</TableCell>
+                  <TableCell align="center">{row.starttime}</TableCell>
+                  <TableCell align="center">{row.endtime}</TableCell>
+                  </TableRow>
+              ))}
+              </TableBody>
+          </Table>
+        </div> : <div></div> }
+          </React.Fragment>
+        </Paper>
+      </Grid>
+      <Grid item xs={12} md={4} lg={4}>
+        <Paper className={classes.paper}>
+              <React.Fragment>
+          <Title>{user.team} 평균 근무시간</Title>
+          <Grid
+            container
+            direction="row"
+            justify="space-evenly"
+            alignItems="center"
+          >
+          <Grid>
+          <Findyearmon date={date} setdate={setdate}></Findyearmon>
+          </Grid>
+          <Grid>
+          <Button onClick={searchavg} color="primary" variant="contained">검색</Button>
+          </Grid>
+          </Grid>
+          {result ?
+          <div>
+          <Typography
+          color="textSecondary"
+          variant="h6"
+        >
+          {user.team} 각 개인의 근무시간의 총합의 평균
+        </Typography>
+        <Typography
+          color="textPrimary"
+          variant="h5"
+        >
+          {secondtohour(monthworkhour.avg_per_person)}
+        </Typography>
+        
+        <Typography
+          color="textSecondary"
+          variant="h6"
+        >
+          {user.team} 일별 평균
+        </Typography>
+        <Typography
+          color="textPrimary"
+          variant="h5"
+        >
+          {secondtohour(monthworkhour.avg_per_date)}
+        </Typography>
+        </div> : <div></div> }
+          </React.Fragment>
+        </Paper>
+      </Grid> </React.Fragment>:       
+       <Grid item xs={12}>
+      <Paper className={classes.paper}>
+        팀장 이상만 관리할 수 있는 페이지입니다.
+      </Paper>
+    </Grid>}
+    </Grid>  
+
+    
     );
   };
   
