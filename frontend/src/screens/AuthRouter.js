@@ -3,7 +3,6 @@ import { HashRouter as Router, Route, Switch } from "react-router-dom";
 import Home from "./authenticated/Home/Home";
 import Gate from "./unauthenticated/Gate";
 import Signup from "./unauthenticated/Signup";
-
 export default () => {
   return (
     <Router>

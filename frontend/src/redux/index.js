@@ -12,6 +12,8 @@ import {
 import storage from "redux-persist/lib/storage"; // defaults to localStorage for web
 import rootReducer from "./rootReducer";
 
+import { composeWithDevTools } from 'redux-devtools-extension';
+
 const persistConfig = {
   key: "root",
   storage,
@@ -27,7 +29,7 @@ const store = configureStore({
       ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
     },
   }),
-});
+}, composeWithDevTools());
 let persistor = persistStore(store);
 
 export { store, persistor };

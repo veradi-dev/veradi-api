@@ -16,9 +16,10 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Title from '../Title';
+import { connect } from "react-redux";
 import DirectionsRunIcon from '@material-ui/icons/DirectionsRun';
 import HomeIcon from '@material-ui/icons/Home';
-const Dashboard = () => {
+const Dashboard = ({user}) => {
     const useStyles = makeStyles((theme) => ({
       paper: {
         padding: theme.spacing(2),
@@ -42,11 +43,11 @@ const Dashboard = () => {
         width: 30
       }
     }));
-    const user = {
+    /*const users = {
       //avatar: '/static/images/avatars/avatar_6.png',
       jobTitle: '기술개발부 기술개발팀',
       name: '조은학'
-    };
+    };*/
 
     const workers = [
       {
@@ -75,6 +76,38 @@ const Dashboard = () => {
       },
     ];
 
+
+    function createData(id, title, name, date) {
+      return {id, title, name, date};
+    };
+    
+    const rows = [
+      createData('1', '제목 테스트입니다', '조은학', '20200501'),
+      createData('2', '제목 테스트입니다', '조은학', '20200501'),
+      createData('3', '제목 테스트입니다', '조은학', '20200501'),
+      createData('4', '제목 테스트입니다', '조은학', '20200501'),
+      createData('5', '제목 테스트입니다', '조은학', '20200501'),
+      createData('6', '제목 테스트입니다', '조은학', '20200501'),
+      createData('7', '제목 테스트입니다', '조은학', '20200501'),
+      createData('8', '제목 테스트입니다', '조은학', '20200501'),
+      createData('9', '제목 테스트입니다', '조은학', '20200501'),
+      createData('10', '제목 테스트입니다', '조은학', '20200501'),
+      createData('11', '제목 테스트입니다', '조은학', '20200501'),
+      createData('12', '제목 테스트입니다', '조은학', '20200501'),
+      createData('13', '제목 테스트입니다', '조은학', '20200501'),
+      createData('14', '제목 테스트입니다', '조은학', '20200501'),
+      createData('15', '제목 테스트입니다', '조은학', '20200501'),
+      createData('16', '제목 테스트입니다', '조은학', '20200501'),
+      createData('17', '제목 테스트입니다', '조은학', '20200501'),
+      createData('18', '제목 테스트입니다', '조은학', '20200501'),
+      createData('19', '제목 테스트입니다', '조은학', '20200501'),
+      createData('20', '제목 테스트입니다', '조은학', '20200501'),
+      createData('21', '제목 테스트입니다', '조은학', '20200501'),
+      createData('22', '제목 테스트입니다', '조은학', '20200501'),
+      createData('23', '제목 테스트입니다', '조은학', '20200501'),
+      createData('24', '제목 테스트입니다', '조은학', '20200501'),
+    
+    ];
   //let iconName = `${isAndroid ? "md-" : "ios-"}`;
     const classes = useStyles();
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
@@ -93,20 +126,19 @@ const Dashboard = () => {
                 >
                   <Avatar
                     className={classes.avatar}
-                    src={user.avatar}
                   />
                   <Typography
                     className={classes.name}
                     color="textPrimary"
                     variant="h6"
                   >
-                    {user.name}
+                    {user.last_name+user.first_name}
                   </Typography>
                   <Typography
                     color="textSecondary"
                     variant="h6"
                   >
-                    {user.jobTitle}
+                    {user.team}
                   </Typography>
                 </Box>
               </Paper>
@@ -137,7 +169,7 @@ const Dashboard = () => {
             <Grid item xs={12} md={6} lg={6}>
               <Paper className={fixedHeightPaper}>
               <React.Fragment>
-                <Title>기술개발팀</Title>
+                <Title>{user.team} 근무현황</Title>
                 <Table size="small">
                   <TableHead>
                   </TableHead>
@@ -156,13 +188,41 @@ const Dashboard = () => {
             </Grid>
             <Grid item xs={12}>
               <Paper className={fixedHeightPaper}>
-                <Noticelist />
+              <React.Fragment>
+      <Title>전체 공지사항</Title>
+      <Table className={classes.table} size="small">
+        <TableHead>
+          <TableRow>
+		  	    <TableCell align="center" width="10%">
+            <Typography variant="subtitle2">번호</Typography>
+              </TableCell>
+            <TableCell align="center" width="50%" >제목</TableCell>
+            <TableCell align="center" width="20%" >작성자</TableCell>
+            <TableCell align="center" width="20%" >작성일</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+        {rows.map((row) => (
+            <TableRow key={row.id}>
+              <TableCell align="center" width="10%">{row.id}</TableCell>
+              <TableCell width="50%">{row.title}</TableCell>
+              <TableCell align="center" width="20%">{row.name}</TableCell>
+              <TableCell align="center" width="20%">{row.date}</TableCell>
+            </TableRow>
+             ))}
+        </TableBody>
+      </Table>
+    </React.Fragment>
               </Paper>
             </Grid>
           </Grid>
     );
   };
   
-  export default Dashboard;
+
+  const mapStateToProps = (state) => ({
+    user: state.user,
+  });
+  export default connect(mapStateToProps)(Dashboard);
 
   //<HomeIcon color="secondary" style={{ fontSize: 20 }}/>

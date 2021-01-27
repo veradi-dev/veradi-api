@@ -1,9 +1,10 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-
+import Typography from '@material-ui/core/Typography';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
+import Divider from '@material-ui/core/Divider';
 const Noticedetail = () => {
     const useStyles = makeStyles((theme) => ({
         paper: {
@@ -22,7 +23,28 @@ const Noticedetail = () => {
     <Grid container spacing={3}>
         <Grid item xs={12}>
           <Paper className={classes.paper}>
-          준비중인 페이지입니다.
+          <Grid container spacing={3}>
+          <Grid item xs={2}>
+          <Typography align="center" color="inherit" variant="h5" component="div">
+          제목
+        </Typography>
+        </Grid>
+        <Grid item xs={10}>
+        <Typography align="left" color="inherit" variant="h5" component="div">
+          오늘의 공지사항입니다.
+        </Typography>
+        </Grid>
+        </Grid>
+        <br></br>
+        <Typography align="right" color="inherit" variant="subtitle2" component="div">
+          조은학  2021년 1월 26일
+        </Typography>
+        <Divider />
+        <br></br>
+        <br></br>
+        <Typography align="left" color="inherit" variant="body1" component="div">
+        body2. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur unde suscipit, quam beatae rerum inventore consectetur, neque doloribus, cupiditate numquam dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam.
+        </Typography>
           </Paper>
         </Grid>
       </Grid>
