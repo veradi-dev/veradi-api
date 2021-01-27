@@ -22,6 +22,7 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import axios from "axios";
 import { connect } from "react-redux";
+import Position from './../../../components/Position';
 const initialState = {
   times: [
     {id:0, time:"00:00" ,active:false, team:null, booked:false},
@@ -182,6 +183,8 @@ const Room = ({user}) => {
     
     return (
     <Grid container spacing={3}>
+      {Position(user)>1 ? 
+          <React.Fragment>
         <Grid item xs={12} md={6} lg={6}>
               <Paper className={fixedHeightPaper}>
               <span className="cancelbtn">
@@ -258,6 +261,12 @@ const Room = ({user}) => {
     }
               </Paper>
             </Grid>
+            </React.Fragment>:<Grid item xs={12}>
+      <Paper className={classes.paper}>
+        타스크장 이상만 회의실을 예약할 수 있습니다.
+      </Paper>
+    </Grid>
+}
       </Grid>
     );
   };

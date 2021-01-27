@@ -31,10 +31,14 @@ const Noticedetail = () => {
           제목
         </Typography>
         </Grid>
-        <Grid item xs={10}>
+        <Grid item xs={8}>
         <Typography align="left" color="inherit" variant="h5" component="div">
           오늘의 공지사항입니다.
         </Typography>
+        </Grid>
+        <Grid item xs={2}>
+        <Button color="primary" variant="contained">수정하기</Button>
+        <Button color="primary" variant="contained">삭제하기</Button>
         </Grid>
         </Grid>
         <br></br>
@@ -47,10 +51,7 @@ const Noticedetail = () => {
         <Typography align="left" color="inherit" variant="body1" component="div">
         body2. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur unde suscipit, quam beatae rerum inventore consectetur, neque doloribus, cupiditate numquam dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam.
         </Typography>
-        <div className="btn-grid">
-        <Button color="primary" variant="contained">수정하기</Button>
-        <Button color="primary" variant="contained">삭제하기</Button>
-        </div>
+        
           </Paper>
 
           
