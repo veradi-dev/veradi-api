@@ -233,7 +233,7 @@ const Team = ({user}) => {
       </Grid> </React.Fragment>:       
        <Grid item xs={12}>
       <Paper className={classes.paper}>
-        팀장 이상만 관리할 수 있는 페이지입니다.
+        팀장 이상만 접근할 수 있는 페이지입니다.
       </Paper>
     </Grid>}
     </Grid>  
