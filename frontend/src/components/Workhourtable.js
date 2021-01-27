@@ -282,16 +282,18 @@ export default function EnhancedTable({rows, headCells}) {
   };
 
   const handleClick = (event, id) => {
-    const selectedIndex = selected.indexOf(id);
+    const selectedIndex = selected.indexOf(id);//indexOf() 메서드는 배열에서 지정된 요소를 찾을 수 있는 첫 번째 인덱스를 반환하고 존재하지 않으면 -1을 반환합니다.
     let newSelected = [];
-
-    if (selectedIndex === -1) {
+    //slice() 메서드는 어떤 배열의 begin부터 end까지(end 미포함)에 대한 얕은 복사본을 새로운 배열 객체로 반환합니다
+    // console.log("selectedindex", selectedIndex);
+    // console.log("selected.length", selected.length);
+    if (selectedIndex === -1) {//selected배열에 존재하지 않는다,처음선택한다
       newSelected = newSelected.concat(selected, id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
+    } else if (selectedIndex === 0) {//선택한거를 다시선택???
+      newSelected = newSelected.concat(selected.slice(1));//1부터 끝까지를 반환
+    } else if (selectedIndex === selected.length - 1) {//선택한거를 다시선택???
       newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
+    } else if (selectedIndex > 0) {//
       newSelected = newSelected.concat(
         selected.slice(0, selectedIndex),
         selected.slice(selectedIndex + 1),

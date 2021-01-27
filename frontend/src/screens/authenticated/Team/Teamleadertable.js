@@ -31,7 +31,7 @@ function createData(id, name, strdate, applydate) {
     name,
     strdate,
     applydate,
-    history: [
+    applydetail: [
       { date: '2021-01-05', starttime: '12:30', endtime: '15:30' },
     ],
   };
@@ -72,7 +72,7 @@ function Row(props) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {row.history.map((historyRow) => (
+                  {row.applydetail.map((historyRow) => (
                     <TableRow key={historyRow.date}>
                       <TableCell component="th" scope="row">
                         {historyRow.date}
