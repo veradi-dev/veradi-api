@@ -16,7 +16,6 @@ const Noticecreate = ({match, user}) => {
     const [desc, setDesc] = useState('');
     function onEditorChange(value) {
         setDesc(value);
-        console.log(value);
     }
     const useStyles = makeStyles((theme) => ({
         paper: {
@@ -33,7 +32,7 @@ const Noticecreate = ({match, user}) => {
       const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
       const handlesubmit=(e)=>{
         const data = {
-            "title":"제목1입니다.",
+            "title":title,
             "contents":desc
         };
     axios.post(`/api/v1/notice/`, data, {'headers':{'Authorization':'Token ' + `${user.token}`}})
@@ -60,6 +59,10 @@ const Noticecreate = ({match, user}) => {
         );
 }
 
+const [title, settitle] = useState();
+const onTitleChange =(e)=>{
+    settitle(e.target.value);
+}
     return (
         <div>      
             <Grid container spacing={3}>
@@ -76,6 +79,8 @@ const Noticecreate = ({match, user}) => {
                         shrink: true,
                     }}
                     variant="outlined"
+                    value={title}
+                    onChange={onTitleChange}
                     />
                 <Editor value={desc} onChange={onEditorChange} />
                 <Button component={Link} to={'/Notice'} variant="contained" color="primary" onClick={handlesubmit}>

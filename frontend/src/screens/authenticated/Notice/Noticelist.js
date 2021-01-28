@@ -85,7 +85,7 @@ const Noticelist=({user, label})=> {
 			});
   }, []);
   
-  
+
   const USER_PATH = `/notice/${label}/noticelist`;
   const ROWS_PER_PAGE = 10;
 

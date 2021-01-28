@@ -37,7 +37,6 @@ class UserAdmin(UserAdmin):
                     "last_name",
                     "email",
                     "code",
-                    "approved",
                     "get_department_name",
                     "rank",
                     "team",
