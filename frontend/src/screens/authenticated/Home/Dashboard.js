@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Noticelist from "../Notice/Noticelist";
@@ -15,7 +15,7 @@ import { connect } from "react-redux";
 import DirectionsRunIcon from "@material-ui/icons/DirectionsRun";
 import HomeIcon from "@material-ui/icons/Home";
 import axios from "axios";
-import request, { createHeaders } from "../../../api/base";
+import { get_team_members } from "../../../api/users/team_management";
 
 const Dashboard = ({ user }) => {
   const useStyles = makeStyles(theme => ({
@@ -43,6 +43,11 @@ const Dashboard = ({ user }) => {
   }));
 
   const [teamMembers, setTeamMembers] = useState([]);
+  useEffect(() => {
+    get_team_members(user.token).then(res => {
+      setTeamMembers(res.data);
+    });
+  }, []);
 
   function createData (id, title, name, date) {
     return { id, title, name, date };
@@ -82,14 +87,14 @@ const Dashboard = ({ user }) => {
     classes.paper,
     classes.verysmallfixedHeight
   );
-  useEffect(() => {
-    const headers = createHeaders(user.token);
-    console.log(headers);
-    const res = request("get", "api/v1/workhours/", null, headers, {
-      user: user.id
-    });
-    console.log(res);
-  }, []);
+  // useEffect(() => {
+  //   const headers = createHeaders(user.token);
+  //   console.log(headers);
+  //   const res = request("get", "api/v1/workhours/", null, headers, {
+  //     user: user.id
+  //   });
+  //   console.log(res);
+  // }, []);
 
   return (
     <Grid container spacing={3}>
@@ -141,22 +146,34 @@ const Dashboard = ({ user }) => {
             <Table size='small'>
               <TableHead></TableHead>
               <TableBody>
-                {workers.map(worker => (
-                  <TableRow key={worker.id}>
-                    <TableCell align='center'>
-                      {worker.status === "working" ? (
+                {teamMembers.map(member =>
+                  member.isWorking.complete ? (
+                    <TableRow key={member.id}>
+                      <TableCell align='center'>
+                        <HomeIcon color='secondary' style={{ fontSize: 20 }} />
+                      </TableCell>
+                      <TableCell align='center'>{member.first_name}</TableCell>
+                      <TableCell align='center'>
+                        <Typography>출근중이 아닙니다.</Typography>
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    <TableRow key={member.id}>
+                      <TableCell align='center'>
                         <DirectionsRunIcon
                           color='primary'
                           style={{ fontSize: 20 }}
                         />
-                      ) : (
-                        <HomeIcon color='secondary' style={{ fontSize: 20 }} />
-                      )}
-                    </TableCell>
-                    <TableCell align='center'>{worker.name}</TableCell>
-                    <TableCell align='center'>{worker.starttime}</TableCell>
-                  </TableRow>
-                ))}
+                      </TableCell>
+                      <TableCell align='center'>{member.first_name}</TableCell>
+                      <TableCell align='center'>
+                        <Typography>
+                          {new Date(member.isWorking.start).toLocaleString()}
+                        </Typography>
+                      </TableCell>
+                    </TableRow>
+                  )
+                )}
               </TableBody>
             </Table>
           </React.Fragment>
