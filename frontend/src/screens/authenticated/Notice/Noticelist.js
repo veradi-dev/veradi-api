@@ -13,7 +13,7 @@ import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import {Link, useParams} from 'react-router-dom';
 import Title from '../Title';
-
+import Position from './../../../components/Position';
 
 
 function createData(id, title, name, date) {
@@ -47,11 +47,6 @@ const rows = [
   createData('24', '제목 테스트입니다', '조은학', '20200501'),
 
 ];
-
-function preventDefault(event) {
-  event.preventDefault();
-}
-
 const useStyles = makeStyles((theme) => ({
   seeMore: {
     marginTop: theme.spacing(3),
@@ -76,7 +71,8 @@ const Noticelist=({user, label})=> {
     <React.Fragment>
       <Title>{label} 공지사항</Title>
       <Link to={`/notice/${label}/create`}>
-      <Button>작성하기</Button>
+      {Position(user)>2 ? 
+      <Button>작성하기</Button> : <div></div>}
       </Link>
       <Table className={classes.table} size="small">
       <TableHead>

@@ -20,6 +20,9 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
+import axios from "axios";
+import { connect } from "react-redux";
+import Position from './../../../components/Position';
 const initialState = {
   times: [
     {id:0, time:"00:00" ,active:false, team:null, booked:false},
@@ -119,7 +122,29 @@ function reducer(state, action) {
   }
 }
 
-const Room = () => {
+const Room = ({user}) => {
+  useEffect(() => {
+    axios.get(`/api/v1/conference?year=2021&month=1&day=17`, {'headers':{'Authorization':'Token ' + `${user.token}`}}).then((res) => {
+      setWorkhours(res.data);
+      console.log("asdg",res.data);
+    }).catch((err)=>{
+      const status = err?.response?.status;
+      if (status === undefined) {
+        console.dir("데이터를 불러오던 중 예기치 못한 예외가 발생하였습니다.\n" + JSON.stringify(err));
+      }
+      else if (status === 400) {
+        console.dir("400에러");
+      }
+      else if (status === 401) {
+        console.dir("401에러");
+      }
+      else if (status === 500) {
+        console.dir("내부 서버 오류입니다. 잠시만 기다려주세요.");
+      }
+      });
+  }, []);
+
+
   const [reserveresult, setreserveresult]=useState(false);
   const [morningstate, setmorning] = React.useState({
     ismorning: true,
@@ -158,6 +183,8 @@ const Room = () => {
     
     return (
     <Grid container spacing={3}>
+      {Position(user)>1 ? 
+          <React.Fragment>
         <Grid item xs={12} md={6} lg={6}>
               <Paper className={fixedHeightPaper}>
               <span className="cancelbtn">
@@ -234,11 +261,19 @@ const Room = () => {
     }
               </Paper>
             </Grid>
+            </React.Fragment>:<Grid item xs={12}>
+      <Paper className={classes.paper}>
+        타스크장 이상만 회의실을 예약할 수 있습니다.
+      </Paper>
+    </Grid>
+}
       </Grid>
     );
   };
-  
-  export default Room;
+  const mapStateToProps = (state) => ({
+    user: state.user,
+  });
+  export default connect(mapStateToProps)(Room);
 
 
   /*

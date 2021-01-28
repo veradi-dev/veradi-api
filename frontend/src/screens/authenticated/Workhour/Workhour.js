@@ -46,31 +46,31 @@ const headCells = [
   { id: "status", numeric: true, disablePadding: false, label: "상태" }
 ];
 
-const useStyles = makeStyles(theme => ({
-  paper: {
-    padding: theme.spacing(2),
-    display: "flex",
-    flexDirection: "column"
-  },
-  fixedHeight: {
-    height: 240
-  },
-  seeMore: {
-    marginTop: theme.spacing(3)
-  },
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120
-  },
-  selectEmpty: {
-    marginTop: theme.spacing(2)
-  }
-}));
+
 
 const Workhour = ({ user }) => {
   const [Workhours, setWorkhours] = useState([]);
+  const useStyles = makeStyles(theme => ({
+    paper: {
+      padding: theme.spacing(2),
+      display: "flex",
+      flexDirection: "column"
+    },
+    fixedHeight: {
+      height: 240
+    },
+    seeMore: {
+      marginTop: theme.spacing(3)
+    },
+    formControl: {
+      margin: theme.spacing(1),
+      minWidth: 120
+    },
+    selectEmpty: {
+      marginTop: theme.spacing(2)
+    }
+  }));
   const classes = useStyles();
-
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   const [date, setdate] = React.useState({
     year: "2020",
@@ -92,7 +92,36 @@ const Workhour = ({ user }) => {
     settext(e.target.value);
   };
 
-  return (
+
+  useEffect(() => {
+    // console.log(user.token);
+    // const headers = {
+    //   Authorization: 'Token bee2aa204fa6f7cceaea15c1074eb86fb0e14d6d3a38955d61ffd75c258bf5e6',
+    //   'Content-Type': 'application/json'
+    //   }
+    axios.get(`/api/v1/workhours?user=1&month=1`, {'headers':{'Authorization':'Token ' + `${user.token}`}}).then((res) => {
+      setWorkhours(res.data);
+      console.log("asdg",res.data);
+    }).catch((err)=>{
+			const status = err?.response?.status;
+			if (status === undefined) {
+				console.dir("데이터를 불러오던 중 예기치 못한 예외가 발생하였습니다.\n" + JSON.stringify(err));
+			}
+			else if (status === 400) {
+				console.dir("400에러");
+			}
+			else if (status === 401) {
+				console.dir("401에러");
+			}
+			else if (status === 500) {
+				console.dir("내부 서버 오류입니다. 잠시만 기다려주세요.");
+			}
+			});
+	}, []);
+
+
+
+    return (
     <Grid container spacing={3}>
       <Grid item xs={12} md={6} lg={6}>
         <Paper className={classes.paper}>

@@ -6,8 +6,12 @@ django-dotenv==1.4.2
 django-rest-knox==4.1.0
 django-webpack-loader==0.7.0
 djangorestframework==3.11.1
+numpy==1.19.4
+pandas==1.2.0
 Pillow==7.2.0
+psycopg2-binary==2.8.6
 pycparser==2.20
+python-dateutil==2.8.1
 pytz==2020.1
 six==1.15.0
 sqlparse==0.3.1

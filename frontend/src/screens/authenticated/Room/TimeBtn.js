@@ -50,9 +50,7 @@ const Text = styled.text`
 const Time = React.memo(function User({ time, onToggle }) {
   return (
     <Button time={time} onClick={() => onToggle(time.id)}>
-      <Text>
       {time.booked? time.team : time.time}
-      </Text>
     </Button>
   );
 
