@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
@@ -7,7 +7,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 import './Noticedetail.css';
-const Noticedetail = () => {
+import axios from 'axios';
+import { connect } from "react-redux";
+
+const Noticedetail = ({match}) => {
+  const [data, setdata] = useState([])
     const useStyles = makeStyles((theme) => ({
         paper: {
           padding: theme.spacing(2),
@@ -21,6 +25,28 @@ const Noticedetail = () => {
       }));
       const classes = useStyles();
       const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+
+      
+      useEffect(() => {
+        axios.get(`/api/v1/notice/`).then((res) => {
+          setdata(res.data);
+        }).catch((err)=>{
+          const status = err?.response?.status;
+          if (status === undefined) {
+            console.dir("데이터를 불러오던 중 예기치 못한 예외가 발생하였습니다.\n" + JSON.stringify(err));
+          }
+          else if (status === 400) {
+            console.dir("400에러");
+          }
+          else if (status === 401) {
+            console.dir("401에러");
+          }
+          else if (status === 500) {
+            console.dir("내부 서버 오류입니다. 잠시만 기다려주세요.");
+          }
+          });
+      }, []);
+
     return (
     <Grid container spacing={3}>
         <Grid item xs={12}>
@@ -32,9 +58,8 @@ const Noticedetail = () => {
         </Typography>
         </Grid>
         <Grid item xs={9}>
-        <Typography align="left" color="inherit" variant="h5" component="div">
-          오늘의 공지사항입니다.
-        </Typography>
+          <div>
+          </div>
         </Grid>
         </Grid>
         <br></br>
@@ -59,5 +84,5 @@ const Noticedetail = () => {
       </Grid>
     );
   };
-  
+
   export default Noticedetail;
