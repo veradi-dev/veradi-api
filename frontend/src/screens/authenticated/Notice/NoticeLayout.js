@@ -8,6 +8,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+import {Link} from 'react-router-dom';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -22,7 +23,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box p={3}>
-          <Typography>{children}</Typography>
+          <Typography component={'span'}>{children}</Typography>
         </Box>
       )}
     </div>
@@ -42,18 +43,6 @@ function a11yProps(index) {
   };
 }
 
-function LinkTab(props) {
-  return (
-    <Tab
-      component="a"
-      onClick={(event) => {
-        event.preventDefault();
-      }}
-      {...props}
-    />
-  );
-}
-
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -61,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function NoticeLayout() {
+export default function NoticeLayout({user}) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
@@ -69,25 +58,36 @@ export default function NoticeLayout() {
     setValue(newValue);
   };
 
+  function LinkTab(props) {
+    return (
+      <Tab
+        component="a"
+        onClick={(event) => {
+          event.preventDefault();
+        }}
+        {...props}
+      />
+    );
+  }
+
   return (
     <div className={classes.root}>
       <AppBar position="static">
-        <Tabs
-          variant="fullWidth"
-          value={value}
-          onChange={handleChange}
-          aria-label="nav tabs example"
-        >
-          <LinkTab label="전체" href="/drafts" {...a11yProps(0)} />
-          <LinkTab label="생명과학팀" href="/trash" {...a11yProps(1)} />
-          <LinkTab label="지구과학팀" href="/spam" {...a11yProps(2)} />
-        </Tabs>
+      <Tabs
+      variant="fullWidth"
+      value={value}
+      onChange={handleChange}
+      aria-label="nav tabs example"
+      >
+      <LinkTab label="전체" {...a11yProps(0)} />
+      <LinkTab label={user.team} {...a11yProps(1)} />\
+      </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
+        <Noticelist user={user} label="전체"></Noticelist>
       </TabPanel>
       <TabPanel value={value} index={1}>
-      </TabPanel>
-      <TabPanel value={value} index={2}>
+        <Noticelist user={user} label={user.team}></Noticelist>
       </TabPanel>
     </div>
   );

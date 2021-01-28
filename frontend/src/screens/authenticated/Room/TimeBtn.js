@@ -18,7 +18,7 @@ const Button = styled.button`
 //https://jsramblings.com/how-to-use-media-queries-with-styled-components/
 //https://kiarash-z.github.io/react-modern-calendar-datepicker/docs/responsive-guide
 
-
+//height 지정???
 
 const Text = styled.text`
   font-weight: 300;
@@ -50,9 +50,7 @@ const Text = styled.text`
 const Time = React.memo(function User({ time, onToggle }) {
   return (
     <Button time={time} onClick={() => onToggle(time.id)}>
-      <Text>
       {time.booked? time.team : time.time}
-      </Text>
     </Button>
   );
 

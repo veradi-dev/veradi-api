@@ -8,6 +8,7 @@ import AlertTemplate from "./components/alert/AlertTemplate";
 import App from "./App";
 import './index.css';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+
 // react-alert optional configuration
 const options = {
   // you can also just use 'bottom center'

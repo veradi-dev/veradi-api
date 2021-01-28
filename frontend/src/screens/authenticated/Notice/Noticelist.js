@@ -13,17 +13,15 @@ import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import {Link, useParams} from 'react-router-dom';
 import Title from '../Title';
-// Generate Order Data
+import Position from './../../../components/Position';
+
+
 function createData(id, title, name, date) {
   return {id, title, name, date};
 };
 
-const USER_PATH = "/notice";
-const ROWS_PER_PAGE = 10;
-
-
 const rows = [
-  createData('1', '제목 테스트입니다', '조은학', '20200501'),
+  createData('1', '제목 테스트입니dsaads다', '조은학', '20200501'),
   createData('2', '제목 테스트입니다', '조은학', '20200501'),
   createData('3', '제목 테스트입니다', '조은학', '20200501'),
   createData('4', '제목 테스트입니다', '조은학', '20200501'),
@@ -49,11 +47,6 @@ const rows = [
   createData('24', '제목 테스트입니다', '조은학', '20200501'),
 
 ];
-
-function preventDefault(event) {
-  event.preventDefault();
-}
-
 const useStyles = makeStyles((theme) => ({
   seeMore: {
     marginTop: theme.spacing(3),
@@ -63,21 +56,29 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const handledetail=(e)=>{
+  e.preventDefault();
+
+}
 //https://medium.com/@ankita.singh170190/material-ui-table-with-pagination-component-9f53a3380245
-const Noticelist=({label})=> {
+const Noticelist=({user, label})=> {
+  const USER_PATH = `/notice/${label}/noticelist`;
+  const ROWS_PER_PAGE = 10;
+
   const classes = useStyles();
   const { pageNumber = 1 } = useParams();
   return (
     <React.Fragment>
       <Title>{label} 공지사항</Title>
-      <Link to={`/noticecreate/${label}`}>
-      <Button>작성하기</Button>
+      <Link to={`/notice/${label}/create`}>
+      {Position(user)>2 ? 
+      <Button>작성하기</Button> : <div></div>}
       </Link>
       <Table className={classes.table} size="small">
-        <TableHead>
+      <TableHead>
           <TableRow>
 		  	    <TableCell align="center" width="10%">
-            <Typography variant="subtitle2">번호</Typography>
+            <Typography component={'span'} variant="subtitle2">번호</Typography>
               </TableCell>
             <TableCell align="center" width="50%" >제목</TableCell>
             <TableCell align="center" width="20%" >작성자</TableCell>
@@ -88,8 +89,8 @@ const Noticelist=({label})=> {
         {(ROWS_PER_PAGE > 0 ? rows.slice((Number(pageNumber) - 1) * ROWS_PER_PAGE,(Number(pageNumber) - 1) * ROWS_PER_PAGE + ROWS_PER_PAGE,):rows).map(row => {
           return (
             <TableRow key={row.id}>
-              <TableCell align="center" width="10%">{row.id}</TableCell>
-              <TableCell width="50%">{row.title}</TableCell>
+              <TableCell component={Link} to={`/notice/${label}/${row.id}`} style={{ textDecoration: 'none' }}  align="center" width="10%">{row.id}</TableCell>
+              <TableCell component={Link} to={`/notice/${label}/${row.id}`} style={{ textDecoration: 'none' }}  width="50%">{row.title}</TableCell>
               <TableCell align="center" width="20%">{row.name}</TableCell>
               <TableCell align="center" width="20%">{row.date}</TableCell>
             </TableRow>);})}
@@ -122,6 +123,7 @@ const Noticelist=({label})=> {
             )}
           />
         </Box>
+       
     </React.Fragment>
   );
 }

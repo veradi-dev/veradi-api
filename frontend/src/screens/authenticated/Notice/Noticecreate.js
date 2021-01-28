@@ -46,7 +46,6 @@ const Noticecreate = ({match}) => {
                     variant="outlined"
                     />
                 <Editor value={desc} onChange={onEditorChange} />
-
                 <Button component={Link} to={'/Notice'} variant="contained" color="primary" onClick={() => alert("저장되었습니다!")}>
                 저장하기
                 </Button>
