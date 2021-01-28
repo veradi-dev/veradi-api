@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 from rest_framework import viewsets
@@ -23,10 +24,10 @@ class WorkHourViewset(viewsets.ModelViewSet):
         month=검색하고자 하는 달 (1-12)
         """
         user = request.user
-
+        print(request.GET)
         # target_user 를 가져온다. 가져오지 못한다면 400
         try:
-            target_user = User.objects.get(pk=request.GET.get("user"))
+            target_user = User.objects.get(pk=int(request.GET.get("user")))
         except User.DoesNotExist:
             data = {"message": "해당 유저가 없습니다."}
             return Response(status=status.HTTP_400_BAD_REQUEST, data=data)
@@ -42,7 +43,7 @@ class WorkHourViewset(viewsets.ModelViewSet):
             return Response(status=status.HTTP_400_BAD_REQUEST, data=data)
 
         # month를 가져온다. month는 1~12 의 정수여야 한다. month가 없거나 1~12에 속하지 않는 경우 400
-        month = request.GET.get("month")
+        month = request.GET.get("month", timezone.now().month)
         try:
             month = int(month)
             if not 0 < month < 13:
