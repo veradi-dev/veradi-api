@@ -48,6 +48,36 @@ class UserSerializer(serializers.ModelSerializer):
         )
 
 
+class TeamMemberSerializer(serializers.ModelSerializer):
+    isWorking = serializers.SerializerMethodField()
+
+    def get_isWorking(self, obj):
+        return not obj.workhours.get_queryset().latest("created_at").complete
+
+    class Meta:
+        model = User
+        fields = (
+            "id",
+            "username",
+            "first_name",
+            "last_name",
+            "rank",
+            "team",
+            "position",
+            "isWorking",
+        )
+        read_only_fields = (
+            "id",
+            "username",
+            "first_name",
+            "last_name",
+            "department",
+            "rank",
+            "team",
+            "position",
+        )
+
+
 class TeamSerializer(serializers.ModelSerializer):
     class Meta:
         model = Team

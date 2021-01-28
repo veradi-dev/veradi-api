@@ -10,6 +10,7 @@ const logout = () => (dispatch, getState) => {
   const token = getState().user.token;
   logoutRequest(token).finally(() => {
     dispatch(userActions.logout());
+    dispatch(alertActions.success(`로그아웃 되었습니다.`));
   });
 };
 
