@@ -161,8 +161,9 @@ const Dashboard = ({ user, workhours, getMyWorkhours }) => {
               <TableHead></TableHead>
               <TableBody>
                 {teamMembers.map(member =>
-                  member.isWorking.complete ? (
-                    <TableRow key={member.id}>
+                  (member.isWorking === null || member.isWorking.complete === true ) ? ( 
+        
+                    <TableRow key={member.id}> 
                       <TableCell align='center'>
                         <HomeIcon color='secondary' style={{ fontSize: 20 }} />
                       </TableCell>
@@ -182,7 +183,7 @@ const Dashboard = ({ user, workhours, getMyWorkhours }) => {
                           style={{ fontSize: 20 }}
                         />
                       </TableCell>
-                      <TableCell align='center'>{member.first_name}</TableCell>
+                      <TableCell align='center'>{member.last_name}{member.first_name}</TableCell>
                       <TableCell align='center'>
                         <Typography>
                           {new Date(member.isWorking.start).toLocaleString()}

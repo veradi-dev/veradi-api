@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-
+from workhours.models import WorkHour
 from .models import Team
 
 
@@ -74,10 +74,13 @@ class TeamMemberSerializer(serializers.ModelSerializer):
 
     def get_isWorking(self, obj):
         from workhours.serializers import WorkHourSerializer
-
-        return WorkHourSerializer(
-            obj.workhours.get_queryset().latest("created_at")
-        ).data
+        try:
+            return WorkHourSerializer(
+                obj.workhours.get_queryset().latest("created_at")
+            ).data
+        except WorkHour.DoesNotExist:
+            return None
+        
 
     class Meta:
         model = User
