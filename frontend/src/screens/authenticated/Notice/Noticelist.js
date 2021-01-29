@@ -15,6 +15,8 @@ import {Link, useParams} from 'react-router-dom';
 import Title from '../Title';
 import Position from './../../../components/Position';
 import axios from 'axios';
+import NoticeLayout from './NoticeLayout';
+import { connect } from "react-redux";
 /*
 function createData(id, title, name, date) {
   return {id, title, name, date};
@@ -56,18 +58,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const handledetail=(e)=>{
-  e.preventDefault();
-
-}
 //https://medium.com/@ankita.singh170190/material-ui-table-with-pagination-component-9f53a3380245
-const Noticelist=({user, label})=> {
+const Noticelist=({user, match})=> {
   const [rows, setrows] = useState([]);
-  
+  const [loading, setLoading] = useState(true);
+  if(match.params.team=='전체'){
   useEffect(() => {
     axios.get(`/api/v1/notice/`, {'headers':{'Authorization':'Token ' + `${user.token}`}}).then((res) => {
       setrows(res.data);
-      console.log(res.data);
+      setLoading(false);
     }).catch((err)=>{
 			const status = err?.response?.status;
 			if (status === undefined) {
@@ -84,17 +83,40 @@ const Noticelist=({user, label})=> {
 			}
 			});
   }, []);
-  
-
-  const USER_PATH = `/notice/${label}/noticelist`;
+}
+  else{
+    useEffect(() => {
+      axios.get(`/api/v1/notice?team=${user.team}`).then((res) => {
+        setrows(res.data);
+        setLoading(false);
+      }).catch((err)=>{
+        const status = err?.response?.status;
+        if (status === undefined) {
+          console.dir("데이터를 불러오던 중 예기치 못한 예외가 발생하였습니다.\n" + JSON.stringify(err));
+        }
+        else if (status === 400) {
+          console.dir("400에러");
+        }
+        else if (status === 401) {
+          console.dir("401에러");
+        }
+        else if (status === 500) {
+          console.dir("내부 서버 오류입니다. 잠시만 기다려주세요.");
+        }
+        });
+    }, []);
+  }
+  const USER_PATH = `/notice/${match.params.team}/noticelist`;
   const ROWS_PER_PAGE = 10;
 
   const classes = useStyles();
   const { pageNumber = 1 } = useParams();
   return (
     <React.Fragment>
-      <Title>{label} 공지사항</Title>
-      <Link to={`/notice/${label}/create`}>
+      {loading ? <div> 로딩중입니다.</div>:
+      <React.Fragment>
+      <Title>{match.params.team} 공지사항</Title>
+      <Link to={`/notice/${match.params.team}/create`}>
       {Position(user)>2 ? 
       <Button>작성하기</Button> : <div></div>}
       </Link>
@@ -113,14 +135,13 @@ const Noticelist=({user, label})=> {
         {(ROWS_PER_PAGE > 0 ? rows.slice((Number(pageNumber) - 1) * ROWS_PER_PAGE,(Number(pageNumber) - 1) * ROWS_PER_PAGE + ROWS_PER_PAGE,):rows).map(row => {
           return (
             <TableRow key={row.id}>
-              <TableCell component={Link} to={`/notice/${label}/${row.id}`} style={{ textDecoration: 'none' }}  align="center" width="10%">{row.id}</TableCell>
-              <TableCell component={Link} to={`/notice/${label}/${row.id}`} style={{ textDecoration: 'none' }}  width="50%">{row.title}</TableCell>
+              <TableCell component={Link} to={`/notice/${match.params.team}/${row.id}`} style={{ textDecoration: 'none' }}  align="center" width="10%">{row.id}</TableCell>
+              <TableCell component={Link} to={`/notice/${match.params.team}/${row.id}`} style={{ textDecoration: 'none' }}  width="50%">{row.title}</TableCell>
               <TableCell align="center" width="20%">{row.name}</TableCell>
               <TableCell align="center" width="20%">{row.date}</TableCell>
             </TableRow>);})}
         </TableBody>
       </Table>
-
       <Box
           display="flex"
           justifyContent="flex-end"
@@ -146,10 +167,11 @@ const Noticelist=({user, label})=> {
               />
             )}
           />
-        </Box>
-       
+        </Box></React.Fragment>} 
     </React.Fragment>
   );
 }
-
-export default Noticelist;
+const mapStateToProps = (state) => ({
+  user: state.user,
+});
+export default connect(mapStateToProps)(Noticelist);
