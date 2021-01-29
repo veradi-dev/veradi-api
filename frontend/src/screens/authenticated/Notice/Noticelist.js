@@ -1,5 +1,5 @@
   
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -14,8 +14,8 @@ import Box from '@material-ui/core/Box';
 import {Link, useParams} from 'react-router-dom';
 import Title from '../Title';
 import Position from './../../../components/Position';
-
-
+import axios from 'axios';
+/*
 function createData(id, title, name, date) {
   return {id, title, name, date};
 };
@@ -45,8 +45,8 @@ const rows = [
   createData('22', '제목 테스트입니다', '조은학', '20200501'),
   createData('23', '제목 테스트입니다', '조은학', '20200501'),
   createData('24', '제목 테스트입니다', '조은학', '20200501'),
+];*/
 
-];
 const useStyles = makeStyles((theme) => ({
   seeMore: {
     marginTop: theme.spacing(3),
@@ -62,6 +62,30 @@ const handledetail=(e)=>{
 }
 //https://medium.com/@ankita.singh170190/material-ui-table-with-pagination-component-9f53a3380245
 const Noticelist=({user, label})=> {
+  const [rows, setrows] = useState([]);
+  
+  useEffect(() => {
+    axios.get(`/api/v1/notice/`, {'headers':{'Authorization':'Token ' + `${user.token}`}}).then((res) => {
+      setrows(res.data);
+      console.log(res.data);
+    }).catch((err)=>{
+			const status = err?.response?.status;
+			if (status === undefined) {
+				console.dir("데이터를 불러오던 중 예기치 못한 예외가 발생하였습니다.\n" + JSON.stringify(err));
+			}
+			else if (status === 400) {
+				console.dir("400에러");
+			}
+			else if (status === 401) {
+				console.dir("401에러");
+			}
+			else if (status === 500) {
+				console.dir("내부 서버 오류입니다. 잠시만 기다려주세요.");
+			}
+			});
+  }, []);
+  
+
   const USER_PATH = `/notice/${label}/noticelist`;
   const ROWS_PER_PAGE = 10;
 

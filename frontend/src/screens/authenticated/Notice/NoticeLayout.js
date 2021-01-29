@@ -1,6 +1,5 @@
 import React from 'react';
 import Noticelist from './Noticelist';
-import Noticecreate from './Noticecreate';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
