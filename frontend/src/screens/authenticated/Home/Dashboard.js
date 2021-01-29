@@ -14,10 +14,10 @@ import Title from "../Title";
 import { connect } from "react-redux";
 import DirectionsRunIcon from "@material-ui/icons/DirectionsRun";
 import HomeIcon from "@material-ui/icons/Home";
-import axios from "axios";
 import { get_team_members } from "../../../api/users/team_management";
+import { getMyWorkhours } from "../../../redux/workhours/workhoursThunks";
 
-const Dashboard = ({ user }) => {
+const Dashboard = ({ user, workhours, getMyWorkhours }) => {
   const useStyles = makeStyles(theme => ({
     paper: {
       padding: theme.spacing(2),
@@ -43,11 +43,32 @@ const Dashboard = ({ user }) => {
   }));
 
   const [teamMembers, setTeamMembers] = useState([]);
+  const [myWorkHoursInMonth, setMyWorkHoursInMonth] = useState(0);
+  const [notices, setNotices] = useState([]);
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+
   useEffect(() => {
     get_team_members(user.token).then(res => {
       setTeamMembers(res.data);
     });
+    getMyWorkhours(year, month);
   }, []);
+
+  useEffect(() => {
+    setMyWorkHoursInMonth(
+      workhours
+        .filter(
+          workhour =>
+            workhour.user.id === user.id &&
+            parseInt(workhour.start.slice(0, 4)) === year &&
+            parseInt(workhour.start.slice(5, 7)) === month &&
+            workhour.total !== false
+        )
+        .reduce((total, workhour) => total + workhour.total, 0)
+    );
+  }, [workhours]);
 
   function createData (id, title, name, date) {
     return { id, title, name, date };
@@ -87,14 +108,6 @@ const Dashboard = ({ user }) => {
     classes.paper,
     classes.verysmallfixedHeight
   );
-  // useEffect(() => {
-  //   const headers = createHeaders(user.token);
-  //   console.log(headers);
-  //   const res = request("get", "api/v1/workhours/", null, headers, {
-  //     user: user.id
-  //   });
-  //   console.log(res);
-  // }, []);
 
   return (
     <Grid container spacing={3}>
@@ -132,7 +145,8 @@ const Dashboard = ({ user }) => {
                   이번달 근무시간
                 </Typography>
                 <Typography color='textPrimary' variant='h5'>
-                  111시간 11분
+                  {parseInt(myWorkHoursInMonth / 3600)}시간{" "}
+                  {parseInt((myWorkHoursInMonth % 3600) / 60)}분
                 </Typography>
               </Grid>
             </Grid>
@@ -152,7 +166,10 @@ const Dashboard = ({ user }) => {
                       <TableCell align='center'>
                         <HomeIcon color='secondary' style={{ fontSize: 20 }} />
                       </TableCell>
-                      <TableCell align='center'>{member.first_name}</TableCell>
+                      <TableCell align='center'>
+                        {member.last_name}
+                        {member.first_name}
+                      </TableCell>
                       <TableCell align='center'>
                         <Typography>출근중이 아닙니다.</Typography>
                       </TableCell>
@@ -225,8 +242,10 @@ const Dashboard = ({ user }) => {
 };
 
 const mapStateToProps = state => ({
-  user: state.user
+  user: state.user,
+  workhours: state.workhours
 });
-export default connect(mapStateToProps)(Dashboard);
+const mapDispatchToProps = { getMyWorkhours };
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
 
 //<HomeIcon color="secondary" style={{ fontSize: 20 }}/>
