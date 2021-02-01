@@ -7,7 +7,7 @@ import Noticelist from './Noticelist';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import NoticeLayout from './NoticeLayout';
-const Notice = ({user}) => {
+const Notice = ({user, match}) => {
     const useStyles = makeStyles((theme) => ({
         paper: {
           padding: theme.spacing(2),
@@ -25,7 +25,7 @@ const Notice = ({user}) => {
       <Grid container spacing={3}>
           <Grid item xs={12}>
             <Paper className={classes.paper}>
-            <NoticeLayout user={user}></NoticeLayout>
+            <NoticeLayout match={match} />
             </Paper>
         </Grid>
       </Grid>

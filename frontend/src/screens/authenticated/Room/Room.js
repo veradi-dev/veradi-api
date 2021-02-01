@@ -23,6 +23,7 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import axios from "axios";
 import { connect } from "react-redux";
 import Position from './../../../components/Position';
+import {Link} from 'react-router-dom';
 const initialState = {
   times: [
     {id:0, time:"00:00" ,active:false, team:null, booked:false},
@@ -188,7 +189,7 @@ const Room = ({user}) => {
         <Grid item xs={12} md={6} lg={6}>
               <Paper className={fixedHeightPaper}>
               <span className="cancelbtn">
-                <Button variant="contained" color="primary" onClick={() => alert("예약되었습니다!")}>
+                <Button component={Link} to={'/CancelRoom'} variant="contained" color="primary">
                 예약취소하기
               </Button>
               </span>
