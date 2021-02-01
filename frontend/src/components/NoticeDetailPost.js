@@ -21,7 +21,15 @@ export default function NoticeDetailPost({noticeData, num}) {
         },
       }));
       const classes = useStyles();
-      console.log(noticeData[10]);
+      function findnotice(noticeData, num){
+        
+        {for(let i=0;noticeData[i].id<=num;i++){
+          if(noticeData[i].id==num){
+            return i;
+          }
+}}
+      }
+      console.log(noticeData[findnotice(noticeData, num)]);
     return (
         <div>
           <Paper className={classes.paper}>
@@ -33,7 +41,7 @@ export default function NoticeDetailPost({noticeData, num}) {
         </Grid>
         <Grid item xs={9}>
         <Typography align="left" color="inherit" variant="h5" component="div">
-          {noticeData[num-1].title}
+          {noticeData[findnotice(noticeData, num)].title}
         </Typography>
         </Grid>
         </Grid>
@@ -43,13 +51,13 @@ export default function NoticeDetailPost({noticeData, num}) {
         <Button color="primary" variant="contained">삭제하기</Button>
         </div>
         <Typography align="right" color="inherit" variant="subtitle2" component="div">
-        {noticeData[num-1].writer.last_name+noticeData[num-1].writer.first_name}  2021년 1월 26일
+        {noticeData[findnotice(noticeData, num)].writer.last_name+noticeData[findnotice(noticeData, num)].writer.first_name}  2021년 1월 26일
         </Typography>
         <Divider />
         <br></br>
         <br></br>
         <Typography align="left" color="inherit" variant="body1" component="div">
-        <div dangerouslySetInnerHTML={{ __html: noticeData[num-1].contents }} />
+        <div dangerouslySetInnerHTML={{ __html: noticeData[findnotice(noticeData, num)].contents }} />
         </Typography>
         
           </Paper>
