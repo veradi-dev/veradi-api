@@ -1,55 +1,34 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import clsx from "clsx";
-import Link from "@material-ui/core/Link";
 import { makeStyles } from "@material-ui/core/styles";
-import { DataGrid } from "@material-ui/data-grid";
 import Title from "../Title";
-import axios from "axios";
 import { connect } from "react-redux";
 import "./Workhour.css";
-import Findyearmon from "./../../../components/Findyearmon";
+import DateComboBox from "../../../components/DateComboBox";
 import Workhourtable from "./../../../components/Workhourtable";
+import { getMyWorkhours } from "~/frontend/src/redux/workhours/workhoursThunks";
+import { getDate } from "~/frontend/src/utils";
 
-// const columns = [
-//   { field: 'date', headerName: '날짜', width: 100 },
-//   { field: 'starttime', headerName: '출근시간', width: 110 },
-//   { field: 'endtime', headerName: '퇴근시간', width: 110 },
-//   { field: 'status',headerName: '상태',type: 'number',width: 100,},
-// ];
-
-// const rows =
-// // [
-// // ];
-
-function createData (id, date, starttime, endtime, status) {
-  return { id, date, starttime, endtime, status };
-}
-
-const rows = [
-  createData("1", "12/1", "15:30", "16:30", "1"),
-  createData("2", "12/2", "12:30", "16:30", "1"),
-  createData("3", "12/3", "13:30", "16:30", "2"),
-  createData("4", "12/4", "14:30", "16:30", "3"),
-  createData("5", "12/1", "15:30", "16:30", "2"),
-  createData("6", "12/2", "12:30", "16:30", "1"),
-  createData("7", "12/3", "13:30", "16:30", "1"),
-  createData("8", "12/4", "14:30", "16:30", "1")
-];
 const headCells = [
-  { id: "date", numeric: false, disablePadding: true, label: "날짜" },
-  { id: "starttime", numeric: false, disablePadding: false, label: "출근시간" },
-  { id: "endtime", numeric: false, disablePadding: false, label: "퇴근시간" },
-  { id: "status", numeric: true, disablePadding: false, label: "상태" }
+  { id: "date", numeric: false, disablePadding: false, label: "일자" },
+  { id: "start", numeric: false, disablePadding: false, label: "출근시간" },
+  { id: "end", numeric: false, disablePadding: false, label: "퇴근시간" },
+  { id: "total", numeric: false, disablePadding: false, label: "총 근무시간" },
+  { id: "status", numeric: false, disablePadding: false, label: "상태" }
 ];
+const isEqualDate = (date_string, date_object) => {
+  const ds = new Date(date_string);
+  return (
+    ds.getFullYear() === date_object.year &&
+    ds.getMonth() + 1 === date_object.month
+  );
+};
 
-
-
-const Workhour = ({ user }) => {
-  const [Workhours, setWorkhours] = useState([]);
+const Workhour = ({ user, workhours, getMyWorkhours }) => {
   const useStyles = makeStyles(theme => ({
     paper: {
       padding: theme.spacing(2),
@@ -71,59 +50,42 @@ const Workhour = ({ user }) => {
     }
   }));
   const classes = useStyles();
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-  const [date, setdate] = React.useState({
-    year: "2020",
-    month: "1"
-  });
-  const [personalresult, setpersonalresult] = React.useState(false);
-  const searchavg = e => {
-    e.preventDefault();
-    console.log(date);
-    setpersonalresult(true);
-  };
-  const searchteamperson = e => {
-    e.preventDefault();
-    console.log(state);
-    setpersonresult(true);
-  };
-  const [text, settext] = useState("");
-  const onChange = e => {
-    settext(e.target.value);
-  };
+  const [date, setdate] = React.useState(getDate());
+  const [rows, setRows] = React.useState(false);
 
+  const search = useCallback(() => {
+    getMyWorkhours(date.year, date.month);
+  }, [date]);
 
   useEffect(() => {
-    // console.log(user.token);
-    // const headers = {
-    //   Authorization: 'Token bee2aa204fa6f7cceaea15c1074eb86fb0e14d6d3a38955d61ffd75c258bf5e6',
-    //   'Content-Type': 'application/json'
-    //   }
-    axios.get(`/api/v1/workhours?user=1&month=1`, {'headers':{'Authorization':'Token ' + `${user.token}`}}).then((res) => {
-      setWorkhours(res.data);
-      console.log("asdg",res.data);
-    }).catch((err)=>{
-			const status = err?.response?.status;
-			if (status === undefined) {
-				console.dir("데이터를 불러오던 중 예기치 못한 예외가 발생하였습니다.\n" + JSON.stringify(err));
-			}
-			else if (status === 400) {
-				console.dir("400에러");
-			}
-			else if (status === 401) {
-				console.dir("401에러");
-			}
-			else if (status === 500) {
-				console.dir("내부 서버 오류입니다. 잠시만 기다려주세요.");
-			}
-			});
-	}, []);
+    const createData = () => {
+      return workhours
+        .filter(
+          workhour => workhour.complete && isEqualDate(workhour.start, date)
+        )
+        .map(workhour => ({
+          id: workhour.id,
+          date: `${workhour.start.slice(8, 10)}일`,
+          start: ` ${workhour.start.slice(11, 13)}시 ${workhour.start.slice(
+            14,
+            16
+          )}분`,
+          end: `${workhour.end.slice(11, 13)}시 ${workhour.end.slice(
+            14,
+            16
+          )}분`,
+          total: `${parseInt(workhour.total / 3600)}시간 ${parseInt(
+            (workhour.total % 3600) / 60
+          )}분`,
+          status: workhour.message
+        }));
+    };
+    setRows(createData());
+  }, [workhours]);
 
-
-
-    return (
+  return (
     <Grid container spacing={3}>
-      <Grid item xs={12} md={6} lg={6}>
+      <Grid item xs={12} md={12} lg={12}>
         <Paper className={classes.paper}>
           <React.Fragment>
             <Title>{user.last_name + user.first_name}님의 근무시간</Title>
@@ -134,31 +96,15 @@ const Workhour = ({ user }) => {
               alignItems='center'
             >
               <Grid>
-                <Findyearmon date={date} setdate={setdate}></Findyearmon>
+                <DateComboBox date={date} setdate={setdate}></DateComboBox>
               </Grid>
               <Grid>
-                <Button onClick={searchavg} color='primary' variant='contained'>
+                <Button onClick={search} color='primary' variant='contained'>
                   검색
                 </Button>
               </Grid>
             </Grid>
-            {personalresult ? (
-              <Workhourtable rows={rows} headCells={headCells}></Workhourtable>
-            ) : (
-              <div></div>
-            )}
-          </React.Fragment>
-        </Paper>
-      </Grid>
-      <Grid item xs={12} md={6} lg={6}>
-        <Paper className={classes.paper}>
-          <React.Fragment>
-            <Title>이상한 결과</Title>
-            {personalresult ? (
-              <Workhourtable rows={rows} headCells={headCells}></Workhourtable>
-            ) : (
-              <div></div>
-            )}
+            <Workhourtable rows={rows} headCells={headCells}></Workhourtable>
           </React.Fragment>
         </Paper>
       </Grid>
@@ -167,6 +113,7 @@ const Workhour = ({ user }) => {
 };
 
 const mapStateToProps = state => ({
-  user: state.user
+  user: state.user,
+  workhours: state.workhours
 });
-export default connect(mapStateToProps)(Workhour);
+export default connect(mapStateToProps, { getMyWorkhours })(Workhour);
