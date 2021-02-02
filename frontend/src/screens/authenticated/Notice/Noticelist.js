@@ -86,7 +86,7 @@ const Noticelist=({user, match})=> {
 }
   else{
     useEffect(() => {
-      axios.get(`/api/v1/notice?team=${user.team}`).then((res) => {
+      axios.get(`/api/v1/notice?team=TDD`, {'headers':{'Authorization':'token ' + `${user.token}`}}).then((res) => {
         setrows(res.data);
         setLoading(false);
       }).catch((err)=>{

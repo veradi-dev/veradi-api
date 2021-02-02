@@ -37,10 +37,10 @@ const initialState = {
     {id:8, time:"04:00" ,active:false, team:null, booked:false},
     {id:9, time:"04:30" ,active:false, team:null, booked:false},
     {id:10, time:"05:00", active:false, team:null, booked:false},
-    {id:11, time:"05:30", active:false, team:"지구과학팀", booked:true},
-    {id:12, time:"06:00", active:false, team:"지구과학팀", booked:true},
-    {id:13, time:"06:30", active:false, team:"지구과학팀", booked:true},
-    {id:14, time:"07:00", active:false, team:"지구과학팀", booked:true},
+    {id:11, time:"05:30", active:false, team:"기술개발팀", booked:true},
+    {id:12, time:"06:00", active:false, team:"기술개발팀", booked:true},
+    {id:13, time:"06:30", active:false, team:"기술개발팀", booked:true},
+    {id:14, time:"07:00", active:false, team:"기술개발팀", booked:true},
     {id:15, time:"07:30", active:false, team:null, booked:false},
     {id:16, time:"08:00", active:false, team:null, booked:false},
     {id:17, time:"08:30", active:false, team:null, booked:false},
@@ -233,7 +233,7 @@ const Room = ({user}) => {
                   flexWrap="wrap"
                   p={2}
                 >
-    <TimeBtn times={times.slice(24,48)} onToggle={onToggle}></TimeBtn>
+    <TimeBtn times={times.slice(24,48)} onToggle={onToggle} user={user}></TimeBtn>
     <div>
     </div>
     <span className="reservebtn">
@@ -249,7 +249,7 @@ const Room = ({user}) => {
                   flexWrap="wrap"
                   p={2}
                 >
-      <TimeBtn times={times.slice(0,24)} onToggle={onToggle}></TimeBtn>
+      <TimeBtn times={times.slice(0,24)} onToggle={onToggle} user={user}></TimeBtn>
       <div>
       </div>
         <span className="reservebtn">

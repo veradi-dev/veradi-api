@@ -2,7 +2,6 @@ import React from 'react';
 import styled from "styled-components";
 import { device } from '../../interactive/device';
 
-
 const Button = styled.button`
   margin-bottom: 2px;
   margin-right: 2px;
@@ -11,7 +10,7 @@ const Button = styled.button`
   align-items: center;
   border:${props => (props.time.booked? 'transparent' : props.time.active? "#53990e" :"#f0f7f4")} ;
   width: 24%;
-  background-color: ${props => (props.time.booked? "#a8a7a7" : props.time.active? "#53990e" :"#f0f7f4")} ;
+  background-color: ${props => (props.time.team==props.user.team ? "#FFFA78" : props.time.booked? "#a8a7a7" :  props.time.team==props.user.team&&props.time.active? "#FFA500": props.time.active?"#53990e" :"#f0f7f4")} ;
 `;
 
 
@@ -47,21 +46,22 @@ const Text = styled.text`
   
 `;
 //
-const Time = React.memo(function User({ time, onToggle }) {
+const Time = React.memo(function User({ time, onToggle, user }) {
   return (
-    <Button time={time} onClick={() => onToggle(time.id)}>
+    <Button time={time} onClick={() => onToggle(time.id)} user={user}>
       {time.booked? time.team : time.time}
     </Button>
   );
 
 });
 
-function TimeBtn({ times, onToggle }) {
+function TimeBtn({ times, onToggle, user }) {
   return (
     <div>
       {times.map(time => (
-        <Time onToggle={onToggle} time={time} key={time.id} />
-      ))}
+        <Time onToggle={onToggle} time={time} key={time.id} user={user}/>
+      ))
+      }
     </div>
   );
 }
