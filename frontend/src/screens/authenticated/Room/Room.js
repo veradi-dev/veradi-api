@@ -130,6 +130,12 @@ const Room = ({user}) => {
   function setinitialState(initialState, reserveresult) {
     for(let i=0;i<Object.keys(initialState.times).length;i++){
       for(let t=0;t<Object.keys(reserveresult).length;t++){
+        initialState.times[i].booked=false;
+        initialState.times[i].team=null;
+    
+    }}
+    for(let i=0;i<Object.keys(initialState.times).length;i++){
+      for(let t=0;t<Object.keys(reserveresult).length;t++){
       if(initialState.times[i].id==reserveresult[t].start_time){
         initialState.times[i].booked=true;
         initialState.times[i].team=reserveresult[t].team;
@@ -186,6 +192,7 @@ const Room = ({user}) => {
       }</React.Fragment>
 }
   useEffect(() => {
+    setLoading(true);
     console.log(value.getMonth());
     axios.get(`/api/v1/conference?year=${value.getFullYear()}&month=${value.getMonth()+1}&day=${value.getDate()}`, {'headers':{'Authorization':'Token ' + `${user.token}`}}).then((res) => {
       console.log(res.data);
