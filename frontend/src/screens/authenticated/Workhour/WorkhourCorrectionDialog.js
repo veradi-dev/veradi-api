@@ -15,6 +15,8 @@ import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 import { Container } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import { connect } from "react-redux";
+
 
 const modes = [
   {
@@ -172,6 +174,6 @@ const WorkhourCorrectionDialog = ({ workhour, correctionWorkhour }) => {
   );
 };
 
-export default connect(() => {}, { correctionWorkhour })(
+export default connect(() => { correctionWorkhour })(
   WorkhourCorrectionDialog
 );

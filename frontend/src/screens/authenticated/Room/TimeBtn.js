@@ -10,13 +10,10 @@ const Button = styled.button`
   align-items: center;
   border:${props => (props.time.booked? 'transparent' : props.time.active? "#53990e" :"#f0f7f4")} ;
   width: 24%;
-  background-color: ${props => (props.time.team==props.user.team ? "#FFFA78" : props.time.booked? "#a8a7a7" :  props.time.team==props.user.team&&props.time.active? "#FFA500": props.time.active?"#53990e" :"#f0f7f4")} ;
+  background-color: ${props => (props.time.team==props.user.team ? (props.time.active? "#FF0000": "#FFFA78") : props.time.booked? "#a8a7a7" : (props.time.active?"#53990e" :"#f0f7f4"))} ;
 `;
-
-
 //https://jsramblings.com/how-to-use-media-queries-with-styled-components/
 //https://kiarash-z.github.io/react-modern-calendar-datepicker/docs/responsive-guide
-
 //height 지정???
 
 const Text = styled.text`

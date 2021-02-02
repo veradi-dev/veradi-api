@@ -59,6 +59,7 @@ export default function NoticeDetailPost({noticeData, num}) {
         <Typography align="left" color="inherit" variant="body1" component="div">
         <div dangerouslySetInnerHTML={{ __html: noticeData[findnotice(noticeData, num)].contents }} />
         </Typography>
+        
           </Paper>
         </div>
     )

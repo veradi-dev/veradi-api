@@ -188,11 +188,6 @@ const Room = ({user}) => {
           <React.Fragment>
         <Grid item xs={12} md={6} lg={6}>
               <Paper className={fixedHeightPaper}>
-              <span className="cancelbtn">
-                <Button component={Link} to={'/CancelRoom'} variant="contained" color="primary">
-                예약취소하기
-              </Button>
-              </span>
               <Title>회의실 예약</Title>
               <FormControl component="fieldset">
                 <FormLabel component="legend">회의실</FormLabel>
@@ -240,6 +235,9 @@ const Room = ({user}) => {
     <Button variant="contained" color="primary" onClick={() => alert("예약되었습니다!")}>
       예약하기
     </Button>
+    <Button variant="contained" color="secondary" onClick={() => alert("예약을 취소하시겠습니가??")}>
+      예약취소하기
+    </Button>
     </span>
     
   </Box>: <Box
@@ -255,6 +253,9 @@ const Room = ({user}) => {
         <span className="reservebtn">
       <Button variant="contained" color="primary" onClick={() => alert("예약되었습니다!")}>
       예약하기
+    </Button>
+    <Button variant="contained" color="secondary" onClick={() => alert("예약을 취소하시겠습니가??")}>
+      예약취소하기
     </Button>
     </span>
       
