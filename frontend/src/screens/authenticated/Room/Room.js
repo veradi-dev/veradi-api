@@ -115,7 +115,6 @@ const Room = ({user}) => {
   const [value, onChange] = useState(new Date());
   const [reserveresult, setreserveresult]=useState([]);
   const [loading, setLoading] = useState(true);
-  const [matchloading, setmatchLoading] = useState(true);
   function reducer(state, action) {
     switch (action.type) {
       case 'TOGGLE':
@@ -135,10 +134,60 @@ const Room = ({user}) => {
         initialState.times[i].booked=true;
         initialState.times[i].team=reserveresult[t].team;
       }}}
-    return 
+          return <React.Fragment>
+          <Typography component="div">
+      <Grid component="label" container alignItems="center" justify="center" spacing={1}>
+      <Grid item>오전</Grid>
+      <Grid item>
+        <AntSwitch checked={morningstate.ismorning} onChange={handleChange} name="ismorning" />
+      </Grid>
+      <Grid item>오후</Grid>
+      </Grid>
+      </Typography>
+      {morningstate.ismorning ? <Box
+              alignItems="center"
+              display="flex"
+              flexDirection="column"
+              flexWrap="wrap"
+              p={2}
+            >
+      <TimeBtn times={times.slice(24,48)} onToggle={onToggle} user={user}></TimeBtn>
+      <div>
+      </div>
+      <span className="reservebtn">
+      <Button variant="contained" color="primary" onClick={() => alert("예약되었습니다!")}>
+      예약하기
+      </Button>
+      <Button variant="contained" color="secondary" onClick={() => alert("예약을 취소하시겠습니가??")}>
+      예약취소하기
+      </Button>
+      </span>
+
+      </Box>: <Box
+              alignItems="center"
+              display="flex"
+              flexDirection="column"
+              flexWrap="wrap"
+              p={2}
+            >
+      <TimeBtn times={times.slice(0,24)} onToggle={onToggle} user={user}></TimeBtn>
+      <div>
+      </div>
+      <span className="reservebtn">
+      <Button variant="contained" color="primary" onClick={() => alert("예약되었습니다!")}>
+      예약하기
+      </Button>
+      <Button variant="contained" color="secondary" onClick={() => alert("예약을 취소하시겠습니가??")}>
+      예약취소하기
+      </Button>
+      </span>
+
+      </Box>
+      }</React.Fragment>
 }
   useEffect(() => {
-    axios.get(`/api/v1/conference?year=2021&month=2&day=2`, {'headers':{'Authorization':'Token ' + `${user.token}`}}).then((res) => {
+    console.log(value.getMonth());
+    axios.get(`/api/v1/conference?year=${value.getFullYear()}&month=${value.getMonth()+1}&day=${value.getDate()}`, {'headers':{'Authorization':'Token ' + `${user.token}`}}).then((res) => {
       console.log(res.data);
       setreserveresult(res.data);
     setLoading(false);
@@ -159,10 +208,7 @@ const Room = ({user}) => {
       });
   }, [value]);
 
-//   function getreservedata(reserveresult){
-//     const type = data.template;
-//     const color = "black";
-// }
+
   
   const [morningstate, setmorning] = React.useState({
     ismorning: true,
@@ -173,13 +219,6 @@ const Room = ({user}) => {
   const onToggle = useCallback(id => {
     dispatch({type: 'TOGGLE',id});
   }, []);
-
-  // const onChangeDay = useCallback(id => {
-  //   dispatch({type: 'SETRESULT',id});
-  // }, []);
-
-
-
 
   const handleRoom = (event) => {
     setroom(event.target.value);
@@ -205,9 +244,6 @@ const Room = ({user}) => {
       const classes = useStyles();
       const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
       //console.log(value);
-      const handleClick = (value) => {
-        alert('New date is: ', value)
-            };
     
     return (
     <Grid container spacing={3}>
@@ -232,7 +268,6 @@ const Room = ({user}) => {
               <Calendar
                 onChange={onChange}
                 value={value}
-                //onClickDay={onChangeDay}
               />
               </Box>
               </Paper>
@@ -240,56 +275,10 @@ const Room = ({user}) => {
             <Grid item xs={12} md={6} lg={6}>
               <Paper className={fixedHeightPaper}>
               {loading? <div>로딩중입니다.</div>: 
-              <React.Fragment>
-              <Typography component="div">
-        <Grid component="label" container alignItems="center" justify="center" spacing={1}>
-          <Grid item>오전</Grid>
-          <Grid item>
-            <AntSwitch checked={morningstate.ismorning} onChange={handleChange} name="ismorning" />
-          </Grid>
-          <Grid item>오후</Grid>
-        </Grid>
-      </Typography>
-      {morningstate.ismorning ? <Box
-                  alignItems="center"
-                  display="flex"
-                  flexDirection="column"
-                  flexWrap="wrap"
-                  p={2}
-                >
-    <TimeBtn times={times.slice(24,48)} onToggle={onToggle} user={user}></TimeBtn>
-    <div>
-    </div>
-    <span className="reservebtn">
-    <Button variant="contained" color="primary" onClick={() => alert("예약되었습니다!")}>
-      예약하기
-    </Button>
-    <Button variant="contained" color="secondary" onClick={() => alert("예약을 취소하시겠습니가??")}>
-      예약취소하기
-    </Button>
-    </span>
-    
-  </Box>: <Box
-                  alignItems="center"
-                  display="flex"
-                  flexDirection="column"
-                  flexWrap="wrap"
-                  p={2}
-                >
-      <TimeBtn times={times.slice(0,24)} onToggle={onToggle} user={user}></TimeBtn>
-      <div>
-      </div>
-        <span className="reservebtn">
-      <Button variant="contained" color="primary" onClick={() => alert("예약되었습니다!")}>
-      예약하기
-    </Button>
-    <Button variant="contained" color="secondary" onClick={() => alert("예약을 취소하시겠습니가??")}>
-      예약취소하기
-    </Button>
-    </span>
-
-    </Box>
-    }</React.Fragment>}
+                      <div>
+                      {setinitialState(initialState, reserveresult)} 
+                      </div>
+                      }
               </Paper>
             </Grid>
             </React.Fragment>:<Grid item xs={12}>
