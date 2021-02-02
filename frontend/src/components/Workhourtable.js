@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import { lighten, makeStyles } from "@material-ui/core/styles";
@@ -7,28 +7,14 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
-import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
-import TableSortLabel from "@material-ui/core/TableSortLabel";
-import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
-import Checkbox from "@material-ui/core/Checkbox";
 import IconButton from "@material-ui/core/IconButton";
-import Tooltip from "@material-ui/core/Tooltip";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Switch from "@material-ui/core/Switch";
-import FilterListIcon from "@material-ui/icons/FilterList";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import CloseIcon from "@material-ui/icons/Close";
-import ReportProblemIcon from "@material-ui/icons/ReportProblem";
-import { withStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import TextField from "@material-ui/core/TextField";
+import Box from "@material-ui/core/Box";
+import Collapse from "@material-ui/core/Collapse";
+import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import "./Workhourtable.css";
 
 function EnhancedTableHead (props) {
@@ -84,9 +70,74 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+const Row = ({ row }) => {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <React.Fragment>
+      <TableRow>
+        <TableCell>
+          <IconButton
+            aria-label='expand row'
+            size='small'
+            onClick={() => setOpen(!open)}
+          >
+            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
+        </TableCell>
+        <TableCell>{row.date}</TableCell>
+        <TableCell>{row.start}</TableCell>
+        <TableCell>{row.end}</TableCell>
+        <TableCell>{row.total}</TableCell>
+        <TableCell>{row.status()}</TableCell>
+        <TableCell>{row.btn()}</TableCell>
+      </TableRow>
+      {open ? (
+        <TableRow>
+          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+            <Collapse in={open} timeout='auto' unmountOnExit>
+              <Box margin={1}>
+                <Typography variant='h6' component='div'>
+                  출입 이력
+                </Typography>
+                <Table size='small' aria-label='enterlogs'>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>일자</TableCell>
+                      <TableCell>시각</TableCell>
+                      <TableCell align='right'>유형</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {row.enter_logs.map(enter_log => (
+                      <TableRow key={enter_log.time}>
+                        <TableCell>{enter_log.date}</TableCell>
+                        <TableCell>{enter_log.time.slice(0, 5)}</TableCell>
+                        <TableCell align='right'>
+                          {enter_log.mode === 1
+                            ? "출근"
+                            : enter_log.mode === 2
+                            ? "퇴근"
+                            : "출입"}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </Box>
+            </Collapse>
+          </TableCell>
+        </TableRow>
+      ) : (
+        <></>
+      )}
+    </React.Fragment>
+  );
+};
+
 export default function EnhancedTable ({ rows, headCells }) {
   const classes = useStyles();
-  console.log(rows);
+
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
@@ -99,15 +150,7 @@ export default function EnhancedTable ({ rows, headCells }) {
             <EnhancedTableHead classes={classes} headCells={headCells} />
             <TableBody>
               {rows ? (
-                rows.map(row => (
-                  <TableRow key={row.id}>
-                    <TableCell>{row.date}</TableCell>
-                    <TableCell>{row.start}</TableCell>
-                    <TableCell>{row.end}</TableCell>
-                    <TableCell>{row.total}</TableCell>
-                    <TableCell>{row.status}</TableCell>
-                  </TableRow>
-                ))
+                rows.map(row => <Row key={row.id} row={row} />)
               ) : (
                 <React.Fragment />
               )}

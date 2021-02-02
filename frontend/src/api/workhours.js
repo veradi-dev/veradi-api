@@ -6,3 +6,8 @@ export const getMyWorkhoursRequest = ({ token, userId, year, month }) =>
     year,
     month
   });
+
+export const correctionWorkhourRequest = ({ token, data }) =>
+  request("post", "api/v1/workhours/correction/", data, createHeaders(token));
+
+export const decideCorrectionWorkhourRequest = () => {};

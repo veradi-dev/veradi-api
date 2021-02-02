@@ -1,6 +1,5 @@
 from django.utils import timezone
 from django.contrib.auth import get_user_model
-from django.db.models import Q
 from rest_framework import viewsets
 from rest_framework import status
 from rest_framework.decorators import action
@@ -65,6 +64,15 @@ class WorkHourViewset(viewsets.ModelViewSet):
         ]
         serializer = self.get_serializer(workhours, many=True)
         return Response(status=status.HTTP_200_OK, data=serializer.data)
+
+    @action(methods=["get", "post"], detail=False)
+    def correction(self, request):
+        if request.method == "GET":
+            print("get")
+        elif request.method == "POST":
+            data = request.data
+            print(data)
+        return Response()
 
     def get_permissions(self):
         """

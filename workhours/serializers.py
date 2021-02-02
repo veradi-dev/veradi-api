@@ -36,6 +36,7 @@ class WorkHourSerializer(serializers.ModelSerializer):
     class Meta:
         model = WorkHour
         fields = (
+            "id",
             "user",
             "enter_logs",
             "status",
@@ -45,3 +46,4 @@ class WorkHourSerializer(serializers.ModelSerializer):
             "total",
             "complete",
         )
+        read_only_fields = ("id", "user")
