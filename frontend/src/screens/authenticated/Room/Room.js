@@ -16,15 +16,13 @@ import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormControl from '@material-ui/core/FormControl';
-import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import axios from "axios";
 import { connect } from "react-redux";
 import Position from './../../../components/Position';
-import {Link} from 'react-router-dom';
-const initialState = {
+let initialState = {
   times: [
     {id:0, time:"00:00" ,active:false, team:null, booked:false},
     {id:1, time:"00:30" ,active:false, team:null, booked:false},
@@ -37,10 +35,10 @@ const initialState = {
     {id:8, time:"04:00" ,active:false, team:null, booked:false},
     {id:9, time:"04:30" ,active:false, team:null, booked:false},
     {id:10, time:"05:00", active:false, team:null, booked:false},
-    {id:11, time:"05:30", active:false, team:"기술개발팀", booked:true},
-    {id:12, time:"06:00", active:false, team:"기술개발팀", booked:true},
-    {id:13, time:"06:30", active:false, team:"기술개발팀", booked:true},
-    {id:14, time:"07:00", active:false, team:"기술개발팀", booked:true},
+    {id:11, time:"05:30", active:false, team:null, booked:false},
+    {id:12, time:"06:00", active:false, team:null, booked:false},
+    {id:13, time:"06:30", active:false, team:null, booked:false},
+    {id:14, time:"07:00", active:false, team:null, booked:false},
     {id:15, time:"07:30", active:false, team:null, booked:false},
     {id:16, time:"08:00", active:false, team:null, booked:false},
     {id:17, time:"08:30", active:false, team:null, booked:false},
@@ -52,11 +50,11 @@ const initialState = {
     {id:23, time:"11:30", active:false, team:null, booked:false},
     {id:24, time:"12:00", active:false, team:null, booked:false},
     {id:25, time:"12:30", active:false, team:null, booked:false},
-    {id:26, time:"13:00", active:false, team:"생명과학팀", booked:true},
-    {id:27, time:"13:30", active:false, team:"생명과학팀", booked:true},
-    {id:28, time:"14:00", active:false, team:"생명과학팀", booked:true},
-    {id:29, time:"14:30", active:false, team:"생명과학팀", booked:true},
-    {id:30, time:"15:00", active:false, team:"생명과학팀", booked:true},
+    {id:26, time:"13:00", active:false, team:null, booked:false},
+    {id:27, time:"13:30", active:false, team:null, booked:false},
+    {id:28, time:"14:00", active:false, team:null, booked:false},
+    {id:29, time:"14:30", active:false, team:null, booked:false},
+    {id:30, time:"15:00", active:false, team:null, booked:false},
     {id:31, time:"15:30", active:false, team:null, booked:false},
     {id:32, time:"16:00", active:false, team:null, booked:false},
     {id:33, time:"16:30", active:false, team:null, booked:false},
@@ -68,9 +66,9 @@ const initialState = {
     {id:39, time:"19:30", active:false, team:null, booked:false},
     {id:40, time:"20:00", active:false, team:null, booked:false},
     {id:41, time:"20:30", active:false, team:null, booked:false},
-    {id:42, time:"21:00", active:false, team:"수학팀", booked:true},
-    {id:43, time:"21:30", active:false, team:"수학팀", booked:true},
-    {id:44, time:"22:00", active:false, team:"수학팀", booked:true},
+    {id:42, time:"21:00", active:false, team:null, booked:false},
+    {id:43, time:"21:30", active:false, team:null, booked:false},
+    {id:44, time:"22:00", active:false, team:null, booked:false},
     {id:45, time:"22:30", active:false, team:null, booked:false},
     {id:46, time:"23:00", active:false, team:null, booked:false},
     {id:47, time:"23:30", active:false, team:null, booked:false}
@@ -111,29 +109,45 @@ const AntSwitch = withStyles((theme) => ({
   checked: {},
 }))(Switch);
 
-function reducer(state, action) {
-  switch (action.type) {
-    case 'TOGGLE':
-      return {
-        ...state,
-        times:state.times.map((time)=>
-          time.id===action.id ? {...time, active: !time.active}: time)};
-    default:
-      return state;
-  }
-}
+
 
 const Room = ({user}) => {
+  const [value, onChange] = useState(new Date());
+  const [reserveresult, setreserveresult]=useState([]);
+  const [loading, setLoading] = useState(true);
+  const [matchloading, setmatchLoading] = useState(true);
+  function reducer(state, action) {
+    switch (action.type) {
+      case 'TOGGLE':
+        return {
+          ...state,
+          times:state.times.map((time)=>
+            time.id===action.id ? {...time, active: !time.active}: time)};
+      default:
+        return state;
+    }
+  }
+
+  function setinitialState(initialState, reserveresult) {
+    for(let i=0;i<Object.keys(initialState.times).length;i++){
+      for(let t=0;t<Object.keys(reserveresult).length;t++){
+      if(initialState.times[i].id==reserveresult[t].start_time){
+        initialState.times[i].booked=true;
+        initialState.times[i].team=reserveresult[t].team;
+      }}}
+    return 
+}
   useEffect(() => {
-    axios.get(`/api/v1/conference?year=2021&month=1&day=17`, {'headers':{'Authorization':'Token ' + `${user.token}`}}).then((res) => {
-      setWorkhours(res.data);
-      console.log("asdg",res.data);
+    axios.get(`/api/v1/conference?year=2021&month=2&day=2`, {'headers':{'Authorization':'Token ' + `${user.token}`}}).then((res) => {
+      console.log(res.data);
+      setreserveresult(res.data);
+    setLoading(false);
     }).catch((err)=>{
       const status = err?.response?.status;
-      if (status === undefined) {
-        console.dir("데이터를 불러오던 중 예기치 못한 예외가 발생하였습니다.\n" + JSON.stringify(err));
-      }
-      else if (status === 400) {
+      // if (status === undefined) {
+      //   console.dir("데이터를 불러오던 중 예기치 못한 예외가 발생하였습니다.\n" + JSON.stringify(err));
+      // }
+      if (status === 400) {
         console.dir("400에러");
       }
       else if (status === 401) {
@@ -143,10 +157,13 @@ const Room = ({user}) => {
         console.dir("내부 서버 오류입니다. 잠시만 기다려주세요.");
       }
       });
-  }, []);
+  }, [value]);
 
-
-  const [reserveresult, setreserveresult]=useState(false);
+//   function getreservedata(reserveresult){
+//     const type = data.template;
+//     const color = "black";
+// }
+  
   const [morningstate, setmorning] = React.useState({
     ismorning: true,
   });
@@ -156,10 +173,20 @@ const Room = ({user}) => {
   const onToggle = useCallback(id => {
     dispatch({type: 'TOGGLE',id});
   }, []);
-  const [value, onChange] = useState(new Date());
+
+  // const onChangeDay = useCallback(id => {
+  //   dispatch({type: 'SETRESULT',id});
+  // }, []);
+
+
+
+
   const handleRoom = (event) => {
     setroom(event.target.value);
   };
+
+  
+  
   const handleChange = (event) => {
     setmorning({ ...morningstate, [event.target.name]: event.target.checked });
   };
@@ -178,8 +205,8 @@ const Room = ({user}) => {
       const classes = useStyles();
       const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
       //console.log(value);
-      const getreservation = (value) => {
-        console.log(value);
+      const handleClick = (value) => {
+        alert('New date is: ', value)
             };
     
     return (
@@ -205,13 +232,15 @@ const Room = ({user}) => {
               <Calendar
                 onChange={onChange}
                 value={value}
-                onclick={getreservation}
+                //onClickDay={onChangeDay}
               />
               </Box>
               </Paper>
             </Grid>
             <Grid item xs={12} md={6} lg={6}>
               <Paper className={fixedHeightPaper}>
+              {loading? <div>로딩중입니다.</div>: 
+              <React.Fragment>
               <Typography component="div">
         <Grid component="label" container alignItems="center" justify="center" spacing={1}>
           <Grid item>오전</Grid>
@@ -258,9 +287,9 @@ const Room = ({user}) => {
       예약취소하기
     </Button>
     </span>
-      
+
     </Box>
-    }
+    }</React.Fragment>}
               </Paper>
             </Grid>
             </React.Fragment>:<Grid item xs={12}>
