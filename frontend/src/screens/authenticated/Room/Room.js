@@ -115,6 +115,7 @@ const Room = ({user}) => {
   const [value, onChange] = useState(new Date());
   const [reserveresult, setreserveresult]=useState([]);
   const [loading, setLoading] = useState(true);
+  const [room, setroom] = React.useState('1');
   function reducer(state, action) {
     switch (action.type) {
       case 'TOGGLE':
@@ -136,10 +137,11 @@ const Room = ({user}) => {
     }}
     for(let i=0;i<Object.keys(initialState.times).length;i++){
       for(let t=0;t<Object.keys(reserveresult).length;t++){
-      if(initialState.times[i].id==reserveresult[t].start_time){
+      if(initialState.times[i].id==reserveresult[t].start_time && parseInt(room)==reserveresult[t].room){
         initialState.times[i].booked=true;
         initialState.times[i].team=reserveresult[t].team;
       }}}
+
           return <React.Fragment>
           <Typography component="div">
       <Grid component="label" container alignItems="center" justify="center" spacing={1}>
@@ -220,7 +222,6 @@ const Room = ({user}) => {
   const [morningstate, setmorning] = React.useState({
     ismorning: true,
   });
-  const [room, setroom] = React.useState('room1');
   const [state, dispatch] = useReducer(reducer, initialState);
   const { times } = state;
   const onToggle = useCallback(id => {
@@ -262,8 +263,8 @@ const Room = ({user}) => {
               <FormControl component="fieldset">
                 <FormLabel component="legend">회의실</FormLabel>
                 <RadioGroup aria-label="room" name="room" value={room} onChange={handleRoom}>
-                  <FormControlLabel value="room1" control={<Radio color="primary" />} label="회의실" />
-                  <FormControlLabel value="room2" control={<Radio color="primary"/>} label="탕비실" />
+                  <FormControlLabel value='1' control={<Radio color="primary" />} label="회의실" />
+                  <FormControlLabel value='2' control={<Radio color="primary"/>} label="탕비실" />
                 </RadioGroup>
               </FormControl>
               <Box
