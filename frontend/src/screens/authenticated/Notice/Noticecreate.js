@@ -28,14 +28,21 @@ const Noticecreate = ({match, user}) => {
           height: 240,
         },
       }));
+      console.log(match.params);
       const classes = useStyles();
       const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
       const handlesubmit=(e)=>{
+
         const data = {
             "title":title,
             "contents":desc
         };
-    axios.post(`/api/v1/notice/`, data, {'headers':{'Authorization':'Token ' + `${user.token}`}})
+        const Teamdata = {
+            "title":title,
+            "contents":desc,
+            "Team":user.team
+        };
+    axios.post(`/api/v1/notice/`, Teamdata, {'headers':{'Authorization':'Token ' + `${user.token}`}})
         .then((res) => {
             console.log(res);
         })

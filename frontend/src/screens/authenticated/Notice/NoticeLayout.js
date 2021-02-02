@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from "react";
 import Noticelist from './Noticelist';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -15,27 +15,33 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
+
 const NoticeLayout=({user, match})=> {
-  const classes = useStyles();
-  const [value, setValue] = React.useState(0);
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
+  
+  const [Team, setTeam] = useState("전체");
+  const handleAll = () => {
+    setTeam("전체");
   };
+  const handleTeam = () => {
+    setTeam(user.team);
+  };
+  const classes = useStyles();
   return (
     <div className={classes.root}>
       <Grid container spacing={1}>
           <Grid item xs={6}>
             <Link to={`/notice/전체/noticelist/1`} style={{ textDecoration: 'none', color: 'black' }}>
-            <button className="NoticeTab">전체</button>
+            <button onClick={handleAll} className="NoticeTab">전체</button>
             </Link>
           </Grid>
           <Grid item xs={6}>
           <Link to={`/notice/${user.team}/noticelist/1`} style={{ textDecoration: 'none', color: 'black' }}>
-            <button className="NoticeTab">{user.team}</button>
+            <button onClick={handleTeam} className="NoticeTab">{user.team}</button>
             </Link>
           </Grid>
         </Grid>
-        <Noticelist match={match}></Noticelist>
+        <Noticelist Team={Team} match={match}></Noticelist>
     </div>
   );
 }

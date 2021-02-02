@@ -59,13 +59,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 //https://medium.com/@ankita.singh170190/material-ui-table-with-pagination-component-9f53a3380245
-const Noticelist=({user, match})=> {
+const Noticelist=({user, match, Team})=> {
   const [rows, setrows] = useState([]);
   const [loading, setLoading] = useState(true);
   if(match.params.team=='전체'){
   useEffect(() => {
     axios.get(`/api/v1/notice/`, {'headers':{'Authorization':'Token ' + `${user.token}`}}).then((res) => {
       setrows(res.data);
+      console.log(res.data);
       setLoading(false);
     }).catch((err)=>{
 			const status = err?.response?.status;
@@ -82,12 +83,13 @@ const Noticelist=({user, match})=> {
 				console.dir("내부 서버 오류입니다. 잠시만 기다려주세요.");
 			}
 			});
-  }, []);
+  }, [Team]);
 }
   else{
     useEffect(() => {
       axios.get(`/api/v1/notice?team=TDD`, {'headers':{'Authorization':'token ' + `${user.token}`}}).then((res) => {
         setrows(res.data);
+        console.log(res.data);
         setLoading(false);
       }).catch((err)=>{
         const status = err?.response?.status;
@@ -104,7 +106,7 @@ const Noticelist=({user, match})=> {
           console.dir("내부 서버 오류입니다. 잠시만 기다려주세요.");
         }
         });
-    }, []);
+    }, [Team]);
   }
   const USER_PATH = `/notice/${match.params.team}/noticelist`;
   const ROWS_PER_PAGE = 10;
