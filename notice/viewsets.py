@@ -11,12 +11,13 @@ class NoticeViewSet(viewsets.ModelViewSet):
     serializer_class = NoticeSerializer
     permission_classes = []
 
-    def list(self, request):
-        user = request.user
-        team_code = request.GET.get("team", None)
+    def get_queryset(self):
+        team_code = self.request.GET.get("team", None)
+        user = self.request.user
         if team_code is not None:
             try:
                 team = Team.objects.get(name=team_code)
+                queryset = team.notices.get_queryset().order_by("-created_at")
                 if team != user.team:
                     return Response(
                         status=status.HTTP_403_FORBIDDEN, data={"message": "권한이 없습니다."}
@@ -26,15 +27,19 @@ class NoticeViewSet(viewsets.ModelViewSet):
                     status=status.HTTP_403_FORBIDDEN,
                     data={"message": "쿼리로 잘못된 팀 코드가 전달되었습니다."},
                 )
-        queryset = self.get_queryset().filter(team=team_code)
+        else:
+            queryset = Notice.objects.filter(team=None)
+        return queryset
 
+    def list(self, request):
+        queryset = self.get_queryset()
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
 
         serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
+        return Response(data=serializer.data)
 
     def create(self, request):
         team_name = request.data.pop("team", None)
