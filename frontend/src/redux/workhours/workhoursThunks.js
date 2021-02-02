@@ -1,5 +1,8 @@
 import { workhoursActions } from "./workhoursSlice";
-import { getMyWorkhoursRequest } from "../../api/workhours";
+import {
+  getMyWorkhoursRequest,
+  correctionWorkhourRequest
+} from "../../api/workhours";
 
 export const getMyWorkhours = (year, month) => (dispatch, getState) => {
   const userId = getState().user.id;
@@ -10,4 +13,10 @@ export const getMyWorkhours = (year, month) => (dispatch, getState) => {
   });
 };
 
-export const getWorkhours = (userId, year, month) => {};
+export const correctionWorkhour = data => (dispatch, getState) => {
+  const token = getState().user.token;
+
+  correctionWorkhourRequest(token, data).then(res => {
+    console.log(res);
+  });
+};

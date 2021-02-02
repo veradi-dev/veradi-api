@@ -10,14 +10,8 @@ class NoticeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Notice
-        fields = (
-            "id",
-            "writer",
-            "team",
-            "title",
-            "contents",
-        )
-        read_only_fields = ("id", "writer", "team")
+        fields = ("id", "writer", "team", "title", "contents", "created_at")
+        read_only_fields = ("id", "writer", "team", "created_at")
 
     def create(self, validated_data):
         request = self.context.get("request", None)

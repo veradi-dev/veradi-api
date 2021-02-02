@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, Fragment } from "react";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
@@ -10,15 +10,19 @@ import { connect } from "react-redux";
 import "./Workhour.css";
 import DateComboBox from "../../../components/DateComboBox";
 import Workhourtable from "./../../../components/Workhourtable";
+import WorkhourCorrectionDialog from "./WorkhourCorrectionDialog";
 import { getMyWorkhours } from "~/frontend/src/redux/workhours/workhoursThunks";
 import { getDate } from "~/frontend/src/utils";
+import { Container } from "@material-ui/core";
 
 const headCells = [
+  { id: "collapseBtn", numeric: false, disablePadding: false, label: "" },
   { id: "date", numeric: false, disablePadding: false, label: "일자" },
   { id: "start", numeric: false, disablePadding: false, label: "출근시간" },
   { id: "end", numeric: false, disablePadding: false, label: "퇴근시간" },
   { id: "total", numeric: false, disablePadding: false, label: "총 근무시간" },
-  { id: "status", numeric: false, disablePadding: false, label: "상태" }
+  { id: "status", numeric: false, disablePadding: false, label: "상태" },
+  { id: "btn", numeric: false, disablePadding: false, label: "이의신청" }
 ];
 const isEqualDate = (date_string, date_object) => {
   const ds = new Date(date_string);
@@ -50,12 +54,22 @@ const Workhour = ({ user, workhours, getMyWorkhours }) => {
     }
   }));
   const classes = useStyles();
-  const [date, setdate] = React.useState(getDate());
+  const [date, setDate] = React.useState(getDate());
   const [rows, setRows] = React.useState(false);
-
   const search = useCallback(() => {
     getMyWorkhours(date.year, date.month);
   }, [date]);
+  const [total, setTotal] = React.useState(0);
+
+  useEffect(() => {
+    let totalWorkhour = 0;
+    for (let i = 0; i < workhours.length; i++) {
+      if (workhours[i].status === 1) {
+        totalWorkhour += workhours[i].total;
+      }
+    }
+    setTotal(totalWorkhour);
+  }, [workhours]);
 
   useEffect(() => {
     const createData = () => {
@@ -77,11 +91,20 @@ const Workhour = ({ user, workhours, getMyWorkhours }) => {
           total: `${parseInt(workhour.total / 3600)}시간 ${parseInt(
             (workhour.total % 3600) / 60
           )}분`,
-          status: workhour.message
+          status: () => (
+            <Typography variant='caption'>{workhour.message}</Typography>
+          ),
+          btn: () => (
+            <WorkhourCorrectionDialog
+              key={`workhour${workhour.start}`}
+              workhour={workhour}
+            />
+          ),
+          enter_logs: workhour.enter_logs
         }));
     };
     setRows(createData());
-  }, [workhours]);
+  }, [workhours, open]);
 
   return (
     <Grid container spacing={3}>
@@ -96,7 +119,7 @@ const Workhour = ({ user, workhours, getMyWorkhours }) => {
               alignItems='center'
             >
               <Grid>
-                <DateComboBox date={date} setdate={setdate}></DateComboBox>
+                <DateComboBox date={date} setdate={setDate}></DateComboBox>
               </Grid>
               <Grid>
                 <Button onClick={search} color='primary' variant='contained'>
@@ -104,6 +127,10 @@ const Workhour = ({ user, workhours, getMyWorkhours }) => {
                 </Button>
               </Grid>
             </Grid>
+            <Typography>
+              총 {parseInt(total / 3600)}시간 {parseInt((total % 3600) / 60)}분
+              입니다.
+            </Typography>
             <Workhourtable rows={rows} headCells={headCells}></Workhourtable>
           </React.Fragment>
         </Paper>

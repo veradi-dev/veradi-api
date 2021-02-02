@@ -105,9 +105,8 @@ class WorkHour(CoreModel):
         for enter_log in enter_logs:
             if enter_log.mode == 1:
                 _MODE1_EXIST = True
-            if _MODE1_EXIST:
-                if enter_log.mode == 2:
-                    _MODE2_EXIST = True
+            if enter_log.mode == 2:
+                _MODE2_EXIST = True
 
         if _MODE1_EXIST and _MODE2_EXIST:
             return (1, "정상입니다.")
@@ -152,3 +151,27 @@ class WorkHour(CoreModel):
             )
         else:
             return f"{self.user.get_full_name()} {self.status[1]}"
+
+
+class WorkHourCorrectionRequest(CoreModel):
+    MODE_CHOICE = [(1, "출근"), (2, "퇴근"), (3, "출입")]
+
+    workhour = models.ForeignKey(
+        WorkHour,
+        related_name="+",
+        verbose_name="원본 근무 시간",
+        on_delete=models.CASCADE,
+    )
+    # mode 는 통행의 형태를 나타낸다. => 1: 출근 / 2: 퇴근 / 3: 통행
+    mode = models.IntegerField(choices=MODE_CHOICE)
+    # 통행 날짜
+    date = models.DateField(verbose_name="통행 날짜")
+    # 통행 시각
+    time = models.TimeField(verbose_name="통행 시각")
+    # 사유
+    reason = models.CharField(verbose_name="사유", max_length=1000)
+    # 승인 여부
+    approved = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.workhour.user.get_full_name()}의 {self.date}의 근무시간 정정 요청"

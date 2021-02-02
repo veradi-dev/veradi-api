@@ -74,13 +74,13 @@ class TeamMemberSerializer(serializers.ModelSerializer):
 
     def get_isWorking(self, obj):
         from workhours.serializers import WorkHourSerializer
+
         try:
             return WorkHourSerializer(
                 obj.workhours.get_queryset().latest("created_at")
             ).data
         except WorkHour.DoesNotExist:
             return None
-        
 
     class Meta:
         model = User
