@@ -215,7 +215,7 @@ const Room = ({user}) => {
         console.dir("내부 서버 오류입니다. 잠시만 기다려주세요.");
       }
       });
-  }, [value]);
+  }, [value, room]);
 
 
   
