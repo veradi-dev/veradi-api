@@ -13,7 +13,9 @@ export const getMyWorkhours = (year, month) => (dispatch, getState) => {
   });
 };
 
-export const correctionWorkhour = data => dispatch => {
+export const correctionWorkhour = data => (dispatch, getState) => {
+  const token = getState().user.token;
+
   correctionWorkhourRequest(token, data).then(res => {
     console.log(res);
   });
