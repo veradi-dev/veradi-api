@@ -12,7 +12,7 @@ class ReservationSerializer(serializers.ModelSerializer):
             user = obj.proposer
         except AttributeError:
             user = obj["proposer"]
-        return user.get_team_name() + "팀"
+        return user.get_team_name()
 
     def validate_proposer(self, value):
         user = self.context["request"].user
@@ -27,10 +27,14 @@ class ReservationSerializer(serializers.ModelSerializer):
         hour, minute = divmod(start_time, 2)
         minute *= 30
         d_datetime = timezone.datetime.combine(
-            date, datetime.time(hour, minute), tzinfo=timezone.timezone(timezone.timedelta(hours=9))
+            date,
+            datetime.time(hour, minute),
+            tzinfo=timezone.timezone(timezone.timedelta(hours=9)),
         )
         if d_datetime < timezone.localtime():
-            raise serializers.ValidationError({"error": "예약이 불가능한 시간입니다."})
+            raise serializers.ValidationError(
+                {"error": f"{d_datetime}은 예약이 불가능한 시간입니다."}
+            )
 
         # super().create()에서 reservation을 생성하고 return 한다.
         return super().create(validated_data)

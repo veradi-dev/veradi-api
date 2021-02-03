@@ -79,12 +79,12 @@ class ConferenceViewSet(viewsets.ModelViewSet):
 
         method: POST
         data type:
-            {
+            [{
                 room: '1'
                 date: '2021-01-16'
                 start_time: '10'
                 proposer: '1'
-            }
+            },{}...]
 
         response:
             [
@@ -94,18 +94,20 @@ class ConferenceViewSet(viewsets.ModelViewSet):
                     "start_time": 4,
                     "proposer": 1,
                     "team": "기술개발 본부팀"
-                }
+                },{},...
             ]
         """
         serializer = self.get_serializer(
-            data=request.data, context={"request", request}
+            data=request.data, context={"request", request}, many=True
         )
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(
-            serializer.data, status=status.HTTP_201_CREATED, headers=headers
-        )
+        if serializer.is_valid(raise_exception=True):
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            return Response(
+                serializer.data, status=status.HTTP_201_CREATED, headers=headers
+            )
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST, data=serializer.data)
 
     def update(self, request, *args, **kwargs):
         # 업데이트 기능 지원 안함. 삭제했다 새로 만들어야 함.
