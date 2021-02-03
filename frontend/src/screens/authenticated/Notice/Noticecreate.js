@@ -40,7 +40,7 @@ const Noticecreate = ({match, user}) => {
         const Teamdata = {
             "title":title,
             "contents":desc,
-            "Team":user.team
+            "team":"TDD"
         };
     axios.post(`/api/v1/notice/`, Teamdata, {'headers':{'Authorization':'Token ' + `${user.token}`}})
         .then((res) => {
