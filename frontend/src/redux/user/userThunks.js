@@ -2,7 +2,7 @@ import { userActions } from "./userSlice";
 import {
   loginRequest,
   logoutRequest,
-  CheckLogedInRequest,
+  CheckLogedInRequest
 } from "../../api/users/auth";
 import { alertActions } from "../alert/alertSlice";
 
@@ -14,9 +14,9 @@ const logout = () => (dispatch, getState) => {
   });
 };
 
-const login = (data) => (dispatch) => {
+const login = data => dispatch => {
   loginRequest(data)
-    .then((res) => {
+    .then(res => {
       const { data, status } = res;
       if (status === 200) {
         dispatch(userActions.login(data));
@@ -25,10 +25,11 @@ const login = (data) => (dispatch) => {
             `반갑습니다 ${data.user.last_name}${data.user.first_name}님`
           )
         );
+
         return true;
       }
     })
-    .catch((e) => {
+    .catch(e => {
       dispatch(logout());
       dispatch(alertActions.error(`로그인 정보가 올바르지 않습니다.`));
     });
@@ -36,7 +37,7 @@ const login = (data) => (dispatch) => {
 
 const checkLogedIn = () => (dispatch, getState) => {
   const token = getState().user.token;
-  CheckLogedInRequest(token).catch((e) => {
+  CheckLogedInRequest(token).catch(e => {
     dispatch(logout());
   });
 };

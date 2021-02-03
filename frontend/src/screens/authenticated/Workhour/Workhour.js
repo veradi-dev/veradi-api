@@ -62,16 +62,6 @@ const Workhour = ({ user, workhours, getMyWorkhours }) => {
   const [total, setTotal] = React.useState(0);
 
   useEffect(() => {
-    let totalWorkhour = 0;
-    for (let i = 0; i < workhours.length; i++) {
-      if (workhours[i].status === 1) {
-        totalWorkhour += workhours[i].total;
-      }
-    }
-    setTotal(totalWorkhour);
-  }, [workhours]);
-
-  useEffect(() => {
     const createData = () => {
       return workhours
         .filter(
@@ -88,9 +78,11 @@ const Workhour = ({ user, workhours, getMyWorkhours }) => {
             14,
             16
           )}분`,
+          total_int: workhour.total,
           total: `${parseInt(workhour.total / 3600)}시간 ${parseInt(
             (workhour.total % 3600) / 60
           )}분`,
+          status_code: workhour.status,
           status: () => (
             <Typography variant='caption'>{workhour.message}</Typography>
           ),
@@ -106,6 +98,20 @@ const Workhour = ({ user, workhours, getMyWorkhours }) => {
     setRows(createData());
   }, [workhours, open]);
 
+  useEffect(() => {
+    let totalWorkhour = 0;
+    for (let i = 0; i < rows.length; i++) {
+      if (rows[i].status_code === 1) {
+        totalWorkhour += rows[i].total_int;
+      }
+    }
+    setTotal(totalWorkhour);
+  }, [rows, date]);
+
+  // 처음 접속하면 검색시킴
+  useEffect(() => {
+    search();
+  }, []);
   return (
     <Grid container spacing={3}>
       <Grid item xs={12} md={12} lg={12}>

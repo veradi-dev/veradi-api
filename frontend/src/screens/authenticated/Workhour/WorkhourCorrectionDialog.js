@@ -1,4 +1,5 @@
 import React from "react";
+import { connect } from "react-redux";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
@@ -15,8 +16,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 import { Container } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { connect } from "react-redux";
-
+import { correctionWorkhour } from "~/frontend/src/redux/workhours/workhoursThunks";
 
 const modes = [
   {
@@ -43,7 +43,7 @@ const useStyles = makeStyles(theme => ({
 const WorkhourCorrectionDialog = ({ workhour, correctionWorkhour }) => {
   const [open, setOpen] = React.useState(false);
   const [form, setForm] = React.useState({
-    workhourId: workhour.id,
+    workhour: workhour.id,
     datetime: workhour.start.slice(0, 16),
     mode: 3,
     reason: ""
@@ -60,6 +60,7 @@ const WorkhourCorrectionDialog = ({ workhour, correctionWorkhour }) => {
     console.log(form);
     correctionWorkhour(form);
     setForm({
+      workhour: workhour.id,
       datetime: workhour.start.slice(0, 16),
       mode: 3,
       reason: ""
@@ -174,6 +175,10 @@ const WorkhourCorrectionDialog = ({ workhour, correctionWorkhour }) => {
   );
 };
 
-export default connect(() => { correctionWorkhour })(
-  WorkhourCorrectionDialog
-);
+const mapStateToProps = () => ({});
+const mapDispatchToProps = { correctionWorkhour };
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(WorkhourCorrectionDialog);

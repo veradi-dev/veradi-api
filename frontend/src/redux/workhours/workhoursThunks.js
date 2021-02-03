@@ -3,6 +3,7 @@ import {
   getMyWorkhoursRequest,
   correctionWorkhourRequest
 } from "../../api/workhours";
+import { alertActions } from "../alert/alertSlice";
 
 export const getMyWorkhours = (year, month) => (dispatch, getState) => {
   const userId = getState().user.id;
@@ -13,8 +14,24 @@ export const getMyWorkhours = (year, month) => (dispatch, getState) => {
   });
 };
 
-export const correctionWorkhour = data => dispatch => {
-  correctionWorkhourRequest(token, data).then(res => {
-    console.log(res);
-  });
+export const correctionWorkhour = data => (dispatch, getState) => {
+  const token = getState().user.token;
+
+  correctionWorkhourRequest(token, data)
+    .then(res => {
+      dispatch(
+        alertActions.create({
+          type: "success",
+          message: "이의신청이 접수되었습니다."
+        })
+      );
+    })
+    .catch(err => {
+      dispatch(
+        alertActions.create({
+          type: "error",
+          message: "이의신청 접수 중 오류가 발생했습니다."
+        })
+      );
+    });
 };

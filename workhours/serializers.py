@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from users.serializers import UserSerializer
-from .models import EnterLog, WorkHour
+from .models import EnterLog, WorkHour, WorkHourCorrectionRequest
 
 
 class EnterLogSerializer(serializers.ModelSerializer):
@@ -47,3 +47,9 @@ class WorkHourSerializer(serializers.ModelSerializer):
             "complete",
         )
         read_only_fields = ("id", "user")
+
+
+class WorkHourCorrectionRequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WorkHourCorrectionRequest
+        fields = ("workhour", "mode", "date", "time", "reason", "approved")
