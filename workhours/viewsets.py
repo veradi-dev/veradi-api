@@ -5,9 +5,9 @@ from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from .serializers import WorkHourSerializer
-from .models import WorkHour
-
+from .serializers import WorkHourSerializer, WorkHourCorrectionRequestSerializer
+from .models import WorkHour, WorkHourCorrectionRequest
+from utils import get_aware_datetime
 
 User = get_user_model()
 
@@ -15,7 +15,7 @@ User = get_user_model()
 class WorkHourViewset(viewsets.ModelViewSet):
     serializer_class = WorkHourSerializer
     queryset = WorkHour.objects.all()
-    permission_classes = []
+    permission_classes = [IsAuthenticated]
 
     def list(self, request):
         """
@@ -24,7 +24,6 @@ class WorkHourViewset(viewsets.ModelViewSet):
         month=검색하고자 하는 달 (1-12)
         """
         user = request.user
-        print(request.GET)
         # target_user 를 가져온다. 가져오지 못한다면 400
         try:
             target_user = User.objects.get(pk=int(request.GET.get("user")))
@@ -67,29 +66,25 @@ class WorkHourViewset(viewsets.ModelViewSet):
 
     @action(methods=["get", "post"], detail=False)
     def correction(self, request):
+        print("correction")
         if request.method == "GET":
             print("get")
+            return Response()
+
         elif request.method == "POST":
             data = request.data
-            print(data)
-        return Response()
+            datetime_str = data.pop("datetime", None)
+            if datetime_str is None:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
 
-    def get_permissions(self):
-        """
-        Instantiates and returns the list of permissions that this view requires.
-        """
-        permission_classes = []
-        if self.action == "list":
-            permission_classes = [IsAuthenticated]
-        elif self.action == "create":
-            pass
-        elif self.action == "retrieve":
-            pass
-        elif self.action == "update":
-            pass
-        elif self.action == "partial_update":
-            pass
-        elif self.action == "partial_update":
-            pass
-
-        return [permission() for permission in permission_classes]
+            data.update(
+                {
+                    "date": get_aware_datetime(datetime_str).date(),
+                    "time": get_aware_datetime(datetime_str).time(),
+                }
+            )
+            serializer = WorkHourCorrectionRequestSerializer(data=data)
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+                return Response(status=status.HTTP_201_CREATED)
+            return Response(status=status.HTTP_400_BAD_REQUEST, data=serializer.data)

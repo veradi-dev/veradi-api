@@ -43,7 +43,7 @@ const useStyles = makeStyles(theme => ({
 const WorkhourCorrectionDialog = ({ workhour, correctionWorkhour }) => {
   const [open, setOpen] = React.useState(false);
   const [form, setForm] = React.useState({
-    workhourId: workhour.id,
+    workhour: workhour.id,
     datetime: workhour.start.slice(0, 16),
     mode: 3,
     reason: ""
@@ -60,6 +60,7 @@ const WorkhourCorrectionDialog = ({ workhour, correctionWorkhour }) => {
     console.log(form);
     correctionWorkhour(form);
     setForm({
+      workhour: workhour.id,
       datetime: workhour.start.slice(0, 16),
       mode: 3,
       reason: ""
