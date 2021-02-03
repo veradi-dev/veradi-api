@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import EnterLog, WorkHour
+from .models import EnterLog, WorkHour, WorkHourCorrectionRequest
 
 
 class EnterLogInline(admin.TabularInline):
@@ -14,3 +14,8 @@ class EnterLogAdmin(admin.ModelAdmin):
 @admin.register(WorkHour)
 class WorkHourAdmin(admin.ModelAdmin):
     inlines = (EnterLogInline,)
+
+
+@admin.register(WorkHourCorrectionRequest)
+class WorkHourAdmin(admin.ModelAdmin):
+    pass

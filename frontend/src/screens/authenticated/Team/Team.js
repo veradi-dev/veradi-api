@@ -27,32 +27,6 @@ import DateComboBox from "./../../../components/DateComboBox";
 const Team = ({ user }) => {
   const [Workhours, setWorkhours] = useState([]);
 
-  /*useEffect(() => {
-    // console.log(user.token);
-    // const headers = {
-    //   Authorization: 'Token bee2aa204fa6f7cceaea15c1074eb86fb0e14d6d3a38955d61ffd75c258bf5e6',
-    //   'Content-Type': 'application/json'
-    //   }
-    axios.get(`/api/v1/workhours?user=1&month=1`, {'headers':{'Authorization':'Token ' + `${user.token}`}}).then((res) => {
-      setWorkhours(res.data);
-      console.log(res.data);
-    }).catch((err)=>{
-			const status = err?.response?.status;
-			if (status === undefined) {
-				console.dir("데이터를 불러오던 중 예기치 못한 예외가 발생하였습니다.\n" + JSON.stringify(err));
-			}
-			else if (status === 400) {
-				console.dir("400에러");
-			}
-			else if (status === 401) {
-				console.dir("401에러");
-			}
-			else if (status === 500) {
-				console.dir("내부 서버 오류입니다. 잠시만 기다려주세요.");
-			}
-			});
-	}, []);*/
-
   const monthworkhour = {
     avg_per_date: 720, // 단위는 초(seconds)
     avg_per_person: 10800 // 단위는 초(seconds)
@@ -254,22 +228,3 @@ const mapStateToProps = state => ({
   user: state.user
 });
 export default connect(mapStateToProps)(Team);
-/*
-  
-            <div className={classes.seeMore}>
-                <Link color="primary" href="#" onClick={preventDefault}>
-                더보기
-                </Link>
-            </div>
-            */
-
-//https://dev.to/asimdahall/simple-search-form-in-react-using-hooks-42pg
-
-// <Grid container spacing={1}>
-// <Grid item xs={10}>
-// <TextField fullWidth='true' id="outlined-search" label="팀원을 검색하세요" type="search" variant="outlined" size="small"/>
-// </Grid>
-// <Grid item xs={2}>
-// <Button fullWidth='true' onClick={searchteamperson} color="primary" variant="contained">검색</Button>
-// </Grid>
-// </Grid>

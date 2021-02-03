@@ -52,4 +52,4 @@ class WorkHourSerializer(serializers.ModelSerializer):
 class WorkHourCorrectionRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = WorkHourCorrectionRequest
-        fields = ("workhour", "mode", "date", "time", "reason", "approved")
+        fields = ("workhour", "mode", "date", "time", "reason", "approved", "complete")
