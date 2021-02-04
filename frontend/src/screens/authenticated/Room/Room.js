@@ -196,7 +196,6 @@ const Room = ({user}) => {
 }
   useEffect(() => {
     setLoading(true);
-    console.log(value.getMonth());
     axios.get(`/api/v1/conference?year=${value.getFullYear()}&month=${value.getMonth()+1}&day=${value.getDate()}`, {'headers':{'Authorization':'Token ' + `${user.token}`}}).then((res) => {
       console.log(res.data);
       setreserveresult(res.data);

@@ -23,8 +23,7 @@ export default function NoticeDetailPost({noticeData, num}) {
       }));
       const classes = useStyles();
       function findnotice(noticeData, num){
-        
-        {for(let i=0;noticeData[i].id<=num;i++){
+        {for(let i=0;noticeData[i].id>=num;i++){
           if(noticeData[i].id==num){
             return i;
           }

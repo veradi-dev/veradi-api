@@ -81,7 +81,6 @@ const CancelRoom = ({user}) => {
   useEffect(() => {
     axios.get(`/api/v1/conference?year=2021&month=1&day=17`, {'headers':{'Authorization':'Token ' + `${user.token}`}}).then((res) => {
       setWorkhours(res.data);
-      console.log("asdg",res.data);
     }).catch((err)=>{
       const status = err?.response?.status;
       if (status === undefined) {
@@ -115,9 +114,7 @@ const CancelRoom = ({user}) => {
       }));
       const classes = useStyles();
       const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-      //console.log(value);
       const getreservation = (value) => {
-        console.log(value);
             };
     
     return (

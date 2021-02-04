@@ -29,7 +29,6 @@ const Noticecreate = ({match, user}) => {
           height: 240,
         },
       }));
-      console.log(match.params);
       const classes = useStyles();
       const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
       const handlesubmit=(e)=>{
