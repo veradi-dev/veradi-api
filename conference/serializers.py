@@ -12,7 +12,7 @@ class ReservationSerializer(serializers.ModelSerializer):
             user = obj.proposer
         except AttributeError:
             user = obj["proposer"]
-        return user.get_team_name() + "팀"
+        return user.get_team_name()
 
     def validate_proposer(self, value):
         user = self.context["request"].user

@@ -94,7 +94,7 @@ class ConferenceViewSet(viewsets.ModelViewSet):
                     "start_time": 4,
                     "proposer": 1,
                     "team": "기술개발 본부팀"
-                }
+                },{},...
             ]
         """
         serializer = self.get_serializer(

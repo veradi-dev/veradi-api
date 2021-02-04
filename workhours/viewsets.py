@@ -64,11 +64,17 @@ class WorkHourViewset(viewsets.ModelViewSet):
         serializer = self.get_serializer(workhours, many=True)
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
-    @action(methods=["get", "post"], detail=False)
+    @action(methods=["get", "post", "patch", "delete"], detail=False)
     def correction(self, request):
-        print("correction")
         if request.method == "GET":
-            print("get")
+            user = request.user
+            # 팀장 권한이 있는 사람만 근무 시간 정정 요청을 확인할 수 있다.
+            if user.position < 3:
+                return Response(status=status.HTTP_401_UNAUTHORIZED)
+            # 자신이 속한 팀의 모든 사람의 근무 정정을 가져온다.
+            queryset = WorkHourCorrectionRequest.objects.filter(
+                workhour__user__team=user.team,
+            )
             return Response()
 
         elif request.method == "POST":

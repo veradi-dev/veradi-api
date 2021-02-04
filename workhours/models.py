@@ -172,6 +172,8 @@ class WorkHourCorrectionRequest(CoreModel):
     reason = models.CharField(verbose_name="사유", max_length=1000)
     # 승인 여부
     approved = models.BooleanField(default=False)
+    # 결재 여부
+    complete = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.workhour.user.get_full_name()}의 {self.date}의 근무시간 정정 요청"
