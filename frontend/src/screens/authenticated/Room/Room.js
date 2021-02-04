@@ -21,7 +21,9 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import axios from "axios";
 import { connect } from "react-redux";
-import Position from './../../../components/Position';
+import {getPosition} from './../../../utils';
+
+
 let initialState = {
   times: [
     {id:0, time:"00:00" ,active:false, team:null, booked:false},
@@ -133,7 +135,6 @@ const Room = ({user}) => {
       for(let t=0;t<Object.keys(reserveresult).length;t++){
         initialState.times[i].booked=false;
         initialState.times[i].team=null;
-    
     }}
     for(let i=0;i<Object.keys(initialState.times).length;i++){
       for(let t=0;t<Object.keys(reserveresult).length;t++){
@@ -163,7 +164,7 @@ const Room = ({user}) => {
       <div>
       </div>
       <span className="reservebtn">
-      <Button variant="contained" color="primary" onClick={() => alert("예약되었습니다!")}>
+      <Button variant="contained" color="primary" onClick={handleSubmit}>
       예약하기
       </Button>
       <Button variant="contained" color="secondary" onClick={() => alert("예약을 취소하시겠습니가??")}>
@@ -232,6 +233,74 @@ const Room = ({user}) => {
     setroom(event.target.value);
   };
 
+
+  function findActive(state){
+    console.log(state);
+  }
+  const handleSubmit = () => {
+//     const data = [{
+//       "room":room,
+//       "date":value.getFullYear()+"-"+value.getMonth()+"-"+value.getDate(),
+//       "start_time":"44",
+//       "proposer":user.id
+//   },
+//   {
+//     "room":room,
+//     "date":value.getFullYear()+value.getMonth()+value.getDate(),
+//     "start_time":"45",
+//     "proposer":user.id
+// },
+// {
+//   "room":room,
+//   "date":value.getFullYear()+value.getMonth()+value.getDate(),
+//   "start_time":"46",
+//   "proposer":user.id
+// },
+// ];
+
+const data = [{
+        "room":"1",
+        "date":"2021-02-19",
+        "start_time":"44",
+        "proposer":"1"
+    },
+    {
+      "room":"1",
+        "date":"2021-02-19",
+        "start_time":"45",
+        "proposer":"1"
+  },
+  {
+    "room":"1",
+        "date":"2021-02-19",
+        "start_time":"46",
+        "proposer":"1"
+  },
+  ];
+axios.post(`/api/v1/conference/`, data, {'headers':{'Authorization':'Token ' + `${user.token}`}})
+  .then((res) => {
+      console.log(res);
+  })
+  .catch((err) => {
+  const status = err?.response?.status;
+  console.log(err);
+  if (status === undefined) {
+      console.dir("데이터를 불러오던 중 예기치 못한 예외가 발생하였습니다.\n" + JSON.stringify(err));
+  }
+  else if (status === 400) {
+      alert("");
+      console.dir("400에러");
+  }
+  else if (status === 500) {
+      console.dir("내부 서버 오류입니다. 잠시만 기다려주세요.");
+  }
+  else{
+      history.push('/notice/전체/noticelist/1')
+  }
+  }
+  );
+  };
+
   
   
   const handleChange = (event) => {
@@ -255,7 +324,7 @@ const Room = ({user}) => {
     
     return (
     <Grid container spacing={3}>
-      {Position(user)>1 ? 
+      {getPosition(user)>1 ? 
           <React.Fragment>
         <Grid item xs={12} md={6} lg={6}>
               <Paper className={fixedHeightPaper}>

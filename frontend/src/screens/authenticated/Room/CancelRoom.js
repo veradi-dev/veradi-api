@@ -22,7 +22,7 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import axios from "axios";
 import { connect } from "react-redux";
-import Position from './../../../components/Position';
+import {getPosition} from './../../../utils';
 import {Link} from 'react-router-dom';
 const initialState = {
   times: [
@@ -122,7 +122,7 @@ const CancelRoom = ({user}) => {
     
     return (
     <Grid container spacing={3}>
-      {Position(user)>1 ? 
+      {getPosition(user)>1 ? 
           <React.Fragment>
         <Grid item xs={12} md={6} lg={6}>
               <Paper className={fixedHeightPaper}>
