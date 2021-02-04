@@ -6,7 +6,7 @@ import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import { makeStyles } from "@material-ui/core/styles";
 
-export default function DateComboBox ({ date, setdate }) {
+export default function DateComboBox ({ date, setDate }) {
   const useStyles = makeStyles(theme => ({
     formControl: {
       margin: theme.spacing(1),
@@ -16,7 +16,7 @@ export default function DateComboBox ({ date, setdate }) {
   const classes = useStyles();
   const handleChange = event => {
     const name = event.target.name;
-    setdate({
+    setDate({
       ...date,
       [name]: parseInt(event.target.value)
     });

@@ -50,6 +50,19 @@ class WorkHourSerializer(serializers.ModelSerializer):
 
 
 class WorkHourCorrectionRequestSerializer(serializers.ModelSerializer):
+    workhour = WorkHourSerializer(read_only=True)
+
     class Meta:
         model = WorkHourCorrectionRequest
-        fields = ("workhour", "mode", "date", "time", "reason", "approved", "complete")
+        fields = (
+            "id",
+            "workhour",
+            "mode",
+            "date",
+            "time",
+            "reason",
+            "approved",
+            "complete",
+            "created_at",
+        )
+        read_only_fields = ("id", "workhour")

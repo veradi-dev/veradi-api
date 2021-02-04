@@ -67,17 +67,28 @@ class WorkHourViewset(viewsets.ModelViewSet):
     @action(methods=["get", "post", "patch", "delete"], detail=False)
     def correction(self, request):
         if request.method == "GET":
+            """
+            근무 시간 정정 요청을 모두 가져온다.
+            """
             user = request.user
             # 팀장 권한이 있는 사람만 근무 시간 정정 요청을 확인할 수 있다.
             if user.position < 3:
                 return Response(status=status.HTTP_401_UNAUTHORIZED)
-            # 자신이 속한 팀의 모든 사람의 근무 정정을 가져온다.
+            # 자신이 속한 팀의 아직 결재되지 않은 모든 근무 정정을 가져온다.
             queryset = WorkHourCorrectionRequest.objects.filter(
-                workhour__user__team=user.team,
+                workhour__user__in=User.objects.filter(team=user.team),
+                complete=False,
             )
-            return Response()
+            if queryset.__len__() == 0:
+                return Response(status.HTTP_204_NO_CONTENT)
+            serializer = WorkHourCorrectionRequestSerializer(queryset, many=True)
+            print(queryset)
+            return Response(status=status.HTTP_200_OK, data=serializer.data)
 
         elif request.method == "POST":
+            """
+            근무 시간 정정 요청을 생성한다.
+            """
             data = request.data
             datetime_str = data.pop("datetime", None)
             if datetime_str is None:
@@ -94,3 +105,17 @@ class WorkHourViewset(viewsets.ModelViewSet):
                 serializer.save()
                 return Response(status=status.HTTP_201_CREATED)
             return Response(status=status.HTTP_400_BAD_REQUEST, data=serializer.data)
+
+        elif request.method == "PATCH":
+            """
+            근무 시간 정정 요청을 결재한다. (승인 / 거절)
+            """
+            pass
+
+        elif request.method == "DELETE":
+            """
+            근무 시간 정정 요청을 삭제한다.
+                - 결재 이전에는 결재 생성자가 삭제 가능.
+                - 결재가 된 이후는 삭제 불가능.
+            """
+            pass

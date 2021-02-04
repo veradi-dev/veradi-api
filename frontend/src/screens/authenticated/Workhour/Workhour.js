@@ -123,7 +123,7 @@ const Workhour = ({ user, workhours, getMyWorkhours }) => {
               alignItems='center'
             >
               <Grid>
-                <DateComboBox date={date} setdate={setDate}></DateComboBox>
+                <DateComboBox date={date} setDate={setDate}></DateComboBox>
               </Grid>
               <Grid>
                 <Button onClick={search} color='primary' variant='contained'>
