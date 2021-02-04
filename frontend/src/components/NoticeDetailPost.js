@@ -9,6 +9,7 @@ import Button from '@material-ui/core/Button';
 
 
 export default function NoticeDetailPost({noticeData, num}) {
+  console.log(noticeData);
     const useStyles = makeStyles((theme) => ({
         paper: {
           padding: theme.spacing(2),
@@ -51,7 +52,7 @@ export default function NoticeDetailPost({noticeData, num}) {
         <Button color="primary" variant="contained">삭제하기</Button>
         </div>
         <Typography align="right" color="inherit" variant="subtitle2" component="div">
-        {noticeData[findnotice(noticeData, num)].writer.last_name+noticeData[findnotice(noticeData, num)].writer.first_name}  2021년 1월 26일
+        {noticeData[findnotice(noticeData, num)].writer.last_name+noticeData[findnotice(noticeData, num)].writer.first_name}  {noticeData[findnotice(noticeData, num)].created_at.slice(0,10)}
         </Typography>
         <Divider />
         <br></br>

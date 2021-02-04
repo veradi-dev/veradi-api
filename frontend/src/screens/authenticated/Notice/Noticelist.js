@@ -13,10 +13,11 @@ import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import {Link, useParams} from 'react-router-dom';
 import Title from '../Title';
-import Position from './../../../components/Position';
+import {getPosition} from '~/frontend/src/utils';
 import axios from 'axios';
 import NoticeLayout from './NoticeLayout';
 import { connect } from "react-redux";
+import {getTeamCode} from '~/frontend/src/utils';
 /*
 function createData(id, title, name, date) {
   return {id, title, name, date};
@@ -62,9 +63,11 @@ const useStyles = makeStyles((theme) => ({
 const Noticelist=({user, match, Team})=> {
   const [rows, setrows] = useState([]);
   const [loading, setLoading] = useState(true);
-  if(match.params.team=='전체'){
+  console.log(match.params.team);
+  
   useEffect(() => {
-    axios.get(`/api/v1/notice/`, {'headers':{'Authorization':'Token ' + `${user.token}`}}).then((res) => {
+    if(match.params.team=='전체'){
+    axios.get(`api/v1/notice/`, {'headers':{'Authorization':'Token ' + `${user.token}`}}).then((res) => {
       setrows(res.data);
       console.log(res.data);
       setLoading(false);
@@ -82,32 +85,35 @@ const Noticelist=({user, match, Team})=> {
 			else if (status === 500) {
 				console.dir("내부 서버 오류입니다. 잠시만 기다려주세요.");
 			}
-			});
+      });}
+      
+      else{
+        axios.get(`/api/v1/notice?team=${getTeamCode(user.team)}`, {'headers':{'Authorization':'token ' + `${user.token}`}}).then((res) => {
+          setrows(res.data);
+          console.log(res.data);
+          setLoading(false);
+        }).catch((err)=>{
+          const status = err?.response?.status;
+          if (status === undefined) {
+            console.dir("데이터를 불러오던 중 예기치 못한 예외가 발생하였습니다.\n" + JSON.stringify(err));
+          }
+          else if (status === 400) {
+            console.dir("400에러");
+          }
+          else if (status === 401) {
+            console.dir("401에러");
+          }
+          else if (status === 500) {
+            console.dir("내부 서버 오류입니다. 잠시만 기다려주세요.");
+          }
+          });
+      }
+
+    
   }, [Team]);
-}
-  else{
-    useEffect(() => {
-      axios.get(`/api/v1/notice?team=TDD`, {'headers':{'Authorization':'token ' + `${user.token}`}}).then((res) => {
-        setrows(res.data);
-        console.log(res.data);
-        setLoading(false);
-      }).catch((err)=>{
-        const status = err?.response?.status;
-        if (status === undefined) {
-          console.dir("데이터를 불러오던 중 예기치 못한 예외가 발생하였습니다.\n" + JSON.stringify(err));
-        }
-        else if (status === 400) {
-          console.dir("400에러");
-        }
-        else if (status === 401) {
-          console.dir("401에러");
-        }
-        else if (status === 500) {
-          console.dir("내부 서버 오류입니다. 잠시만 기다려주세요.");
-        }
-        });
-    }, [Team]);
-  }
+
+
+
   const USER_PATH = `/notice/${match.params.team}/noticelist`;
   const ROWS_PER_PAGE = 10;
 
@@ -119,7 +125,7 @@ const Noticelist=({user, match, Team})=> {
       <React.Fragment>
       <Title>{match.params.team} 공지사항</Title>
       <Link to={`/notice/${match.params.team}/create`}>
-      {Position(user)>2 ? 
+      {getPosition(user)>2 ? 
       <Button>작성하기</Button> : <div></div>}
       </Link>
       <Table className={classes.table} size="small">
@@ -139,8 +145,8 @@ const Noticelist=({user, match, Team})=> {
             <TableRow key={row.id}>
               <TableCell component={Link} to={`/notice/${match.params.team}/${row.id}`} style={{ textDecoration: 'none' }}  align="center" width="10%">{row.id}</TableCell>
               <TableCell component={Link} to={`/notice/${match.params.team}/${row.id}`} style={{ textDecoration: 'none' }}  width="50%">{row.title}</TableCell>
-              <TableCell align="center" width="20%">{row.name}</TableCell>
-              <TableCell align="center" width="20%">{row.date}</TableCell>
+              <TableCell align="center" width="20%">{row.writer.last_name+row.writer.first_name}</TableCell>
+              <TableCell align="center" width="20%">{row.created_at.slice(0,10)}</TableCell>
             </TableRow>);})}
         </TableBody>
       </Table>

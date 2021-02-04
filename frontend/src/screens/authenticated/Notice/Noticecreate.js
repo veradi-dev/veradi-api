@@ -11,6 +11,7 @@ import Button from '@material-ui/core/Button';
 import {Link} from 'react-router-dom'
 import axios from 'axios';
 import { connect } from "react-redux";
+import {getTeamCode} from '~/frontend/src/utils';
 const Noticecreate = ({match, user}) => {
     const { team } = match.params;
     const [desc, setDesc] = useState('');
@@ -40,30 +41,61 @@ const Noticecreate = ({match, user}) => {
         const Teamdata = {
             "title":title,
             "contents":desc,
-            "team":"TDD"
+            "team":getTeamCode(user.team)
         };
-    axios.post(`/api/v1/notice/`, Teamdata, {'headers':{'Authorization':'Token ' + `${user.token}`}})
-        .then((res) => {
-            console.log(res);
-        })
-        .catch((err) => {
-        const status = err?.response?.status;
-        console.log(err);
-        if (status === undefined) {
-            console.dir("데이터를 불러오던 중 예기치 못한 예외가 발생하였습니다.\n" + JSON.stringify(err));
-        }
-        else if (status === 400) {
-            alert("");
-            console.dir("400에러");
-        }
-        else if (status === 500) {
-            console.dir("내부 서버 오류입니다. 잠시만 기다려주세요.");
-        }
-        else{
-            history.push('/notice/전체/noticelist/1')
-        }
-        }
-        );
+        if(match.params.team=='전체'){
+            axios.post(`/api/v1/notice/`, data, {'headers':{'Authorization':'Token ' + `${user.token}`}})
+                    .then((res) => {
+                        console.log(res);
+                    })
+                    .catch((err) => {
+                    const status = err?.response?.status;
+                    console.log(err);
+                    if (status === undefined) {
+                        console.dir("데이터를 불러오던 중 예기치 못한 예외가 발생하였습니다.\n" + JSON.stringify(err));
+                    }
+                    else if (status === 400) {
+                        alert("");
+                        console.dir("400에러");
+                    }
+                    else if (status === 500) {
+                        console.dir("내부 서버 오류입니다. 잠시만 기다려주세요.");
+                    }
+                    else{
+                        history.push('/notice/전체/noticelist/1')
+                    }
+                    }
+                    );
+            }
+                  
+                  else{
+            axios.post(`/api/v1/notice/`, Teamdata, {'headers':{'Authorization':'Token ' + `${user.token}`}})
+                    .then((res) => {
+                        console.log(res);
+                    })
+                    .catch((err) => {
+                    const status = err?.response?.status;
+                    console.log(err);
+                    if (status === undefined) {
+                        console.dir("데이터를 불러오던 중 예기치 못한 예외가 발생하였습니다.\n" + JSON.stringify(err));
+                    }
+                    else if (status === 400) {
+                        alert("");
+                        console.dir("400에러");
+                    }
+                    else if (status === 500) {
+                        console.dir("내부 서버 오류입니다. 잠시만 기다려주세요.");
+                    }
+                    else{
+                        history.push('/notice/전체/noticelist/1')
+                    }
+                    }
+                    );
+                  }
+
+
+
+
 }
 
 const [title, settitle] = useState();

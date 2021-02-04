@@ -21,7 +21,9 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import axios from "axios";
 import { connect } from "react-redux";
-import Position from './../../../components/Position';
+import {getPosition} from './../../../utils';
+
+
 let initialState = {
   times: [
     {id:0, time:"00:00" ,active:false, team:null, booked:false},
@@ -236,12 +238,45 @@ const Room = ({user}) => {
     console.log(state);
   }
   const handleSubmit = () => {
-    const data = {
-      "room":room,
-      "date":value.getFullYear()+value.getMonth()+value.getDate(),
-      "start_time":findActive(state),
-      "proposer":user.id
-  };
+//     const data = [{
+//       "room":room,
+//       "date":value.getFullYear()+"-"+value.getMonth()+"-"+value.getDate(),
+//       "start_time":"44",
+//       "proposer":user.id
+//   },
+//   {
+//     "room":room,
+//     "date":value.getFullYear()+value.getMonth()+value.getDate(),
+//     "start_time":"45",
+//     "proposer":user.id
+// },
+// {
+//   "room":room,
+//   "date":value.getFullYear()+value.getMonth()+value.getDate(),
+//   "start_time":"46",
+//   "proposer":user.id
+// },
+// ];
+
+const data = [{
+        "room":"1",
+        "date":"2021-02-19",
+        "start_time":"44",
+        "proposer":"1"
+    },
+    {
+      "room":"1",
+        "date":"2021-02-19",
+        "start_time":"45",
+        "proposer":"1"
+  },
+  {
+    "room":"1",
+        "date":"2021-02-19",
+        "start_time":"46",
+        "proposer":"1"
+  },
+  ];
 axios.post(`/api/v1/conference/`, data, {'headers':{'Authorization':'Token ' + `${user.token}`}})
   .then((res) => {
       console.log(res);
@@ -289,7 +324,7 @@ axios.post(`/api/v1/conference/`, data, {'headers':{'Authorization':'Token ' + `
     
     return (
     <Grid container spacing={3}>
-      {Position(user)>1 ? 
+      {getPosition(user)>1 ? 
           <React.Fragment>
         <Grid item xs={12} md={6} lg={6}>
               <Paper className={fixedHeightPaper}>

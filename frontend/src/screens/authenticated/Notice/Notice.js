@@ -7,6 +7,8 @@ import Noticelist from './Noticelist';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import NoticeLayout from './NoticeLayout';
+// import {Position} from '~/frontend/src/utils';
+
 const Notice = ({user, match}) => {
     const useStyles = makeStyles((theme) => ({
         paper: {
