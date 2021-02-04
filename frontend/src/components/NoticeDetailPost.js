@@ -6,10 +6,15 @@ import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
-
+import axios from "axios";
 
 export default function NoticeDetailPost({noticeData, num}) {
-  console.log(noticeData);
+
+  const handleDelete=()=>{
+        }
+
+
+
     const useStyles = makeStyles((theme) => ({
         paper: {
           padding: theme.spacing(2),
@@ -48,7 +53,7 @@ export default function NoticeDetailPost({noticeData, num}) {
         <br></br>
         <div className="fixdeletebtn">
         <Button color="primary" variant="contained">수정하기</Button>
-        <Button color="primary" variant="contained">삭제하기</Button>
+        <Button color="primary" variant="contained" onClick={handleDelete}>삭제하기</Button>
         </div>
         <Typography align="right" color="inherit" variant="subtitle2" component="div">
         {noticeData[findnotice(noticeData, num)].writer.last_name+noticeData[findnotice(noticeData, num)].writer.first_name}  {noticeData[findnotice(noticeData, num)].created_at.slice(0,10)}

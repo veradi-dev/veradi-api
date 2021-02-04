@@ -91,10 +91,6 @@ const Noticecreate = ({match, user}) => {
                     }
                     );
                   }
-
-
-
-
 }
 
 const [title, settitle] = useState();
