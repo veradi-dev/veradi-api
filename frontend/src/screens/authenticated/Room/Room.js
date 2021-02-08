@@ -24,6 +24,7 @@ import { connect, useDispatch } from "react-redux";
 import { getPosition } from "./../../../utils";
 import { getConference } from "~/frontend/src/redux/conference/conferenceThunk";
 import { alertActions } from "~/frontend/src/redux/alert/alertSlice";
+import { columnLookupSelector } from "@material-ui/data-grid";
 
 const AntSwitch = withStyles((theme) => ({
   root: {
@@ -159,57 +160,38 @@ const Room = ({ user, getConference }) => {
   }, [date, room]);
 
   const handleSubmit = () => {
-    const data = [];
-    console.log(data);
-    // const data = [
-    //   {
-    //     room: room,
-    //     date:
-    //       value.getFullYear() + "-" + value.getMonth() + "-" + value.getDate(),
-    //     start_time: "44",
-    //     proposer: user.id,
-    //   },
-    //   {
-    //     room: room,
-    //     date: value.getFullYear() + value.getMonth() + value.getDate(),
-    //     start_time: "45",
-    //     proposer: user.id,
-    //   },
-    //   {
-    //     room: room,
-    //     date: value.getFullYear() + value.getMonth() + value.getDate(),
-    //     start_time: "46",
-    //     proposer: user.id,
-    //   },
-    // ];
-
-    // const data = [
-    //   {
-    //     room: "1",
-    //     date: "2021-02-19",
-    //     start_time: "44",
-    //     proposer: "1",
-    //   },
-    //   {
-    //     room: "1",
-    //     date: "2021-02-19",
-    //     start_time: "45",
-    //     proposer: "1",
-    //   },
-    //   {
-    //     room: "1",
-    //     date: "2021-02-19",
-    //     start_time: "46",
-    //     proposer: "1",
-    //   },
-    // ];
+    let temp = [];
+    let data = [];
+    for (let i = 0; i < state.length; i++) {
+      console.log(state[i].active);
+      if (state[i].active == true) {
+        console.log(state[i]);
+        temp = temp.concat(state[i]);
+      }
+    }
+    console.log(temp);
+    for (let i = 0; i < temp.length; i++) {
+      data = data.concat({
+        room: room,
+        date:
+          date.getFullYear() +
+          "-" +
+          (date.getMonth() + 1) +
+          "-" +
+          date.getDate(),
+        start_time: temp[i].start_time.toString(),
+        proposer: user.id.toString(),
+      });
+    }
     axios
       .post(`/api/v1/conference/`, data, {
         headers: { Authorization: "Token " + `${user.token}` },
       })
       .then((res) => {
         console.log(res);
-        reduxDispatch(alertActions.success("예약이 완료되었습니다."));
+        window.location.reload();
+        alert("예약이 완료되었습니다.");
+        //reduxDispatch(alertActions.success("예약이 완료되었습니다."));
       })
       .catch((err) => {
         reduxDispatch(alertActions.error("예약 중 오류가 발생했습니다."));
@@ -225,8 +207,6 @@ const Room = ({ user, getConference }) => {
           console.dir("400에러");
         } else if (status === 500) {
           console.dir("내부 서버 오류입니다. 잠시만 기다려주세요.");
-        } else {
-          history.push("/notice/전체/noticelist/1");
         }
       });
   };
