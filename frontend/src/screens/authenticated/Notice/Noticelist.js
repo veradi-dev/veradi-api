@@ -63,13 +63,12 @@ const useStyles = makeStyles((theme) => ({
 const Noticelist=({user, match, Team})=> {
   const [rows, setrows] = useState([]);
   const [loading, setLoading] = useState(true);
-  console.log(match.params.team);
   
   useEffect(() => {
     if(match.params.team=='전체'){
     axios.get(`api/v1/notice/`, {'headers':{'Authorization':'Token ' + `${user.token}`}}).then((res) => {
-      setrows(res.data);
       console.log(res.data);
+      setrows(res.data);
       setLoading(false);
     }).catch((err)=>{
 			const status = err?.response?.status;
@@ -89,8 +88,8 @@ const Noticelist=({user, match, Team})=> {
       
       else{
         axios.get(`/api/v1/notice?team=${getTeamCode(user.team)}`, {'headers':{'Authorization':'token ' + `${user.token}`}}).then((res) => {
-          setrows(res.data);
           console.log(res.data);
+          setrows(res.data);
           setLoading(false);
         }).catch((err)=>{
           const status = err?.response?.status;
@@ -140,7 +139,8 @@ const Noticelist=({user, match, Team})=> {
           </TableRow>
         </TableHead>
         <TableBody>
-        {(ROWS_PER_PAGE > 0 ? rows.slice((Number(pageNumber) - 1) * ROWS_PER_PAGE,(Number(pageNumber) - 1) * ROWS_PER_PAGE + ROWS_PER_PAGE,):rows).map(row => {
+        {(ROWS_PER_PAGE > 0 ? rows.slice((Number(pageNumber) - 1) * ROWS_PER_PAGE,(Number(pageNumber) - 1) * ROWS_PER_PAGE + ROWS_PER_PAGE,):rows)
+        .map(row => {
           return (
             <TableRow key={row.id}>
               <TableCell component={Link} to={`/notice/${match.params.team}/${row.id}`} style={{ textDecoration: 'none' }}  align="center" width="10%">{row.id}</TableCell>
