@@ -80,7 +80,7 @@ function reducer(state, action) {
         }
         for (let i = 0; i < payload.length; i++) {
           if (
-            time.id === payload[i].start_time &&
+            time.start_time === payload[i].start_time &&
             time.room === payload[i].room
           ) {
             time.booked = true;
@@ -103,9 +103,11 @@ function reducer(state, action) {
 const initialState = [...Array(96).keys()].map((n) => {
   const isMorning = n < 48 ? true : false;
   const hour = Math.floor(n / 4);
-  const minute = Math.round(n % 2) * 30 === 0 ? "00" : "30";
+  const minute = Math.round(n % 2) === 0 ? "00" : "30";
+  const start_time = hour * 2 + Math.round(n % 2);
   return {
     id: n,
+    start_time,
     isMorning,
     room: Math.round((n / 4) % 1) + 1,
     time: `${hour}:${minute}`,
