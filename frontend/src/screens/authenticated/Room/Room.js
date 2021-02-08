@@ -160,28 +160,21 @@ const Room = ({ user, getConference }) => {
   }, [date, room]);
 
   const handleSubmit = () => {
-    let temp = [];
     let data = [];
     for (let i = 0; i < state.length; i++) {
-      console.log(state[i].active);
       if (state[i].active == true) {
-        console.log(state[i]);
-        temp = temp.concat(state[i]);
+        data = data.concat({
+          room: room,
+          date:
+            date.getFullYear() +
+            "-" +
+            (date.getMonth() + 1) +
+            "-" +
+            date.getDate(),
+          start_time: state[i].start_time,
+          proposer: user.id,
+        });
       }
-    }
-    console.log(temp);
-    for (let i = 0; i < temp.length; i++) {
-      data = data.concat({
-        room: room,
-        date:
-          date.getFullYear() +
-          "-" +
-          (date.getMonth() + 1) +
-          "-" +
-          date.getDate(),
-        start_time: temp[i].start_time.toString(),
-        proposer: user.id.toString(),
-      });
     }
     axios
       .post(`/api/v1/conference/`, data, {
