@@ -8,7 +8,7 @@ import "react-calendar/dist/Calendar.css";
 import { Box } from "@material-ui/core";
 import "./Room.css";
 import Title from "../Title";
-import TimeBtn, { Time } from "./TimeBtn";
+import { Time } from "./TimeBtn";
 import Switch from "@material-ui/core/Switch";
 import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
@@ -76,6 +76,10 @@ function reducer(state, action) {
 
       return state.map((time) => {
         for (let i = 0; i < payload.length; i++) {
+          time.booked = false;
+          time.team = null;
+        }
+        for (let i = 0; i < payload.length; i++) {
           if (
             time.id === payload[i].start_time &&
             time.room === payload[i].room
@@ -125,8 +129,8 @@ const Room = ({ user, getConference }) => {
     return dispatch({ type: "TOGGLE", payload: { id } });
   }, []);
   const [isMorning, setIsMorning] = React.useState(true);
-
   useEffect(() => {
+    console.log(date);
     setLoading(true);
     getConference(date)
       .then((res) => {

@@ -60,22 +60,9 @@ const Text = styled.text`
 `;
 //
 export const Time = React.memo(({ time, toggleCallback, user }) => {
-  console.log(time);
   return (
     <Button time={time} onClick={() => toggleCallback(time.id)} user={user}>
       {time.booked ? time.team : time.time}
     </Button>
   );
 });
-
-function TimeBtn({ times, onToggle, user }) {
-  return (
-    <div>
-      {times.map((time) => (
-        <Time onToggle={onToggle} time={time} key={time.id} user={user} />
-      ))}
-    </div>
-  );
-}
-
-export default React.memo(TimeBtn);
