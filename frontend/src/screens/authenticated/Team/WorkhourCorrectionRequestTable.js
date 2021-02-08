@@ -31,16 +31,17 @@ const useRowStyles = makeStyles({
 
 function createRow (r) {
   const { id, date, time, mode, reason, workhour, created_at } = r;
-
+  const datetime = new Date(`${date}T${time}`).toLocaleString().slice(0, -3);
   return {
     id,
     username: workhour.user.last_name + workhour.user.first_name,
+    datetime,
     date,
-    time: time.slice(0, 5),
+    time,
     mode: toggleMode(mode),
     reason,
     workhour,
-    created_at: new Date(created_at).toLocaleString()
+    created_at: new Date(created_at).toLocaleString().slice(0, -3)
   };
 }
 
@@ -58,7 +59,7 @@ function Row (props) {
         <TableCell component='th' scope='row'>
           {row.username}
         </TableCell>
-        <TableCell>{`${row.date} ${row.time} ${row.mode}`}</TableCell>
+        <TableCell>{`${row.datetime} ${row.mode}`}</TableCell>
         <TableCell>{row.created_at}</TableCell>
       </TableRow>
     </React.Fragment>

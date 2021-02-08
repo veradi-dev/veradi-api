@@ -12,12 +12,17 @@ import Workhourtable from "./../../../components/Workhourtable";
 import WorkhourCorrectionDialog from "./WorkhourCorrectionDialog";
 import { getMyWorkhours } from "~/frontend/src/redux/workhours/workhoursThunks";
 import { getDate } from "~/frontend/src/utils";
+import Tooltip from "@material-ui/core/Tooltip";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
+import ErrorIcon from "@material-ui/icons/Error";
+import { red, green } from "@material-ui/core/colors";
 
 const headCells = [
   { id: "collapseBtn", numeric: false, disablePadding: false, label: "" },
   { id: "date", numeric: false, disablePadding: false, label: "일자" },
-  { id: "start", numeric: false, disablePadding: false, label: "출근시간" },
-  { id: "end", numeric: false, disablePadding: false, label: "퇴근시간" },
+  { id: "start", numeric: false, disablePadding: false, label: "출근시각" },
+  { id: "end", numeric: false, disablePadding: false, label: "퇴근시각" },
   { id: "total", numeric: false, disablePadding: false, label: "총 근무시간" },
   { id: "status", numeric: false, disablePadding: false, label: "상태" },
   { id: "btn", numeric: false, disablePadding: false, label: "이의신청" }
@@ -36,6 +41,11 @@ const Workhour = ({ user, workhours, getMyWorkhours }) => {
       padding: theme.spacing(2),
       display: "flex",
       flexDirection: "column"
+    },
+    acjc: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center"
     },
     fixedHeight: {
       height: 240
@@ -82,7 +92,16 @@ const Workhour = ({ user, workhours, getMyWorkhours }) => {
           )}분`,
           status_code: workhour.status,
           status: () => (
-            <Typography variant='caption'>{workhour.message}</Typography>
+            <Tooltip title={`${workhour.message}`}>
+              {workhour.status === 1 ? (
+                <CheckCircleIcon
+                  fontSize='small'
+                  style={{ color: green[500] }}
+                />
+              ) : (
+                <ErrorIcon fontSize='small' style={{ color: red[500] }} />
+              )}
+            </Tooltip>
           ),
           btn: () => (
             <WorkhourCorrectionDialog

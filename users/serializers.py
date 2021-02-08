@@ -9,7 +9,7 @@ User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
-    code = serializers.CharField(write_only=True)
+    code = serializers.CharField()
     department = serializers.SerializerMethodField()
     rank = serializers.SerializerMethodField()
     team = serializers.SerializerMethodField()
@@ -32,11 +32,11 @@ class UserSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "username",
+            "code",
             "password",
             "email",
             "first_name",
             "last_name",
-            "code",
             "department",
             "rank",
             "team",
@@ -45,7 +45,6 @@ class UserSerializer(serializers.ModelSerializer):
         read_only_fields = (
             "id",
             "username",
-            "code",
         )
 
 
@@ -87,6 +86,7 @@ class TeamMemberSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "username",
+            "code",
             "first_name",
             "last_name",
             "department",
@@ -98,6 +98,7 @@ class TeamMemberSerializer(serializers.ModelSerializer):
         read_only_fields = (
             "id",
             "username",
+            "code",
             "first_name",
             "last_name",
             "department",

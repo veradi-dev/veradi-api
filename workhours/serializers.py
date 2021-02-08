@@ -6,7 +6,8 @@ from .models import EnterLog, WorkHour, WorkHourCorrectionRequest
 class EnterLogSerializer(serializers.ModelSerializer):
     class Meta:
         model = EnterLog
-        fields = ("date", "time", "name", "code", "mode")
+        fields = ("id", "date", "time", "name", "code", "mode")
+        read_only_fields = ("id",)
 
 
 class WorkHourSerializer(serializers.ModelSerializer):
@@ -64,5 +65,6 @@ class WorkHourCorrectionRequestSerializer(serializers.ModelSerializer):
             "approved",
             "complete",
             "created_at",
+            "approver",
         )
-        read_only_fields = ("id", "workhour")
+        read_only_fields = ("id", "workhour", "approver")
