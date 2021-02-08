@@ -1,0 +1,7 @@
+tr {
+    height: 2rem;
+  }
+  
+  tr td {
+     height: auto !important;
+  }
