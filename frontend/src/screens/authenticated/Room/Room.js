@@ -74,6 +74,10 @@ function reducer(state, action) {
       //   }
       // ]
       return state.map((time) => {
+        if (payload.length == 0) {
+          time.booked = false;
+          time.team = null;
+        }
         for (let i = 0; i < payload.length; i++) {
           time.booked = false;
           time.team = null;
@@ -155,46 +159,50 @@ const Room = ({ user, getConference }) => {
   }, [date, room]);
 
   const handleSubmit = () => {
-    //     const data = [{
-    //       "room":room,
-    //       "date":value.getFullYear()+"-"+value.getMonth()+"-"+value.getDate(),
-    //       "start_time":"44",
-    //       "proposer":user.id
+    const data = [];
+    console.log(data);
+    // const data = [
+    //   {
+    //     room: room,
+    //     date:
+    //       value.getFullYear() + "-" + value.getMonth() + "-" + value.getDate(),
+    //     start_time: "44",
+    //     proposer: user.id,
     //   },
     //   {
-    //     "room":room,
-    //     "date":value.getFullYear()+value.getMonth()+value.getDate(),
-    //     "start_time":"45",
-    //     "proposer":user.id
-    // },
-    // {
-    //   "room":room,
-    //   "date":value.getFullYear()+value.getMonth()+value.getDate(),
-    //   "start_time":"46",
-    //   "proposer":user.id
-    // },
+    //     room: room,
+    //     date: value.getFullYear() + value.getMonth() + value.getDate(),
+    //     start_time: "45",
+    //     proposer: user.id,
+    //   },
+    //   {
+    //     room: room,
+    //     date: value.getFullYear() + value.getMonth() + value.getDate(),
+    //     start_time: "46",
+    //     proposer: user.id,
+    //   },
     // ];
 
-    const data = [
-      {
-        room: "1",
-        date: "2021-02-19",
-        start_time: "44",
-        proposer: "1",
-      },
-      {
-        room: "1",
-        date: "2021-02-19",
-        start_time: "45",
-        proposer: "1",
-      },
-      {
-        room: "1",
-        date: "2021-02-19",
-        start_time: "46",
-        proposer: "1",
-      },
-    ];
+    // const data = [
+    //   {
+    //     room: "1",
+    //     date: "2021-02-19",
+    //     start_time: "44",
+    //     proposer: "1",
+    //   },
+    //   {
+    //     room: "1",
+    //     date: "2021-02-19",
+    //     start_time: "45",
+    //     proposer: "1",
+    //   },
+    //   {
+    //     room: "1",
+    //     date: "2021-02-19",
+    //     start_time: "46",
+    //     proposer: "1",
+    //   },
+    // ];
     axios
       .post(`/api/v1/conference/`, data, {
         headers: { Authorization: "Token " + `${user.token}` },
