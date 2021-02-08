@@ -73,7 +73,6 @@ function reducer(state, action) {
       //     "team": "기술개발 본부팀"
       //   }
       // ]
-
       return state.map((time) => {
         for (let i = 0; i < payload.length; i++) {
           time.booked = false;
@@ -108,7 +107,7 @@ const initialState = [...Array(96).keys()].map((n) => {
   return {
     id: n,
     isMorning,
-    room: Math.round((n / 4) % 1),
+    room: Math.round((n / 4) % 1) + 1,
     time: `${hour}:${minute}`,
     active: false,
     team: null,
@@ -130,10 +129,10 @@ const Room = ({ user, getConference }) => {
   }, []);
   const [isMorning, setIsMorning] = React.useState(true);
   useEffect(() => {
-    console.log(date);
     setLoading(true);
     getConference(date)
       .then((res) => {
+        console.log(res.data);
         load(res.data);
         setLoading(false);
       })
@@ -317,7 +316,6 @@ const Room = ({ user, getConference }) => {
                           />
                         );
                       })}
-                    <div></div>
                     <span className="reservebtn">
                       <Button
                         variant="contained"
