@@ -139,7 +139,6 @@ const Room = ({ user, getConference }) => {
     setLoading(true);
     getConference(date)
       .then((res) => {
-        console.log(res.data);
         load(res.data);
         setLoading(false);
       })
