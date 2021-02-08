@@ -8,7 +8,7 @@ import "react-calendar/dist/Calendar.css";
 import { Box } from "@material-ui/core";
 import "./Room.css";
 import Title from "../Title";
-import TimeBtn from "./TimeBtn";
+import TimeBtn, { Time } from "./TimeBtn";
 import Switch from "@material-ui/core/Switch";
 import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
@@ -20,8 +20,10 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import axios from "axios";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { getPosition } from "./../../../utils";
+import { getConference } from "~/frontend/src/redux/conference/conferenceThunk";
+import { alertActions } from "~/frontend/src/redux/alert/alertSlice";
 
 const AntSwitch = withStyles((theme) => ({
   root: {
@@ -58,7 +60,8 @@ const AntSwitch = withStyles((theme) => ({
 }))(Switch);
 
 function reducer(state, action) {
-  switch (action.type) {
+  const { type, payload } = action;
+  switch (type) {
     case "LOAD":
       // {type: "LOAD", payload:
       // [
@@ -70,24 +73,23 @@ function reducer(state, action) {
       //     "team": "기술개발 본부팀"
       //   }
       // ]
-      const { payload } = action;
-      return [
-        ...state.map((time) => {
-          for (let i = 0; i < payload.length; i++) {
-            if (
-              time.id === payload[i].start_time &&
-              time.room === payload[i].room
-            ) {
-              time.booked = true;
-              time.team = payload[i].team;
-            }
+
+      return state.map((time) => {
+        for (let i = 0; i < payload.length; i++) {
+          if (
+            time.id === payload[i].start_time &&
+            time.room === payload[i].room
+          ) {
+            time.booked = true;
+            time.team = payload[i].team;
           }
-        }),
-      ];
+        }
+        return time;
+      });
     case "TOGGLE":
       return [
         ...state.map((time) =>
-          time.id === action.id ? { ...time, active: !time.active } : time
+          time.id === payload.id ? { ...time, active: !time.active } : time
         ),
       ];
     default:
@@ -96,10 +98,12 @@ function reducer(state, action) {
 }
 
 const initialState = [...Array(96).keys()].map((n) => {
+  const isMorning = n < 48 ? true : false;
   const hour = Math.floor(n / 4);
   const minute = Math.round(n % 2) * 30 === 0 ? "00" : "30";
   return {
     id: n,
+    isMorning,
     room: Math.round((n / 4) % 1),
     time: `${hour}:${minute}`,
     active: false,
@@ -108,33 +112,24 @@ const initialState = [...Array(96).keys()].map((n) => {
   };
 });
 
-const Room = ({ user }) => {
+const Room = ({ user, getConference }) => {
   const [date, setDate] = useState(new Date());
   const [loading, setLoading] = useState(true);
   const [room, setRoom] = React.useState("1");
   const [state, dispatch] = useReducer(reducer, initialState);
+  const reduxDispatch = useDispatch();
   const load = useCallback((payload) => dispatch({ type: "LOAD", payload }), [
     date,
   ]);
-  const toggle = useCallback(
-    (payload) => dispatch({ type: "TOGGLE", payload }),
-    []
-  );
-  const [morningstate, setmorning] = React.useState({
-    ismorning: true,
-  });
+  const toggle = useCallback((id) => {
+    return dispatch({ type: "TOGGLE", payload: { id } });
+  }, []);
+  const [isMorning, setIsMorning] = React.useState(true);
 
   useEffect(() => {
     setLoading(true);
-    axios
-      .get(
-        `/api/v1/conference?year=${date.getFullYear()}&month=${
-          date.getMonth() + 1
-        }&day=${date.getDate()}`,
-        { headers: { Authorization: "token " + `${user.token}` } }
-      )
+    getConference(date)
       .then((res) => {
-        console.log(res.data);
         load(res.data);
         setLoading(false);
       })
@@ -201,8 +196,10 @@ const Room = ({ user }) => {
       })
       .then((res) => {
         console.log(res);
+        reduxDispatch(alertActions.success("예약이 완료되었습니다."));
       })
       .catch((err) => {
+        reduxDispatch(alertActions.error("예약 중 오류가 발생했습니다."));
         const status = err?.response?.status;
         console.log(err);
         if (status === undefined) {
@@ -289,12 +286,9 @@ const Room = ({ user }) => {
                       <Grid item>오전</Grid>
                       <Grid item>
                         <AntSwitch
-                          checked={morningstate.ismorning}
+                          checked={!isMorning}
                           onChange={(event) =>
-                            setmorning({
-                              ...morningstate,
-                              [event.target.name]: event.target.checked,
-                            })
+                            setIsMorning(!event.target.checked)
                           }
                           name="ismorning"
                         />
@@ -302,69 +296,41 @@ const Room = ({ user }) => {
                       <Grid item>오후</Grid>
                     </Grid>
                   </Typography>
-                  {morningstate.ismorning ? (
-                    <Box
-                      alignItems="center"
-                      display="flex"
-                      flexDirection="column"
-                      flexWrap="wrap"
-                      p={2}
-                    >
-                      <TimeBtn
-                        times={state.slice(24, 48)}
-                        onToggle={toggle}
-                        user={user}
-                      ></TimeBtn>
-                      <div></div>
-                      <span className="reservebtn">
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={handleSubmit}
-                        >
-                          예약하기
-                        </Button>
-                        <Button
-                          variant="contained"
-                          color="secondary"
-                          onClick={() => alert("예약을 취소하시겠습니가??")}
-                        >
-                          예약취소하기
-                        </Button>
-                      </span>
-                    </Box>
-                  ) : (
-                    <Box
-                      alignItems="center"
-                      display="flex"
-                      flexDirection="column"
-                      flexWrap="wrap"
-                      p={2}
-                    >
-                      <TimeBtn
-                        times={state.slice(0, 24)}
-                        onToggle={toggle}
-                        user={user}
-                      ></TimeBtn>
-                      <div></div>
-                      <span className="reservebtn">
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={() => alert("예약되었습니다!")}
-                        >
-                          예약하기
-                        </Button>
-                        <Button
-                          variant="contained"
-                          color="secondary"
-                          onClick={() => alert("예약을 취소하시겠습니가??")}
-                        >
-                          예약취소하기
-                        </Button>
-                      </span>
-                    </Box>
-                  )}
+                  <Box alignItems="center" display="flex" flexWrap="wrap" p={2}>
+                    {state
+                      .filter(
+                        (obj) =>
+                          obj.isMorning === isMorning &&
+                          obj.room === parseInt(room)
+                      )
+                      .map((obj) => {
+                        return (
+                          <Time
+                            key={`TimeBtn${obj.id}`}
+                            time={obj}
+                            toggleCallback={toggle}
+                            user={user}
+                          />
+                        );
+                      })}
+                    <div></div>
+                    <span className="reservebtn">
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleSubmit}
+                      >
+                        예약하기
+                      </Button>
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={() => alert("예약을 취소하시겠습니가??")}
+                      >
+                        예약취소하기
+                      </Button>
+                    </span>
+                  </Box>
                 </React.Fragment>
               )}
             </Paper>
@@ -383,4 +349,4 @@ const Room = ({ user }) => {
 const mapStateToProps = (state) => ({
   user: state.user,
 });
-export default connect(mapStateToProps)(Room);
+export default connect(mapStateToProps, { getConference })(Room);

@@ -45,4 +45,4 @@ class ReservationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reservation
         fields = ("id", "room", "date", "start_time", "proposer", "team")
-        read_only_fields = ('id')
+        read_only_fields = ('id',)
