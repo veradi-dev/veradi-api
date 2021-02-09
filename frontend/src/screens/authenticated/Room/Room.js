@@ -303,23 +303,23 @@ const Room = ({ user, getConference }) => {
                           />
                         );
                       })}
-                    <span className="reservebtn">
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={handleSubmit}
-                      >
-                        예약하기
-                      </Button>
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={() => alert("예약을 취소하시겠습니가??")}
-                      >
-                        예약취소하기
-                      </Button>
-                    </span>
                   </Box>
+                  <span className="reservebtn">
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={handleSubmit}
+                    >
+                      예약하기
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => alert("예약을 취소하시겠습니가??")}
+                    >
+                      예약취소하기
+                    </Button>
+                  </span>
                 </React.Fragment>
               )}
             </Paper>
