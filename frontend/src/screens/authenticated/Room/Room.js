@@ -78,10 +78,12 @@ function reducer(state, action) {
         if (payload.length == 0) {
           time.booked = false;
           time.team = null;
+          time.active = false;
         }
         for (let i = 0; i < payload.length; i++) {
           time.booked = false;
           time.team = null;
+          time.active = false;
         }
         for (let i = 0; i < payload.length; i++) {
           if (
@@ -126,6 +128,7 @@ const Room = ({ user, getConference }) => {
   const [date, setDate] = useState(new Date());
   const [loading, setLoading] = useState(true);
   const [room, setRoom] = React.useState("1");
+  const [reservation, setReservation] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
   const reduxDispatch = useDispatch();
   const load = useCallback((payload) => dispatch({ type: "LOAD", payload }), [
@@ -156,7 +159,7 @@ const Room = ({ user, getConference }) => {
         }
         setLoading(false);
       });
-  }, [date, room]);
+  }, [date, room, reservation]);
 
   const handleSubmit = () => {
     let data = [];
@@ -181,9 +184,11 @@ const Room = ({ user, getConference }) => {
       })
       .then((res) => {
         console.log(res);
-        window.location.reload();
-        alert("예약이 완료되었습니다.");
-        //reduxDispatch(alertActions.success("예약이 완료되었습니다."));
+        // window.location.reload();
+        // alert("예약이 완료되었습니다.");
+        setReservation(true);
+        setReservation(false);
+        reduxDispatch(alertActions.success("예약이 완료되었습니다."));
       })
       .catch((err) => {
         reduxDispatch(alertActions.error("예약 중 오류가 발생했습니다."));
