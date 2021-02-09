@@ -1,12 +1,13 @@
 from rest_framework import serializers
 from users.serializers import UserSerializer
-from .models import EnterLog, WorkHour
+from .models import EnterLog, WorkHour, WorkHourCorrectionRequest
 
 
 class EnterLogSerializer(serializers.ModelSerializer):
     class Meta:
         model = EnterLog
-        fields = ("date", "time", "name", "code", "mode")
+        fields = ("id", "date", "time", "name", "code", "mode")
+        read_only_fields = ("id",)
 
 
 class WorkHourSerializer(serializers.ModelSerializer):
@@ -36,6 +37,7 @@ class WorkHourSerializer(serializers.ModelSerializer):
     class Meta:
         model = WorkHour
         fields = (
+            "id",
             "user",
             "enter_logs",
             "status",
@@ -45,3 +47,24 @@ class WorkHourSerializer(serializers.ModelSerializer):
             "total",
             "complete",
         )
+        read_only_fields = ("id", "user")
+
+
+class WorkHourCorrectionRequestSerializer(serializers.ModelSerializer):
+    workhour = WorkHourSerializer(read_only=True)
+
+    class Meta:
+        model = WorkHourCorrectionRequest
+        fields = (
+            "id",
+            "workhour",
+            "mode",
+            "date",
+            "time",
+            "reason",
+            "approved",
+            "complete",
+            "created_at",
+            "approver",
+        )
+        read_only_fields = ("id", "workhour", "approver")

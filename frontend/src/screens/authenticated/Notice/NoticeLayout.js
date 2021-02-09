@@ -1,48 +1,13 @@
-import React from 'react';
+import React, { useState } from "react";
 import Noticelist from './Noticelist';
-import Noticecreate from './Noticecreate';
-import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+import Grid from '@material-ui/core/Grid';
 import {Link} from 'react-router-dom';
 
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`nav-tabpanel-${index}`}
-      aria-labelledby={`nav-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box p={3}>
-          <Typography component={'span'}>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired,
-};
-
-function a11yProps(index) {
-  return {
-    id: `nav-tab-${index}`,
-    'aria-controls': `nav-tabpanel-${index}`,
-  };
-}
-
+import { connect } from "react-redux";
+import './NoticeLayout.css';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -50,45 +15,38 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function NoticeLayout({user}) {
-  const classes = useStyles();
-  const [value, setValue] = React.useState(0);
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
+
+const NoticeLayout=({user, match})=> {
+  
+  const [Team, setTeam] = useState("전체");
+  const handleAll = () => {
+    setTeam("전체");
   };
-
-  function LinkTab(props) {
-    return (
-      <Tab
-        component="a"
-        onClick={(event) => {
-          event.preventDefault();
-        }}
-        {...props}
-      />
-    );
-  }
-
+  const handleTeam = () => {
+    setTeam(user.team);
+  };
+  const classes = useStyles();
   return (
     <div className={classes.root}>
-      <AppBar position="static">
-      <Tabs
-      variant="fullWidth"
-      value={value}
-      onChange={handleChange}
-      aria-label="nav tabs example"
-      >
-      <LinkTab label="전체" {...a11yProps(0)} />
-      <LinkTab label={user.team} {...a11yProps(1)} />\
-      </Tabs>
-      </AppBar>
-      <TabPanel value={value} index={0}>
-        <Noticelist user={user} label="전체"></Noticelist>
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        <Noticelist user={user} label={user.team}></Noticelist>
-      </TabPanel>
+      <Grid container spacing={1}>
+          <Grid item xs={6}>
+            <Link to={`/notice/전체/noticelist/1`} style={{ textDecoration: 'none', color: 'black' }}>
+            <button onClick={handleAll} className="NoticeTab">전체</button>
+            </Link>
+          </Grid>
+          <Grid item xs={6}>
+          <Link to={`/notice/${user.team}/noticelist/1`} style={{ textDecoration: 'none', color: 'black' }}>
+            <button onClick={handleTeam} className="NoticeTab">{user.team}</button>
+            </Link>
+          </Grid>
+        </Grid>
+        <Noticelist Team={Team} match={match}></Noticelist>
     </div>
   );
 }
+
+const mapStateToProps = (state) => ({
+  user: state.user,
+});
+export default connect(mapStateToProps)(NoticeLayout);

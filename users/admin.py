@@ -22,7 +22,10 @@ class UserAdmin(UserAdmin):
 
     # 내부 패널
     fieldsets = (
-        ("계정 정보", {"fields": ("username", "password", "last_login", "date_joined")}),
+        (
+            "계정 정보",
+            {"fields": ("username", "password", "last_login", "date_joined")},
+        ),
         (
             "권한",
             {
@@ -37,7 +40,6 @@ class UserAdmin(UserAdmin):
                     "last_name",
                     "email",
                     "code",
-                    "approved",
                     "get_department_name",
                     "rank",
                     "team",

@@ -1,5 +1,5 @@
   
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -13,9 +13,12 @@ import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import {Link, useParams} from 'react-router-dom';
 import Title from '../Title';
-import Position from './../../../components/Position';
-
-
+import {getPosition} from '~/frontend/src/utils';
+import axios from 'axios';
+import NoticeLayout from './NoticeLayout';
+import { connect } from "react-redux";
+import {getTeamCode} from '~/frontend/src/utils';
+/*
 function createData(id, title, name, date) {
   return {id, title, name, date};
 };
@@ -45,8 +48,8 @@ const rows = [
   createData('22', '제목 테스트입니다', '조은학', '20200501'),
   createData('23', '제목 테스트입니다', '조은학', '20200501'),
   createData('24', '제목 테스트입니다', '조은학', '20200501'),
+];*/
 
-];
 const useStyles = makeStyles((theme) => ({
   seeMore: {
     marginTop: theme.spacing(3),
@@ -56,22 +59,72 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const handledetail=(e)=>{
-  e.preventDefault();
-
-}
 //https://medium.com/@ankita.singh170190/material-ui-table-with-pagination-component-9f53a3380245
-const Noticelist=({user, label})=> {
-  const USER_PATH = `/notice/${label}/noticelist`;
+const Noticelist=({user, match, Team})=> {
+  const [rows, setrows] = useState([]);
+  const [loading, setLoading] = useState(true);
+  
+  useEffect(() => {
+    if(match.params.team=='전체'){
+    axios.get(`api/v1/notice/`, {'headers':{'Authorization':'Token ' + `${user.token}`}}).then((res) => {
+      console.log(res.data);
+      setrows(res.data);
+      setLoading(false);
+    }).catch((err)=>{
+			const status = err?.response?.status;
+			if (status === undefined) {
+				console.dir("데이터를 불러오던 중 예기치 못한 예외가 발생하였습니다.\n" + JSON.stringify(err));
+			}
+			else if (status === 400) {
+				console.dir("400에러");
+			}
+			else if (status === 401) {
+				console.dir("401에러");
+			}
+			else if (status === 500) {
+				console.dir("내부 서버 오류입니다. 잠시만 기다려주세요.");
+			}
+      });}
+      
+      else{
+        axios.get(`/api/v1/notice?team=${getTeamCode(user.team)}`, {'headers':{'Authorization':'token ' + `${user.token}`}}).then((res) => {
+          console.log(res.data);
+          setrows(res.data);
+          setLoading(false);
+        }).catch((err)=>{
+          const status = err?.response?.status;
+          if (status === undefined) {
+            console.dir("데이터를 불러오던 중 예기치 못한 예외가 발생하였습니다.\n" + JSON.stringify(err));
+          }
+          else if (status === 400) {
+            console.dir("400에러");
+          }
+          else if (status === 401) {
+            console.dir("401에러");
+          }
+          else if (status === 500) {
+            console.dir("내부 서버 오류입니다. 잠시만 기다려주세요.");
+          }
+          });
+      }
+
+    
+  }, [Team]);
+
+
+
+  const USER_PATH = `/notice/${match.params.team}/noticelist`;
   const ROWS_PER_PAGE = 10;
 
   const classes = useStyles();
   const { pageNumber = 1 } = useParams();
   return (
     <React.Fragment>
-      <Title>{label} 공지사항</Title>
-      <Link to={`/notice/${label}/create`}>
-      {Position(user)>2 ? 
+      {loading ? <div> 로딩중입니다.</div>:
+      <React.Fragment>
+      <Title>{match.params.team} 공지사항</Title>
+      <Link to={`/notice/${match.params.team}/create`}>
+      {getPosition(user)>2 ? 
       <Button>작성하기</Button> : <div></div>}
       </Link>
       <Table className={classes.table} size="small">
@@ -86,17 +139,17 @@ const Noticelist=({user, label})=> {
           </TableRow>
         </TableHead>
         <TableBody>
-        {(ROWS_PER_PAGE > 0 ? rows.slice((Number(pageNumber) - 1) * ROWS_PER_PAGE,(Number(pageNumber) - 1) * ROWS_PER_PAGE + ROWS_PER_PAGE,):rows).map(row => {
+        {(ROWS_PER_PAGE > 0 ? rows.slice((Number(pageNumber) - 1) * ROWS_PER_PAGE,(Number(pageNumber) - 1) * ROWS_PER_PAGE + ROWS_PER_PAGE,):rows)
+        .map(row => {
           return (
             <TableRow key={row.id}>
-              <TableCell component={Link} to={`/notice/${label}/${row.id}`} style={{ textDecoration: 'none' }}  align="center" width="10%">{row.id}</TableCell>
-              <TableCell component={Link} to={`/notice/${label}/${row.id}`} style={{ textDecoration: 'none' }}  width="50%">{row.title}</TableCell>
-              <TableCell align="center" width="20%">{row.name}</TableCell>
-              <TableCell align="center" width="20%">{row.date}</TableCell>
+              <TableCell component={Link} to={`/notice/${match.params.team}/${row.id}`} style={{ textDecoration: 'none' }}  align="center" width="10%">{row.id}</TableCell>
+              <TableCell component={Link} to={`/notice/${match.params.team}/${row.id}`} style={{ textDecoration: 'none' }}  width="50%">{row.title}</TableCell>
+              <TableCell align="center" width="20%">{row.writer.last_name+row.writer.first_name}</TableCell>
+              <TableCell align="center" width="20%">{row.created_at.slice(0,10)}</TableCell>
             </TableRow>);})}
         </TableBody>
       </Table>
-
       <Box
           display="flex"
           justifyContent="flex-end"
@@ -122,10 +175,11 @@ const Noticelist=({user, label})=> {
               />
             )}
           />
-        </Box>
-       
+        </Box></React.Fragment>} 
     </React.Fragment>
   );
 }
-
-export default Noticelist;
+const mapStateToProps = (state) => ({
+  user: state.user,
+});
+export default connect(mapStateToProps)(Noticelist);

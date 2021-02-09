@@ -1,10 +1,10 @@
-
 import React from "react";
 import { Route, Switch } from 'react-router-dom';
 import { Dashboard, NoticeLayout, Project, Room, Team, Workhour } from './';
 import Noticecreate from './Notice/Noticecreate';
 import Notice from './Notice/Notice';
 import Noticedetail from './Notice/Noticedetail';
+import CancelRoom from './Room/CancelRoom';
 const MainNav = () => {
 	return (
 		<>
@@ -16,7 +16,7 @@ const MainNav = () => {
                   <Route exact path="/workhour" component={ Workhour }/>
                   <Route exact path="/team" component={ Team }/>
                   <Route exact path="/room" component={ Room }/>
-                  <Route exact path="/cancelroom" component={ Room }/>
+                  <Route exact path="/cancelroom" component={ CancelRoom }/>
                   <Route exact path="/project" component={ Project }/>
             </Switch>
 		</>
