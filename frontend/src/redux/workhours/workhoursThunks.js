@@ -36,5 +36,37 @@ export const correctionWorkhour = (data, method) => (dispatch, getState) => {
           })
         );
       });
+  } else if (method === "patch") {
+    return correctionWorkhourRequest(token, data, method).then(res => {
+      console.log(`export const correctionWorkhour = (data, method) => (dispatch, getState) => {
+        const token = getState().user.token;
+        if (method === "get") {
+          return correctionWorkhourRequest(token, null, method);
+        } else if (method === "post") {
+          correctionWorkhourRequest(token, data, method)
+            .then(res => {
+              dispatch(
+                alertActions.create({
+                  type: "success",
+                  message: "이의신청이 접수되었습니다."
+                })
+              );
+            })
+            .catch(err => {
+              dispatch(
+                alertActions.create({
+                  type: "error",
+                  message: "이의신청 접수 중 오류가 발생했습니다."
+                })
+              );
+            });
+        } else if (method === "patch") {
+          return correctionWorkhourRequest(token, data, method).then(res =>
+            {console.log();
+            console.log(res)}
+          );
+        }`);
+      console.log(res);
+    });
   }
 };
