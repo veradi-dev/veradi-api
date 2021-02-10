@@ -90,6 +90,7 @@ class WorkHourViewset(viewsets.ModelViewSet):
             근무 시간 정정 요청을 생성한다.
             """
             data = request.data
+
             datetime_str = data.pop("datetime", None)
             if datetime_str is None:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -100,7 +101,11 @@ class WorkHourViewset(viewsets.ModelViewSet):
                     "time": get_aware_datetime(datetime_str).time(),
                 }
             )
-            serializer = WorkHourCorrectionRequestSerializer(data=data)
+
+            workhour = WorkHour.objects.get(id=data.pop("workhour").get("id"))
+            serializer = WorkHourCorrectionRequestSerializer(
+                data=data, partial=True, context={"workhour": workhour}
+            )
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
                 return Response(status=status.HTTP_201_CREATED)
@@ -110,7 +115,24 @@ class WorkHourViewset(viewsets.ModelViewSet):
             """
             근무 시간 정정 요청을 결재한다. (승인 / 거절)
             """
-            pass
+            data = request.data
+            print(data)
+            wcr = WorkHourCorrectionRequest.objects.get(id=data.pop("id"))
+
+            serializer = WorkHourCorrectionRequestSerializer(
+                wcr,
+                data=data,
+                partial=True,
+                context={
+                    "workhour": data.pop("workhour"),
+                    "user": request.user,
+                    "approved": data.pop("approve"),
+                },
+            )
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+                return Response(data=serializer.data)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
         elif request.method == "DELETE":
             """

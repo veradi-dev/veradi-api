@@ -46,15 +46,15 @@ function createRow (r) {
 }
 
 function Row (props) {
-  const { row } = props;
-  const [open, setOpen] = React.useState(false);
+  const { row, open, setOpen } = props;
+
   const classes = useRowStyles();
 
   return (
     <React.Fragment>
       <TableRow className={classes.root}>
         <TableCell>
-          <CorrectionDetailDialog row={row} />
+          <CorrectionDetailDialog row={row} open={open} setOpen={setOpen} />
         </TableCell>
         <TableCell component='th' scope='row'>
           {row.username}
@@ -74,14 +74,14 @@ const useStyles = makeStyles(theme => ({
 
 const WorkhourCorrectionRequestTable = ({ correctionWorkhour }) => {
   const [rows, setRows] = useState([]);
-
+  const [open, setOpen] = React.useState(false);
   const classes = useStyles();
 
   useEffect(() => {
     correctionWorkhour(null, "get").then(res => {
       setRows(res.data.map(r => createRow(r)));
     });
-  }, []);
+  }, [open]);
 
   return (
     <TableContainer component={Paper}>
@@ -96,7 +96,7 @@ const WorkhourCorrectionRequestTable = ({ correctionWorkhour }) => {
         </TableHead>
         <TableBody>
           {rows.map(row => (
-            <Row key={row.id} row={row} />
+            <Row key={row.id} row={row} open={open} setOpen={setOpen} />
           ))}
         </TableBody>
       </Table>

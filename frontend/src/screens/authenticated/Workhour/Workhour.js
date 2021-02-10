@@ -64,6 +64,7 @@ const Workhour = ({ user, workhours, getMyWorkhours }) => {
   const classes = useStyles();
   const [date, setDate] = React.useState(getDate());
   const [rows, setRows] = React.useState(false);
+
   const search = useCallback(() => {
     getMyWorkhours(date.year, date.month);
   }, [date]);
