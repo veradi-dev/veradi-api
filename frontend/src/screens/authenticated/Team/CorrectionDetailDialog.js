@@ -165,7 +165,8 @@ const InputRow = ({ form, handleFormChange, handleSubmit, clear, mode }) => {
   );
 };
 
-function CorrectionDetailDialog ({ open, setOpen, row, correctionWorkhour }) {
+function CorrectionDetailDialog ({ row, correctionWorkhour, refresh }) {
+  const [open, setOpen] = useState(false);
   const reduxDispatch = useDispatch();
 
   // 현재 모드 (읽기 / 생성 / 수정 / 삭제)
@@ -321,7 +322,7 @@ function CorrectionDetailDialog ({ open, setOpen, row, correctionWorkhour }) {
         enter_logs: updateForm
       }
     };
-    correctionWorkhour(data, "patch");
+    correctionWorkhour(data, "patch").finally(() => refresh());
     handleClose();
   };
 

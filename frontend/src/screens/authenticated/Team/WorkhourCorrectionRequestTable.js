@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
@@ -46,7 +46,7 @@ function createRow (r) {
 }
 
 function Row (props) {
-  const { row, open, setOpen } = props;
+  const { row, refresh } = props;
 
   const classes = useRowStyles();
 
@@ -54,7 +54,7 @@ function Row (props) {
     <React.Fragment>
       <TableRow className={classes.root}>
         <TableCell>
-          <CorrectionDetailDialog row={row} open={open} setOpen={setOpen} />
+          <CorrectionDetailDialog row={row} refresh={refresh} />
         </TableCell>
         <TableCell component='th' scope='row'>
           {row.username}
@@ -74,14 +74,20 @@ const useStyles = makeStyles(theme => ({
 
 const WorkhourCorrectionRequestTable = ({ correctionWorkhour }) => {
   const [rows, setRows] = useState([]);
-  const [open, setOpen] = React.useState(false);
-  const classes = useStyles();
+  const [refreshOnChange, setRefreshOnChange] = useState(false);
+  const refresh = () => setRefreshOnChange(!refreshOnChange);
 
+  const classes = useStyles();
   useEffect(() => {
     correctionWorkhour(null, "get").then(res => {
-      setRows(res.data.map(r => createRow(r)));
+      console.log(res);
+      if (res.status === 200) {
+        setRows(res.data.map(r => createRow(r)));
+      } else {
+        setRows([]);
+      }
     });
-  }, [open]);
+  }, [refreshOnChange]);
 
   return (
     <TableContainer component={Paper}>
@@ -96,7 +102,7 @@ const WorkhourCorrectionRequestTable = ({ correctionWorkhour }) => {
         </TableHead>
         <TableBody>
           {rows.map(row => (
-            <Row key={row.id} row={row} open={open} setOpen={setOpen} />
+            <Row key={row.id} row={row} refresh={refresh} />
           ))}
         </TableBody>
       </Table>
