@@ -25,6 +25,7 @@ import { getPosition } from "./../../../utils";
 import { getConference } from "~/frontend/src/redux/conference/conferenceThunk";
 import { alertActions } from "~/frontend/src/redux/alert/alertSlice";
 import { columnLookupSelector } from "@material-ui/data-grid";
+import { getConferenceRequest } from "../../../api/conference";
 
 const AntSwitch = withStyles((theme) => ({
   root: {
@@ -61,6 +62,7 @@ const AntSwitch = withStyles((theme) => ({
 }))(Switch);
 
 function reducer(state, action) {
+  console.log(state);
   const { type, payload } = action;
   switch (type) {
     case "LOAD":
@@ -90,6 +92,7 @@ function reducer(state, action) {
             time.start_time === payload[i].start_time &&
             time.room === payload[i].room
           ) {
+            time.pk = payload[i].id;
             time.booked = true;
             time.team = payload[i].team;
           }
@@ -113,6 +116,7 @@ const initialState = [...Array(96).keys()].map((n) => {
   const minute = Math.round(n % 2) === 0 ? "00" : "30";
   const start_time = hour * 2 + Math.round(n % 2);
   return {
+    pk: null,
     id: n,
     start_time,
     isMorning,
@@ -138,6 +142,7 @@ const Room = ({ user, getConference }) => {
     return dispatch({ type: "TOGGLE", payload: { id } });
   }, []);
   const [isMorning, setIsMorning] = React.useState(true);
+
   useEffect(() => {
     setLoading(true);
     getConference(date)
@@ -200,12 +205,43 @@ const Room = ({ user, getConference }) => {
               JSON.stringify(err)
           );
         } else if (status === 400) {
-          alert("");
           console.dir("400에러");
         } else if (status === 500) {
           console.dir("내부 서버 오류입니다. 잠시만 기다려주세요.");
         }
       });
+  };
+  const handleDelete = () => {
+    for (let i = 0; i < state.length; i++) {
+      if (
+        state[i].booked == true &&
+        state[i].team == user.team &&
+        state[i].active == true
+      )
+        axios
+          .delete(`/api/v1/conference/${state[i].pk}`, {
+            headers: { Authorization: "Token " + `${user.token}` },
+          })
+          .then((res) => {
+            console.log(res);
+            setReservation(true);
+            setReservation(false);
+          })
+          .catch((err) => {
+            const status = err?.response?.status;
+            console.log(err);
+            if (status === undefined) {
+              console.dir(
+                "데이터를 불러오던 중 예기치 못한 예외가 발생하였습니다.\n" +
+                  JSON.stringify(err)
+              );
+            } else if (status === 400) {
+              console.dir("400에러");
+            } else if (status === 500) {
+              console.dir("내부 서버 오류입니다. 잠시만 기다려주세요.");
+            }
+          });
+    }
   };
 
   const useStyles = makeStyles((theme) => ({
@@ -315,7 +351,7 @@ const Room = ({ user, getConference }) => {
                     <Button
                       variant="contained"
                       color="secondary"
-                      onClick={() => alert("예약을 취소하시겠습니가??")}
+                      onClick={handleDelete}
                     >
                       예약취소하기
                     </Button>
