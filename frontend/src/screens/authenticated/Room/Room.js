@@ -24,6 +24,7 @@ import { connect, useDispatch } from "react-redux";
 import { getPosition } from "./../../../utils";
 import { getConference } from "~/frontend/src/redux/conference/conferenceThunk";
 import { alertActions } from "~/frontend/src/redux/alert/alertSlice";
+import { columnLookupSelector } from "@material-ui/data-grid";
 
 const AntSwitch = withStyles((theme) => ({
   root: {
@@ -74,9 +75,15 @@ function reducer(state, action) {
       //   }
       // ]
       return state.map((time) => {
+        if (payload.length == 0) {
+          time.booked = false;
+          time.team = null;
+          time.active = false;
+        }
         for (let i = 0; i < payload.length; i++) {
           time.booked = false;
           time.team = null;
+          time.active = false;
         }
         for (let i = 0; i < payload.length; i++) {
           if (
@@ -121,6 +128,7 @@ const Room = ({ user, getConference }) => {
   const [date, setDate] = useState(new Date());
   const [loading, setLoading] = useState(true);
   const [room, setRoom] = React.useState("1");
+  const [reservation, setReservation] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
   const reduxDispatch = useDispatch();
   const load = useCallback((payload) => dispatch({ type: "LOAD", payload }), [
@@ -134,7 +142,6 @@ const Room = ({ user, getConference }) => {
     setLoading(true);
     getConference(date)
       .then((res) => {
-        console.log(res.data);
         load(res.data);
         setLoading(false);
       })
@@ -152,55 +159,35 @@ const Room = ({ user, getConference }) => {
         }
         setLoading(false);
       });
-  }, [date, room]);
+  }, [date, room, reservation]);
 
   const handleSubmit = () => {
-    //     const data = [{
-    //       "room":room,
-    //       "date":value.getFullYear()+"-"+value.getMonth()+"-"+value.getDate(),
-    //       "start_time":"44",
-    //       "proposer":user.id
-    //   },
-    //   {
-    //     "room":room,
-    //     "date":value.getFullYear()+value.getMonth()+value.getDate(),
-    //     "start_time":"45",
-    //     "proposer":user.id
-    // },
-    // {
-    //   "room":room,
-    //   "date":value.getFullYear()+value.getMonth()+value.getDate(),
-    //   "start_time":"46",
-    //   "proposer":user.id
-    // },
-    // ];
-
-    const data = [
-      {
-        room: "1",
-        date: "2021-02-19",
-        start_time: "44",
-        proposer: "1",
-      },
-      {
-        room: "1",
-        date: "2021-02-19",
-        start_time: "45",
-        proposer: "1",
-      },
-      {
-        room: "1",
-        date: "2021-02-19",
-        start_time: "46",
-        proposer: "1",
-      },
-    ];
+    let data = [];
+    for (let i = 0; i < state.length; i++) {
+      if (state[i].active == true) {
+        data = data.concat({
+          room: room,
+          date:
+            date.getFullYear() +
+            "-" +
+            (date.getMonth() + 1) +
+            "-" +
+            date.getDate(),
+          start_time: state[i].start_time,
+          proposer: user.id,
+        });
+      }
+    }
     axios
       .post(`/api/v1/conference/`, data, {
         headers: { Authorization: "Token " + `${user.token}` },
       })
       .then((res) => {
         console.log(res);
+        // window.location.reload();
+        // alert("예약이 완료되었습니다.");
+        setReservation(true);
+        setReservation(false);
         reduxDispatch(alertActions.success("예약이 완료되었습니다."));
       })
       .catch((err) => {
@@ -217,8 +204,6 @@ const Room = ({ user, getConference }) => {
           console.dir("400에러");
         } else if (status === 500) {
           console.dir("내부 서버 오류입니다. 잠시만 기다려주세요.");
-        } else {
-          history.push("/notice/전체/noticelist/1");
         }
       });
   };
@@ -318,23 +303,23 @@ const Room = ({ user, getConference }) => {
                           />
                         );
                       })}
-                    <span className="reservebtn">
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={handleSubmit}
-                      >
-                        예약하기
-                      </Button>
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={() => alert("예약을 취소하시겠습니가??")}
-                      >
-                        예약취소하기
-                      </Button>
-                    </span>
                   </Box>
+                  <span className="reservebtn">
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={handleSubmit}
+                    >
+                      예약하기
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => alert("예약을 취소하시겠습니가??")}
+                    >
+                      예약취소하기
+                    </Button>
+                  </span>
                 </React.Fragment>
               )}
             </Paper>
