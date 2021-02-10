@@ -1,154 +1,172 @@
-import React from 'react';
-import Button from '@material-ui/core/Button';
-import Avatar from '@material-ui/core/Avatar';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import React, { useState, useEffect } from "react";
+import styled, { keyframes } from "styled-components";
+import { connect } from "react-redux";
+import { login } from "../../redux/user/userThunks";
 import LogoImage from "../../../assets/veradi/logo.png";
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        VERADI
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
+import CircularProgress from "@material-ui/core/CircularProgress";
+import { Link } from "react-router-dom";
+const bulb = keyframes`
+  0%{
+    transform: scale(1)
+  }
+  50%{
+    transform: scale(20)
+  }
+  100%{
+    transform: scale(1)
   );
-}
+  }
+`;
 
-const useStyles = makeStyles((theme) => ({
-  paper: {
-    marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    background:'linear-gradient(-37deg, rgb(162, 228, 192), rgb(67, 102, 137))'
-  },
-  form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(3),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
-  logo: {
-    width: "2.5rem",
-    cursor: "pointer",
-  },
-}));
+const Container = styled.div`
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: black;
+  background-position: center center;
+`;
 
-export default function SignUp() {
-  const classes = useStyles();
+const LogoContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+const Bulb = styled.div`
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: radial-gradient(circle, #857c51 10%, rgba(0, 0, 0, 0.2) 100%);
+  animation: ${bulb} 4s linear 2s infinite;
+  border: rgba(0, 0, 0, 0);
+  border-radius: 100%;
+  opacity: 0.4;
+`;
+const Logo = styled.img`
+  height: 200px;
+  z-index: 10;
+`;
+const SignupForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Input = styled.input`
+  width: 300px;
+  height: 50px;
+  border: 1px solid rgba(214, 214, 214);
+  margin-bottom: 10px;
+  padding-left: 10px;
+  font-size: 20px;
+  &::placeholder {
+    opacity: 0.5;
+  }
+  &:focus {
+    outline: 1px solid rgba(196, 255, 225);
+    border: 1px solid rgba(196, 255, 225);
+    z-index: 10;
+  }
+`;
+
+const SubmitButton = styled.button`
+  width: 300px;
+  height: 50px;
+  background-color: rgb(82, 79, 161);
+  color: white;
+`;
+
+const Signup = ({ history, isAuthenticated, login }) => {
+  const [userInput, setUserInput] = useState({
+    username: "",
+    password: "",
+    code: "",
+  });
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    const img = new Image();
+    img.src = LogoImage;
+    img.onload = () => {
+      setInterval(() => setIsLoading(false), 1000);
+    };
+  });
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      history.push("/");
+    }
+  }, [isAuthenticated]);
+  const handleChange = (e) => {
+    setUserInput({
+      ...userInput,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    login(userInput);
+    setUserInput({
+      username: "",
+      password: "",
+      code: "",
+    });
+  };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-      <Avatar className={classes.avatar}>
-          <img
-            src={LogoImage}
-            className={classes.logo}
-            onClick={() => history.push("/")}
-          />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          회원가입
-        </Typography>
-        <form className={classes.form} noValidate>
-          <Grid container spacing={2}>
-          <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="name"
-                label="이름"
-                name="name"
-                autoComplete="name"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="sno"
-                label="학번"
-                name="sno"
-                autoComplete="sno"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="password"
-                label="비밀번호(8자리 이상)"
-                type="password"
-                name="password"
-                autoComplete="password"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="phone"
-                label="핸드폰번호"
-                name="phone"
-                autoComplete="phone"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="major"
-                label="전공"
-                name="major"
-                autoComplete="major"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                name="year"
-                label="학년"
-                id="year"
-                autoComplete="year"
-              />
-            </Grid>
-          </Grid>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
-            회원가입
-          </Button>
-        </form>
-      </div>
-      <Box mt={5}>
-        <Copyright />
-      </Box>
+    <Container>
+      {isLoading ? (
+        <CircularProgress
+          color="primary"
+          size={40}
+          thickness={5}
+          style={{
+            color: "#1a90ff",
+            animationDuration: "550ms",
+          }}
+        />
+      ) : (
+        <>
+          <LogoContainer>
+            <Bulb />
+            <Logo alt="veradi_logo" src={LogoImage} />
+          </LogoContainer>
+          <SignupForm onSubmit={handleSubmit}>
+            <Input
+              type="text"
+              placeholder="ID"
+              name="username"
+              onChange={handleChange}
+              value={userInput.username}
+            />
+            <Input
+              type="password"
+              placeholder="Password"
+              name="password"
+              onChange={handleChange}
+              value={userInput.password}
+            />
+            <Input
+              placeholder="Code"
+              name="code"
+              onChange={handleChange}
+              value={userInput.code}
+            />
+            <br />
+          </SignupForm>
+          <Link to="/signup" style={{ textDecoration: "none", color: "black" }}>
+            <SubmitButton type="submit">회원가입</SubmitButton>
+          </Link>
+        </>
+      )}
     </Container>
   );
-}
+};
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.user.isAuthenticated,
+});
+//const mapDispatchToProps = {  };
+export default connect(mapStateToProps)(Signup);
