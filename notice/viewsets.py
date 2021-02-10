@@ -1,15 +1,20 @@
 from rest_framework import viewsets, status
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
-
 from users.models import Team
 from .serializers import NoticeSerializer
 from .models import Notice
+
+
+class NoticePagination(PageNumberPagination):
+    page_size = 10
 
 
 class NoticeViewSet(viewsets.ModelViewSet):
     queryset = Notice.objects.all()
     serializer_class = NoticeSerializer
     permission_classes = []
+    pagination_class = NoticePagination
 
     def get_queryset(self):
         team_code = self.request.GET.get("team", None)
