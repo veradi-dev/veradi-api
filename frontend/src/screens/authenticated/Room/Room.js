@@ -99,6 +99,8 @@ function reducer(state, action) {
         }
         return time;
       });
+    //payload는 임의의 이름 이름을 바꿔도됨 , 주로 payload라는 이름으로 씀
+    //id는 그냥 구분하기 위한 것....
     case "TOGGLE":
       return [
         ...state.map((time) =>
