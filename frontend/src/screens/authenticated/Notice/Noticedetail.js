@@ -10,10 +10,10 @@ import NoticeDetailPost from "./../../../components/NoticeDetailPost";
 import { getTeamCode } from "~/frontend/src/utils";
 
 const Noticedetail = ({ match, user }) => {
-  const [noticeData, setnoticeData] = useState();
+  const [NoticeData, setNoticeData] = useState();
   const [loading, setLoading] = useState(true);
-
-  console.log(match.params);
+  const pageNumber = match.params.pageNumber;
+  const id = match.params.id;
   useEffect(() => {
     if (match.params.team == "전체") {
       axios
@@ -21,7 +21,7 @@ const Noticedetail = ({ match, user }) => {
           headers: { Authorization: "Token " + `${user.token}` },
         })
         .then((res) => {
-          setnoticeData(res.data);
+          setNoticeData(res.data);
           setLoading(false);
         })
         .catch((err) => {
@@ -48,7 +48,7 @@ const Noticedetail = ({ match, user }) => {
           }
         )
         .then((res) => {
-          setnoticeData(res.data);
+          setNoticeData(res.data);
           setLoading(false);
         })
         .catch((err) => {
@@ -74,7 +74,7 @@ const Noticedetail = ({ match, user }) => {
         <div> 로딩중입니다.</div>
       ) : (
         <Grid item xs={12}>
-          <NoticeDetailPost noticeData={noticeData} num={match.params.num} />
+          <NoticeDetailPost NoticeData={NoticeData} id={id} />
         </Grid>
       )}
     </Grid>

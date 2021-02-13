@@ -31,7 +31,6 @@ const useStyles = makeStyles((theme) => ({
 const Noticelist = ({ user, match, Team }) => {
   const [NoticeData, setNoticeData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [NoticeListView, setNoticeListView] = useState(true);
   const { pageNumber = 1 } = useParams();
   useEffect(() => {
     setLoading(true);
@@ -41,7 +40,6 @@ const Noticelist = ({ user, match, Team }) => {
           headers: { Authorization: "Token " + `${user.token}` },
         })
         .then((res) => {
-          console.log(res.data);
           setNoticeData(res.data);
           setLoading(false);
         })
@@ -69,7 +67,6 @@ const Noticelist = ({ user, match, Team }) => {
           }
         )
         .then((res) => {
-          console.log(res.data);
           setNoticeData(res.data);
           setLoading(false);
         })
@@ -130,7 +127,7 @@ const Noticelist = ({ user, match, Team }) => {
                   <TableRow key={row.id}>
                     <TableCell
                       component={Link}
-                      to={`/notice/${match.params.team}/${row.id}`}
+                      to={`/notice/${match.params.team}/noticelist/${pageNumber}/${row.id}`}
                       style={{ textDecoration: "none" }}
                       align="center"
                       width="10%"
@@ -139,7 +136,7 @@ const Noticelist = ({ user, match, Team }) => {
                     </TableCell>
                     <TableCell
                       component={Link}
-                      to={`/notice/${match.params.team}/${row.id}`}
+                      to={`/notice/${match.params.team}/noticelist/${pageNumber}/${row.id}`}
                       style={{ textDecoration: "none" }}
                       width="50%"
                     >

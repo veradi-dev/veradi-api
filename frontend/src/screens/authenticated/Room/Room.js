@@ -62,7 +62,6 @@ const AntSwitch = withStyles((theme) => ({
 }))(Switch);
 
 function reducer(state, action) {
-  console.log(state);
   const { type, payload } = action;
   switch (type) {
     case "LOAD":
@@ -190,7 +189,6 @@ const Room = ({ user, getConference }) => {
         headers: { Authorization: "Token " + `${user.token}` },
       })
       .then((res) => {
-        console.log(res);
         // window.location.reload();
         // alert("예약이 완료되었습니다.");
         setReservation(true);

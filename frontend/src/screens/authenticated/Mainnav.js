@@ -18,7 +18,11 @@ const MainNav = () => {
           component={Notice}
         />
         <Route exact path="/notice/:team/create" component={Noticecreate} />
-        <Route exact path="/notice/:team/:num" component={Noticedetail} />
+        <Route
+          exact
+          path="/notice/:team/noticelist/:pageNumber/:id"
+          component={Noticedetail}
+        />
         <Route exact path="/workhour" component={Workhour} />
         <Route exact path="/team" component={Team} />
         <Route exact path="/room" component={Room} />
