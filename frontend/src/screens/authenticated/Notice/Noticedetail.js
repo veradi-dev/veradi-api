@@ -74,7 +74,7 @@ const Noticedetail = ({ match, user }) => {
         <div> 로딩중입니다.</div>
       ) : (
         <Grid item xs={12}>
-          <NoticeDetailPost NoticeData={NoticeData} id={id} />
+          <NoticeDetailPost NoticeData={NoticeData} id={id} match={match} />
         </Grid>
       )}
     </Grid>
