@@ -62,7 +62,6 @@ const AntSwitch = withStyles((theme) => ({
 }))(Switch);
 
 function reducer(state, action) {
-  console.log(state);
   const { type, payload } = action;
   switch (type) {
     case "LOAD":
@@ -99,6 +98,8 @@ function reducer(state, action) {
         }
         return time;
       });
+    //payload는 임의의 이름 이름을 바꿔도됨 , 주로 payload라는 이름으로 씀
+    //id는 그냥 구분하기 위한 것....
     case "TOGGLE":
       return [
         ...state.map((time) =>
@@ -188,7 +189,6 @@ const Room = ({ user, getConference }) => {
         headers: { Authorization: "Token " + `${user.token}` },
       })
       .then((res) => {
-        console.log(res);
         // window.location.reload();
         // alert("예약이 완료되었습니다.");
         setReservation(true);
