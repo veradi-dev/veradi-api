@@ -70,10 +70,26 @@ class NoticeViewSet(viewsets.ModelViewSet):
         )
 
     def update(self, request, pk=None):
-        pass
+        instance = self.get_object()
+        # 본인만 수정 가능
+        if request.user != instance.proposer:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        data = request.data
+        print(data)
+        serializer = self.get_serializer(instance, data=data, partial=True)
+        return Response()
 
     def retrieve(self, request, *args, **kwargs):
         pass
 
     def destroy(self, request, *args, **kwargs):
-        pass
+        instance = self.get_object()
+        # 공지사항을 삭제할 수 있는 사람
+        # 1. 본인 2. 해당 팀의 상급자
+        if (
+            request.user.position <= instance.proposer.position
+            or request.user.team != instance.proposer.team
+        ):
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)

@@ -184,21 +184,16 @@ class WorkHourViewset(viewsets.ModelViewSet):
 
         team = user.team
         team_members = team.users.get_queryset()
-        print(team_members)
         data = []
-        import time
 
         for member in team_members:
-            print(f"workhour 불러오기 시작")
-            start = time.time()
             workhours = [
                 workhour
-                for workhour in WorkHour.objects.filter(
-                    user=member,
-                )
+                for workhour in WorkHour.objects.prefetch_related(
+                    Prefetch("enter_logs")
+                ).filter(user=member)
                 if workhour.start.year == year and workhour.start.month == month
             ]
-            print(f"실행 시간: {time.time()-start}")
 
             d = {
                 "name": member.get_full_name(),
