@@ -9,25 +9,6 @@ from rest_framework.permissions import IsAuthenticated
 from .serializers import WorkHourSerializer, WorkHourCorrectionRequestSerializer
 from .models import WorkHour, WorkHourCorrectionRequest
 from utils import get_aware_datetime
-from django_property_filter import (
-    PropertyFilterSet,
-    PropertyBooleanFilter,
-    PropertyNumberFilter,
-    PropertyDateTimeFilter,
-)
-
-
-class WorkHourFilterSet(PropertyFilterSet):
-    class Meta:
-        model = WorkHour
-        fields = ("user",)
-        property_fields = [
-            ("complete", PropertyBooleanFilter, ["exact"]),
-            ("start", PropertyDateTimeFilter, ["lt", "exact"]),
-            ("end", PropertyDateTimeFilter, ["lt", "exact"]),
-            ("total", PropertyNumberFilter, ["lt", "lte", "exact", "gt", "gte"]),
-        ]
-
 
 User = get_user_model()
 
