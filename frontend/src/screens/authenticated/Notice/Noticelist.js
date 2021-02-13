@@ -17,7 +17,7 @@ import axios from "axios";
 import NoticeLayout from "./NoticeLayout";
 import { connect } from "react-redux";
 import { getTeamCode } from "~/frontend/src/utils";
-
+import Noticedetail from "./Noticedetail";
 const useStyles = makeStyles((theme) => ({
   seeMore: {
     marginTop: theme.spacing(3),
@@ -29,9 +29,9 @@ const useStyles = makeStyles((theme) => ({
 
 //https://medium.com/@ankita.singh170190/material-ui-table-with-pagination-component-9f53a3380245
 const Noticelist = ({ user, match, Team }) => {
-  const [rows, setrows] = useState([]);
+  const [NoticeData, setNoticeData] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const [NoticeListView, setNoticeListView] = useState(true);
   const { pageNumber = 1 } = useParams();
   useEffect(() => {
     setLoading(true);
@@ -42,7 +42,7 @@ const Noticelist = ({ user, match, Team }) => {
         })
         .then((res) => {
           console.log(res.data);
-          setrows(res.data);
+          setNoticeData(res.data);
           setLoading(false);
         })
         .catch((err) => {
@@ -70,7 +70,7 @@ const Noticelist = ({ user, match, Team }) => {
         )
         .then((res) => {
           console.log(res.data);
-          setrows(res.data);
+          setNoticeData(res.data);
           setLoading(false);
         })
         .catch((err) => {
@@ -90,7 +90,6 @@ const Noticelist = ({ user, match, Team }) => {
         });
     }
   }, [Team, pageNumber]);
-
   const USER_PATH = `/notice/${match.params.team}/noticelist`;
   const ROWS_PER_PAGE = 10;
 
@@ -126,7 +125,7 @@ const Noticelist = ({ user, match, Team }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.results.map((row) => {
+              {NoticeData.results.map((row) => {
                 return (
                   <TableRow key={row.id}>
                     <TableCell
@@ -166,7 +165,7 @@ const Noticelist = ({ user, match, Team }) => {
           >
             <Pagination
               page={Number(pageNumber)}
-              count={Math.ceil(rows.count / ROWS_PER_PAGE)}
+              count={Math.ceil(NoticeData.count / ROWS_PER_PAGE)}
               shape="rounded"
               color="primary"
               showFirstButton
