@@ -69,15 +69,18 @@ class NoticeViewSet(viewsets.ModelViewSet):
             serializer.data, status=status.HTTP_201_CREATED, headers=headers
         )
 
-    def update(self, request, pk=None):
+    def partial_update(self, request, *args, **kwargs):
         instance = self.get_object()
         # 본인만 수정 가능
-        if request.user != instance.proposer:
+        if request.user != instance.writer:
             return Response(status=status.HTTP_403_FORBIDDEN)
         data = request.data
         print(data)
         serializer = self.get_serializer(instance, data=data, partial=True)
-        return Response()
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(status=status.HTTP_200_OK, data=serializer.data)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
     def retrieve(self, request, *args, **kwargs):
         pass
@@ -87,8 +90,8 @@ class NoticeViewSet(viewsets.ModelViewSet):
         # 공지사항을 삭제할 수 있는 사람
         # 1. 본인 2. 해당 팀의 상급자
         if (
-            request.user.position <= instance.proposer.position
-            or request.user.team != instance.proposer.team
+            request.user.position <= instance.writer.position
+            or request.user.team != instance.writer.team
         ):
             return Response(status=status.HTTP_403_FORBIDDEN)
         self.perform_destroy(instance)
