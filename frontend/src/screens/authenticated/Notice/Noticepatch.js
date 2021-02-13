@@ -12,7 +12,8 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { connect } from "react-redux";
 import { getTeamCode } from "~/frontend/src/utils";
-const Noticepatch = ({ NoticeData, user, match }) => {
+import { Redirect } from "react-router-dom";
+const Noticepatch = ({ NoticeData, user, match, history }) => {
   const useStyles = makeStyles((theme) => ({
     paper: {
       padding: theme.spacing(2),
@@ -46,14 +47,14 @@ const Noticepatch = ({ NoticeData, user, match }) => {
     };
     if (match.params.team == "전체") {
       axios
-        .patch(`/api/v1/notice/${match.params.id}`, data, {
+        .patch(`/api/v1/notice/${match.params.id}/`, data, {
           headers: { Authorization: "Token " + `${user.token}` },
         })
         .then((res) => {
           console.log(res);
-          history.push(
-            `/notice/전체/noticelist/${match.params.pageNumber}/${match.params.id}`
-          );
+          <Redirect
+            to={`/notice/전체/noticelist/${match.params.pageNumber}/${match.params.id}`}
+          ></Redirect>;
         })
         .catch((err) => {
           const status = err?.response?.status;
@@ -78,9 +79,9 @@ const Noticepatch = ({ NoticeData, user, match }) => {
         })
         .then((res) => {
           console.log(res);
-          history.push(
-            `/notice/${match.params.team}/noticelist/${match.params.pageNumber}/${match.params.id}`
-          );
+          <Redirect
+            to={`/notice/${match.params.team}/noticelist/${match.params.pageNumber}/${match.params.id}`}
+          ></Redirect>;
         })
         .catch((err) => {
           const status = err?.response?.status;

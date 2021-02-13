@@ -90,7 +90,7 @@ class NoticeViewSet(viewsets.ModelViewSet):
         # 공지사항을 삭제할 수 있는 사람
         # 1. 본인 2. 해당 팀의 상급자
         if (
-            request.user.position <= instance.writer.position
+            request.user.position < instance.writer.position
             or request.user.team != instance.writer.team
         ):
             return Response(status=status.HTTP_403_FORBIDDEN)

@@ -6,12 +6,42 @@ import { makeStyles } from "@material-ui/core/styles";
 import Divider from "@material-ui/core/Divider";
 import Button from "@material-ui/core/Button";
 import Noticepatch from "./../screens/authenticated/Notice/Noticepatch";
+import axios from "axios";
 
-export default function NoticeDetailPost({ NoticeData, id, match }) {
+export default function NoticeDetailPost({
+  NoticeData,
+  id,
+  match,
+  user,
+  history,
+}) {
   const handlePatch = () => {
     setNoticeDetail(false);
   };
-  const handleDelete = () => {};
+  const handleDelete = () => {
+    axios
+      .delete(`/api/v1/notice/${match.params.id}/`, {
+        headers: { Authorization: "Token " + `${user.token}` },
+      })
+      .then((res) => {
+        console.log(res);
+        <Redirect to={`/notice/전체/noticelist/1`}></Redirect>;
+      })
+      .catch((err) => {
+        const status = err?.response?.status;
+        console.log(err);
+        if (status === undefined) {
+          console.dir(
+            "데이터를 불러오던 중 예기치 못한 예외가 발생하였습니다.\n" +
+              JSON.stringify(err)
+          );
+        } else if (status === 400) {
+          console.dir("400에러");
+        } else if (status === 500) {
+          console.dir("내부 서버 오류입니다. 잠시만 기다려주세요.");
+        }
+      });
+  };
   const useStyles = makeStyles((theme) => ({
     paper: {
       padding: theme.spacing(2),

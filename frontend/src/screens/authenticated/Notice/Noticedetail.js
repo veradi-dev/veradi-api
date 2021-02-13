@@ -6,7 +6,7 @@ import "./Noticedetail.css";
 import axios from "axios";
 import { connect } from "react-redux";
 import NoticeDetailPost from "./../../../components/NoticeDetailPost";
-
+import { redirect } from "react-router-dom";
 import { getTeamCode } from "~/frontend/src/utils";
 
 const Noticedetail = ({ match, user }) => {
@@ -74,7 +74,12 @@ const Noticedetail = ({ match, user }) => {
         <div> 로딩중입니다.</div>
       ) : (
         <Grid item xs={12}>
-          <NoticeDetailPost NoticeData={NoticeData} id={id} match={match} />
+          <NoticeDetailPost
+            NoticeData={NoticeData}
+            id={id}
+            match={match}
+            user={user}
+          />
         </Grid>
       )}
     </Grid>
