@@ -51,7 +51,12 @@ PROJECT_APPS = [
     "conference.apps.ConferenceConfig",
     "notice.apps.NoticeConfig",
 ]
-THIRD_PARTY_APPS = ["rest_framework", "knox", "webpack_loader"]
+THIRD_PARTY_APPS = [
+    "rest_framework",
+    "knox",
+    "webpack_loader",
+    "django_property_filter",
+]
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
 
 # REST_FRAMEWORK SETTINGS
@@ -118,6 +123,12 @@ DATABASES = {
     },
 }
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / "db.sqlite3",
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators

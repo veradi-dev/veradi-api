@@ -1,7 +1,8 @@
 import { workhoursActions } from "./workhoursSlice";
 import {
   getMyWorkhoursRequest,
-  correctionWorkhourRequest
+  correctionWorkhourRequest,
+  getTeamStatRequest
 } from "../../api/workhours";
 import { alertActions } from "../alert/alertSlice";
 
@@ -57,4 +58,10 @@ export const correctionWorkhour = (data, method) => (dispatch, getState) => {
         return err;
       });
   }
+};
+
+export const getTeamStat = (year, month) => (dispatch, getState) => {
+  const token = getState().user.token;
+
+  return getTeamStatRequest(token, year, month);
 };

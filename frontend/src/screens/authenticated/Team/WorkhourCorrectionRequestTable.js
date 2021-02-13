@@ -80,7 +80,6 @@ const WorkhourCorrectionRequestTable = ({ correctionWorkhour }) => {
   const classes = useStyles();
   useEffect(() => {
     correctionWorkhour(null, "get").then(res => {
-      console.log(res);
       if (res.status === 200) {
         setRows(res.data.map(r => createRow(r)));
       } else {
