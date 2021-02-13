@@ -25,7 +25,6 @@ const Noticepatch = ({ NoticeData, user, match }) => {
     },
   }));
   const classes = useStyles();
-
   const [title, settitle] = useState();
   const [desc, setDesc] = useState("");
   const onTitleChange = (e) => {
@@ -40,7 +39,7 @@ const Noticepatch = ({ NoticeData, user, match }) => {
       title: title,
       contents: desc,
     };
-    const Teamdata = {
+    const teamdata = {
       title: title,
       contents: desc,
       team: getTeamCode(user.team),
@@ -52,7 +51,9 @@ const Noticepatch = ({ NoticeData, user, match }) => {
         })
         .then((res) => {
           console.log(res);
-          history.push("/notice/전체/noticelist/1");
+          history.push(
+            `/notice/전체/noticelist/${match.params.pageNumber}/${match.params.id}`
+          );
         })
         .catch((err) => {
           const status = err?.response?.status;
@@ -72,12 +73,14 @@ const Noticepatch = ({ NoticeData, user, match }) => {
         });
     } else {
       axios
-        .patch(`/api/v1/notice/${match.params.id}`, Teamdata, {
+        .patch(`/api/v1/notice/${match.params.id}`, teamdata, {
           headers: { Authorization: "Token " + `${user.token}` },
         })
         .then((res) => {
           console.log(res);
-          history.push(`/notice/${match.params.team}/noticelist/1`);
+          history.push(
+            `/notice/${match.params.team}/noticelist/${match.params.pageNumber}/${match.params.id}`
+          );
         })
         .catch((err) => {
           const status = err?.response?.status;
