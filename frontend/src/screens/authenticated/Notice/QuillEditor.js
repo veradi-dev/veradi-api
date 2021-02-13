@@ -45,7 +45,6 @@ class EditorComponent extends Component {
 
   render() {
     const { value, onChange, NoticeData, defaultValue } = this.props;
-    console.log(NoticeData);
     return (
       <div style={{ height: "650px" }}>
         <ReactQuill
