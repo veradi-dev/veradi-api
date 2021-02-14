@@ -17,5 +17,5 @@ class WorkHourAdmin(admin.ModelAdmin):
 
 
 @admin.register(WorkHourCorrectionRequest)
-class WorkHourAdmin(admin.ModelAdmin):
+class WorkHourCorrectionRequestAdmin(admin.ModelAdmin):
     pass

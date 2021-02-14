@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import Noticelist from './Noticelist';
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
-import {Link} from 'react-router-dom';
+import Noticelist from "./Noticelist";
+import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
+import Box from "@material-ui/core/Box";
+import Grid from "@material-ui/core/Grid";
+import { Link } from "react-router-dom";
 
 import { connect } from "react-redux";
-import './NoticeLayout.css';
+import "./NoticeLayout.css";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -15,10 +15,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
-
-const NoticeLayout=({user, match})=> {
-  
+const NoticeLayout = ({ user, match }) => {
   const [Team, setTeam] = useState("전체");
   const handleAll = () => {
     setTeam("전체");
@@ -30,21 +27,31 @@ const NoticeLayout=({user, match})=> {
   return (
     <div className={classes.root}>
       <Grid container spacing={1}>
-          <Grid item xs={6}>
-            <Link to={`/notice/전체/noticelist/1`} style={{ textDecoration: 'none', color: 'black' }}>
-            <button onClick={handleAll} className="NoticeTab">전체</button>
-            </Link>
-          </Grid>
-          <Grid item xs={6}>
-          <Link to={`/notice/${user.team}/noticelist/1`} style={{ textDecoration: 'none', color: 'black' }}>
-            <button onClick={handleTeam} className="NoticeTab">{user.team}</button>
-            </Link>
-          </Grid>
+        <Grid item xs={6}>
+          <Link
+            to={`/notice/전체/noticelist/1`}
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            <button onClick={handleAll} className="NoticeTab">
+              전체
+            </button>
+          </Link>
         </Grid>
-        <Noticelist Team={Team} match={match}></Noticelist>
+        <Grid item xs={6}>
+          <Link
+            to={`/notice/${user.team}/noticelist/1`}
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            <button onClick={handleTeam} className="NoticeTab">
+              {user.team}
+            </button>
+          </Link>
+        </Grid>
+      </Grid>
+      <Noticelist Team={Team} match={match}></Noticelist>
     </div>
   );
-}
+};
 
 const mapStateToProps = (state) => ({
   user: state.user,

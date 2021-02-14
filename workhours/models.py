@@ -182,6 +182,8 @@ class WorkHourCorrectionRequest(CoreModel):
         on_delete=models.SET_NULL,
         null=True,
     )
+    # 수정 상세사항
+    diff = models.CharField(max_length=1500, verbose_name="수정 상세사항", null=True)
 
     def __str__(self):
         return f"{self.workhour.user.get_full_name()}의 {self.date}의 근무시간 정정 요청"

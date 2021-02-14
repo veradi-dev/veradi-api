@@ -1,3 +1,4 @@
+from django.db.models import Prefetch
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 from rest_framework import viewsets
@@ -64,6 +65,8 @@ class WorkHourViewset(viewsets.ModelViewSet):
         serializer = self.get_serializer(workhours, many=True)
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
+    # update 는 구현하지 않는다. WorkHour 업데이트는 correction 을 통해서만 가능하다.
+
     @action(methods=["get", "post", "patch", "delete"], detail=False)
     def correction(self, request):
         if request.method == "GET":
@@ -80,7 +83,7 @@ class WorkHourViewset(viewsets.ModelViewSet):
                 complete=False,
             )
             if queryset.__len__() == 0:
-                return Response(status.HTTP_204_NO_CONTENT)
+                return Response(status=status.HTTP_204_NO_CONTENT)
             serializer = WorkHourCorrectionRequestSerializer(queryset, many=True)
             print(queryset)
             return Response(status=status.HTTP_200_OK, data=serializer.data)
@@ -90,6 +93,7 @@ class WorkHourViewset(viewsets.ModelViewSet):
             근무 시간 정정 요청을 생성한다.
             """
             data = request.data
+
             datetime_str = data.pop("datetime", None)
             if datetime_str is None:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -100,7 +104,11 @@ class WorkHourViewset(viewsets.ModelViewSet):
                     "time": get_aware_datetime(datetime_str).time(),
                 }
             )
-            serializer = WorkHourCorrectionRequestSerializer(data=data)
+
+            workhour = WorkHour.objects.get(id=data.pop("workhour").get("id"))
+            serializer = WorkHourCorrectionRequestSerializer(
+                data=data, partial=True, context={"workhour": workhour}
+            )
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
                 return Response(status=status.HTTP_201_CREATED)
@@ -110,7 +118,24 @@ class WorkHourViewset(viewsets.ModelViewSet):
             """
             근무 시간 정정 요청을 결재한다. (승인 / 거절)
             """
-            pass
+            data = request.data
+            print(data)
+            wcr = WorkHourCorrectionRequest.objects.get(id=data.pop("id"))
+
+            serializer = WorkHourCorrectionRequestSerializer(
+                wcr,
+                data=data,
+                partial=True,
+                context={
+                    "workhour": data.pop("workhour"),
+                    "user": request.user,
+                    "approved": data.pop("approve"),
+                },
+            )
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+                return Response(status=status.HTTP_200_OK)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
         elif request.method == "DELETE":
             """
@@ -119,3 +144,65 @@ class WorkHourViewset(viewsets.ModelViewSet):
                 - 결재가 된 이후는 삭제 불가능.
             """
             pass
+
+    @action(methods=["get"], detail=False)
+    def team_stat(self, request):
+        """
+        특정 month 의 사용자(user)가 소속된 팀의 평균 근무 시간을 초(seconds)로 제공한다.
+        get으로 month가 제공되지 않으면 현재 월을 기본으로 한다.
+        """
+        user = request.user
+        # 팀장 권한이 있는 사람만 팀원 전체의 근무시간을 확인할 수 있다.
+        if user.position < 3:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        try:
+            year = int(request.GET.get("year", None))
+            month = int(request.GET.get("month", None))
+            if year is None or month is None:
+                raise ValueError
+        except (ValueError, TypeError):
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        team = user.team
+        team_members = team.users.get_queryset()
+        data = []
+
+        for member in team_members:
+            workhours = [
+                workhour
+                for workhour in WorkHour.objects.prefetch_related(
+                    Prefetch("enter_logs")
+                ).filter(user=member)
+                if workhour.start.year == year and workhour.start.month == month
+            ]
+
+            d = {
+                "name": member.get_full_name(),
+                "code": member.code,
+                "total": 0,  # 총 근무 시간
+                "work_count": 0,  # 근무 일수
+            }
+            if workhours.__len__() != 0:
+                # work_count 1로 시작
+                d["work_count"] += 1
+
+                prev_work_date = workhours[0].start.date()
+                for workhour in workhours:
+                    if workhour.complete is True and workhour.status[0] == 1:
+                        d["total"] += workhour.total
+                        # 근무 시간이 인정된 경우 count + 1
+                        if workhour.start.date() != prev_work_date:
+                            d["work_count"] += 1
+                            prev_work_date = workhour.start.date()
+
+            data.append(d)
+
+        return Response(status=status.HTTP_200_OK, data=data)
+
+
+# from django.contrib.auth import get_user_model
+# from workhours.models import *
+# from django.db.models import Prefetch
+#
+# User = get_user_model()
+# EnterLog.objects.prefetch(Prefetch("workhour"))

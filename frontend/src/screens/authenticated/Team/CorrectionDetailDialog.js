@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useReducer, useCallback } from "react";
+import { connect, useDispatch } from "react-redux";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -21,9 +22,22 @@ import { makeStyles } from "@material-ui/core/styles";
 import { loadCSS } from "fg-loadcss";
 import clsx from "clsx";
 import { Container, formatMs, Grid, TextField } from "@material-ui/core";
-import { secondsToLocalTimeString, toggleMode } from "~/frontend/src/utils";
+import {
+  secondsToLocalTimeString,
+  toggleMode,
+  craeteUniqueId,
+  descDateTimeSort,
+  validateDateString,
+  validateTimeString,
+  calcStartDate,
+  calcEndDate,
+  setStatus,
+  printTotal
+} from "~/frontend/src/utils";
 import MenuItem from "@material-ui/core/MenuItem";
 import "./table.css";
+import { alertActions } from "~/frontend/src/redux/alert/alertSlice";
+import { correctionWorkhour } from "~/frontend/src/redux/workhours/workhoursThunks";
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -36,29 +50,8 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const descDateTimeSort = (a, b) => {
-  // Turn your strings into dates, and then subtract them
-  // to get a value that is either negative, positive, or zero.
-  return new Date(`${a.date}T${a.time}`) - new Date(`${b.date}T${b.time}`);
-};
-
-const craeteUniqueId = list => {
-  let id = parseInt(Math.random() * 10000000);
-  for (let i = 0; i < list.length; i++) {
-    if (list[i].id === id) {
-      i = 0;
-      id = parseInt(Math.random() * 10000000);
-    }
-  }
-  return id;
-};
-
 function init (row) {
-  console.log("리듀서 초기화중...");
-  console.log("받은 데이터:");
-  console.log(row);
   if (row === undefined) throw Error;
-  console.log("정상적인 데이터가 전달되었습니다.");
   return row.workhour.enter_logs.map(enter_log => ({
     id: enter_log.id,
     date: enter_log.date,
@@ -84,15 +77,12 @@ function reducer (state, action) {
       state = state
         .map(obj => {
           if (obj.id === payload.id) {
-            console.log(`기존 obj: ${obj.time}`);
-            console.log(`수정 payload: ${payload.time}`);
             return payload;
           } else {
             return obj;
           }
         })
         .sort(descDateTimeSort);
-      console.log(state);
       return state;
     case "DELETE":
       return state.filter(obj => obj.id !== payload.id);
@@ -101,12 +91,6 @@ function reducer (state, action) {
     default:
       return state;
   }
-}
-function validateDateString (dateString) {
-  return !isNaN(Date.parse(dateString));
-}
-function validateTimeString (timeString) {
-  return /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/.test(timeString);
 }
 
 const InputRow = ({ form, handleFormChange, handleSubmit, clear, mode }) => {
@@ -181,40 +165,9 @@ const InputRow = ({ form, handleFormChange, handleSubmit, clear, mode }) => {
   );
 };
 
-function calcStartDate (enter_logs) {
-  //enter log 중 가장 과거 객체의 datetime을 가져온다. enter log 는 이미 정렬된 상태.
-  // mode 1이 있으면 가장 과거의 1을 가져온다.
-  let enterLog = Object.assign([], enter_logs).sort(descDateTimeSort);
-  for (let enter_log of enterLog) {
-    if (enter_log.mode == 1) {
-      return new Date(`${enter_log.date}T${enter_log.time}`);
-    }
-  }
-  return new Date(`${enter_logs[0].date}T${enter_logs[0].time}`);
-}
-
-function calcEndDate (enter_logs) {
-  //enter log 중 가장 최근 객체의 datetime을 가져온다. enter log 는 이미 정렬된 상태.
-  // mode 2이 있으면 가장 최근의 2을 가져온다.
-  let enterLog = Object.assign([], enter_logs).reverse();
-  for (let enter_log of enterLog) {
-    if (enter_log.mode == 2) {
-      return new Date(`${enter_log.date}T${enter_log.time}`);
-    }
-  }
-  return new Date(`${enter_logs[0].date}T${enter_logs[0].time}`);
-}
-
-function printTotal (enter_logs) {
-  // a, b 는 각각 Date object 들이다.
-  const start = calcStartDate(enter_logs);
-  const end = calcEndDate(enter_logs);
-  let total = Math.abs(end - start);
-  return secondsToLocalTimeString(total / 1000);
-}
-
-export default function CorrectionDetailDialog ({ row }) {
+function CorrectionDetailDialog ({ row, correctionWorkhour, refresh }) {
   const [open, setOpen] = useState(false);
+  const reduxDispatch = useDispatch();
 
   // 현재 모드 (읽기 / 생성 / 수정 / 삭제)
   const modeList = ["read", "add", "update"];
@@ -272,30 +225,37 @@ export default function CorrectionDetailDialog ({ row }) {
     setUpdateForm([...updateForm, payload]);
     clear();
   }, []);
-  const handleUpdate = useCallback(form => {
-    const payload = {
-      id: form.id,
-      date: form.date.value,
-      time: form.time.value,
-      mode: form.mode.value, // 숫자
-      type: "update"
-    };
-    dispatch({
-      type: "UPDATE",
-      payload
-    });
-    setUpdateForm(
-      updateForm.map(obj => {
-        if (obj.id === payload.id) {
-          return payload;
-        } else {
-          return obj;
-        }
-      })
-    );
-    clear();
-  }, []);
+  const handleUpdate = useCallback(
+    form => {
+      const payload = {
+        id: form.id,
+        date: form.date.value,
+        time: form.time.value,
+        mode: form.mode.value, // 숫자
+        type: "update"
+      };
+      dispatch({
+        type: "UPDATE",
+        payload
+      });
 
+      if (updateForm.filter(obj => obj.id === payload.id).length === 0) {
+        setUpdateForm([...updateForm, payload]);
+      } else {
+        setUpdateForm(
+          updateForm.map(obj => {
+            if (obj.id === payload.id) {
+              return payload;
+            } else {
+              return obj;
+            }
+          })
+        );
+      }
+      clear();
+    },
+    [updateForm]
+  );
   const handleDelete = useCallback(id => {
     dispatch({
       type: "DELETE",
@@ -337,11 +297,39 @@ export default function CorrectionDetailDialog ({ row }) {
       }
     });
   };
+
+  // 백엔드로 데이터 post
+  const handleSubmit = approve => {
+    const status = setStatus(enterLogs);
+    if (approve === true && status !== 1) {
+      // error 메시지 표시
+      reduxDispatch(
+        alertActions.error("변경 후, 정상적인 출입기록이 아닙니다.")
+      );
+      return;
+    }
+    if (
+      window.confirm("추후 수정은 불가능 합니다.\n정말 진행하시겠습니까?") ===
+      false
+    ) {
+      return;
+    }
+    const data = {
+      id: row.id,
+      approve,
+      workhour: {
+        id: row.workhour.id,
+        enter_logs: updateForm
+      }
+    };
+    correctionWorkhour(data, "patch").finally(() => refresh());
+    handleClose();
+  };
+
+  // Dialog 닫을 때, 정리 함수들
   const handleReset = row => {
     dispatch({ type: "RESET", payload: row });
   };
-
-  // Dialog 개폐 함수
   const handleClickOpen = () => setOpen(true);
   const handleClose = () => {
     clear();
@@ -349,14 +337,13 @@ export default function CorrectionDetailDialog ({ row }) {
     setOpen(false);
   };
 
+  // CSS
   const classes = useStyles();
   useEffect(() => {
-    // CSS
     const node = loadCSS(
       "https://use.fontawesome.com/releases/v5.12.0/css/all.css",
       document.querySelector("#font-awesome-css")
     );
-
     return () => {
       node.parentNode.removeChild(node);
     };
@@ -492,7 +479,7 @@ export default function CorrectionDetailDialog ({ row }) {
                     <br />
                     {row.workhour.status === 1
                       ? secondsToLocalTimeString(row.workhour.total)
-                      : workhour.message}
+                      : row.workhour.message}
                   </Grid>
                 </Grid>
               </Paper>
@@ -531,10 +518,18 @@ export default function CorrectionDetailDialog ({ row }) {
             {row.reason}
           </Typography>
           <DialogActions>
-            <Button onClick={handleClose} variant='contained' color='primary'>
+            <Button
+              onClick={() => handleSubmit(true)}
+              variant='contained'
+              color='primary'
+            >
               승인
             </Button>
-            <Button onClick={handleClose} variant='contained' color='secondary'>
+            <Button
+              onClick={() => handleSubmit(false)}
+              variant='contained'
+              color='secondary'
+            >
               거절
             </Button>
           </DialogActions>
@@ -543,3 +538,8 @@ export default function CorrectionDetailDialog ({ row }) {
     </>
   );
 }
+
+const mapStateToProps = state => ({});
+export default connect(mapStateToProps, { correctionWorkhour })(
+  CorrectionDetailDialog
+);

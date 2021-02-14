@@ -51,7 +51,11 @@ PROJECT_APPS = [
     "conference.apps.ConferenceConfig",
     "notice.apps.NoticeConfig",
 ]
-THIRD_PARTY_APPS = ["rest_framework", "knox", "webpack_loader"]
+THIRD_PARTY_APPS = [
+    "rest_framework",
+    "knox",
+    "webpack_loader",
+]
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
 
 # REST_FRAMEWORK SETTINGS
@@ -106,13 +110,24 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.environ.get("DATABASE_NAME"),
+        "HOST": os.environ.get("DATABASE_HOST"),
+        "USER": os.environ.get("DATABASE_USERNAME"),
+        "PASSWORD": os.environ.get("DATABASE_PASSWORD"),
+        "PORT": os.environ.get("DATABASE_PORT"),
+    },
 }
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / "db.sqlite3",
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators

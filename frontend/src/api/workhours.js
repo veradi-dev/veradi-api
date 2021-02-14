@@ -13,3 +13,11 @@ export const correctionWorkhourRequest = (
   method = "post"
 ) =>
   request(method, "api/v1/workhours/correction/", data, createHeaders(token));
+
+export const getTeamStatRequest = (token, year, month) =>
+  request(
+    "get",
+    `api/v1/workhours/team_stat/?year=${year}&month=${month}`,
+    null,
+    createHeaders(token)
+  );
