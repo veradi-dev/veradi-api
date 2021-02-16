@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Title from "../Title";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
-import Noticelist from "./Noticelist";
+import Noticelist from "./NoticeList";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import TextField from "@material-ui/core/TextField";
@@ -14,49 +14,49 @@ import { connect } from "react-redux";
 import { getTeamCode } from "~/frontend/src/utils";
 import { Redirect } from "react-router-dom";
 const Noticepatch = ({ NoticeData, user, match, history }) => {
-  const useStyles = makeStyles((theme) => ({
+  const useStyles = makeStyles(theme => ({
     paper: {
       padding: theme.spacing(2),
       display: "flex",
       overflow: "auto",
-      flexDirection: "column",
+      flexDirection: "column"
     },
     fixedHeight: {
-      height: 240,
-    },
+      height: 240
+    }
   }));
   const classes = useStyles();
   const [title, settitle] = useState();
   const [desc, setDesc] = useState("");
-  const onTitleChange = (e) => {
+  const onTitleChange = e => {
     settitle(e.target.value);
   };
-  function onEditorChange(value) {
+  function onEditorChange (value) {
     setDesc(value);
   }
 
-  const handlePatch = (e) => {
+  const handlePatch = e => {
     const data = {
       title: title,
-      contents: desc,
+      contents: desc
     };
     const teamdata = {
       title: title,
       contents: desc,
-      team: getTeamCode(user.team),
+      team: getTeamCode(user.team)
     };
     if (match.params.team == "전체") {
       axios
         .patch(`/api/v1/notice/${match.params.id}/`, data, {
-          headers: { Authorization: "Token " + `${user.token}` },
+          headers: { Authorization: "Token " + `${user.token}` }
         })
-        .then((res) => {
+        .then(res => {
           console.log(res);
           <Redirect
-            to={`/notice/전체/noticelist/${match.params.pageNumber}/${match.params.id}`}
+            to={`/notice/전체/${match.params.pageNumber}/${match.params.id}`}
           ></Redirect>;
         })
-        .catch((err) => {
+        .catch(err => {
           const status = err?.response?.status;
           console.log(err);
           if (status === undefined) {
@@ -75,15 +75,15 @@ const Noticepatch = ({ NoticeData, user, match, history }) => {
     } else {
       axios
         .patch(`/api/v1/notice/${match.params.id}`, teamdata, {
-          headers: { Authorization: "Token " + `${user.token}` },
+          headers: { Authorization: "Token " + `${user.token}` }
         })
-        .then((res) => {
+        .then(res => {
           console.log(res);
           <Redirect
-            to={`/notice/${match.params.team}/noticelist/${match.params.pageNumber}/${match.params.id}`}
+            to={`/notice/${match.params.team}/${match.params.pageNumber}/${match.params.id}`}
           ></Redirect>;
         })
-        .catch((err) => {
+        .catch(err => {
           const status = err?.response?.status;
           console.log(err);
           if (status === undefined) {
@@ -109,16 +109,16 @@ const Noticepatch = ({ NoticeData, user, match, history }) => {
           <Paper className={classes.paper}>
             <Title>{match.params.team} 공지사항</Title>
             <TextField
-              id="outlined-full-width"
-              label="제목"
-              placeholder="제목을 입력하세요"
+              id='outlined-full-width'
+              label='제목'
+              placeholder='제목을 입력하세요'
               fullWidth
-              margin="normal"
+              margin='normal'
               InputLabelProps={{
-                shrink: true,
+                shrink: true
               }}
               defaultValue={NoticeData.title}
-              variant="outlined"
+              variant='outlined'
               value={title}
               onChange={onTitleChange}
             />
@@ -131,8 +131,8 @@ const Noticepatch = ({ NoticeData, user, match, history }) => {
             <Button
               component={Link}
               to={"/Notice"}
-              variant="contained"
-              color="primary"
+              variant='contained'
+              color='primary'
               onClick={handlePatch}
             >
               저장하기
@@ -144,7 +144,7 @@ const Noticepatch = ({ NoticeData, user, match, history }) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  user: state.user,
+const mapStateToProps = state => ({
+  user: state.user
 });
 export default connect(mapStateToProps)(Noticepatch);

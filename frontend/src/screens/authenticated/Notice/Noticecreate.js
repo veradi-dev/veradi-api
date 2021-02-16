@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Title from "../Title";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
-import Noticelist from "./Noticelist";
+import Noticelist from "./NoticeList";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import TextField from "@material-ui/core/TextField";
@@ -12,45 +12,45 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { connect } from "react-redux";
 import { getTeamCode } from "~/frontend/src/utils";
-const Noticecreate = ({ match, user, history }) => {
+const NoticeCreate = ({ match, user, history }) => {
   const { team } = match.params;
   const [desc, setDesc] = useState("");
-  function onEditorChange(value) {
+  function onEditorChange (value) {
     setDesc(value);
   }
-  const useStyles = makeStyles((theme) => ({
+  const useStyles = makeStyles(theme => ({
     paper: {
       padding: theme.spacing(2),
       display: "flex",
       overflow: "auto",
-      flexDirection: "column",
+      flexDirection: "column"
     },
     fixedHeight: {
-      height: 240,
-    },
+      height: 240
+    }
   }));
   const classes = useStyles();
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-  const handlesubmit = (e) => {
+  const handlesubmit = e => {
     const data = {
       title: title,
-      contents: desc,
+      contents: desc
     };
     const Teamdata = {
       title: title,
       contents: desc,
-      team: getTeamCode(user.team),
+      team: getTeamCode(user.team)
     };
     if (match.params.team == "전체") {
       axios
         .post(`/api/v1/notice/`, data, {
-          headers: { Authorization: "Token " + `${user.token}` },
+          headers: { Authorization: "Token " + `${user.token}` }
         })
-        .then((res) => {
+        .then(res => {
           console.log(res);
-          history.push("/notice/전체/noticelist/1");
+          history.push("/notice/전체/1");
         })
-        .catch((err) => {
+        .catch(err => {
           const status = err?.response?.status;
           console.log(err);
           if (status === undefined) {
@@ -69,13 +69,13 @@ const Noticecreate = ({ match, user, history }) => {
     } else {
       axios
         .post(`/api/v1/notice/`, Teamdata, {
-          headers: { Authorization: "Token " + `${user.token}` },
+          headers: { Authorization: "Token " + `${user.token}` }
         })
-        .then((res) => {
+        .then(res => {
           console.log(res);
-          history.push(`/notice/${match.params.team}/noticelist/1`);
+          history.push(`/notice/${match.params.team}/1`);
         })
-        .catch((err) => {
+        .catch(err => {
           const status = err?.response?.status;
           console.log(err);
           if (status === undefined) {
@@ -95,7 +95,7 @@ const Noticecreate = ({ match, user, history }) => {
   };
 
   const [title, settitle] = useState();
-  const onTitleChange = (e) => {
+  const onTitleChange = e => {
     settitle(e.target.value);
   };
   return (
@@ -105,15 +105,15 @@ const Noticecreate = ({ match, user, history }) => {
           <Paper className={classes.paper}>
             <Title>{team} 공지사항</Title>
             <TextField
-              id="outlined-full-width"
-              label="제목"
-              placeholder="제목을 입력하세요"
+              id='outlined-full-width'
+              label='제목'
+              placeholder='제목을 입력하세요'
               fullWidth
-              margin="normal"
+              margin='normal'
               InputLabelProps={{
-                shrink: true,
+                shrink: true
               }}
-              variant="outlined"
+              variant='outlined'
               value={title}
               onChange={onTitleChange}
             />
@@ -121,8 +121,8 @@ const Noticecreate = ({ match, user, history }) => {
             <Button
               component={Link}
               to={"/Notice"}
-              variant="contained"
-              color="primary"
+              variant='contained'
+              color='primary'
               onClick={handlesubmit}
             >
               저장하기
@@ -134,7 +134,7 @@ const Noticecreate = ({ match, user, history }) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  user: state.user,
+const mapStateToProps = state => ({
+  user: state.user
 });
-export default connect(mapStateToProps)(Noticecreate);
+export default connect(mapStateToProps)(NoticeCreate);

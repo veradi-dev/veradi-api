@@ -187,5 +187,5 @@ export function getTeamCode (team) {
     return "TDD";
   } else if (team === "디자인팀") {
     return "DDB";
-  }
+  } else return null;
 }

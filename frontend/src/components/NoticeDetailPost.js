@@ -8,12 +8,12 @@ import Button from "@material-ui/core/Button";
 import Noticepatch from "./../screens/authenticated/Notice/Noticepatch";
 import axios from "axios";
 
-export default function NoticeDetailPost({
+export default function NoticeDetailPost ({
   NoticeData,
   id,
   match,
   user,
-  history,
+  history
 }) {
   const handlePatch = () => {
     setNoticeDetail(false);
@@ -21,13 +21,13 @@ export default function NoticeDetailPost({
   const handleDelete = () => {
     axios
       .delete(`/api/v1/notice/${match.params.id}/`, {
-        headers: { Authorization: "Token " + `${user.token}` },
+        headers: { Authorization: "Token " + `${user.token}` }
       })
-      .then((res) => {
+      .then(res => {
         console.log(res);
-        <Redirect to={`/notice/전체/noticelist/1`}></Redirect>;
+        <Redirect to={`/notice/전체/1`}></Redirect>;
       })
-      .catch((err) => {
+      .catch(err => {
         const status = err?.response?.status;
         console.log(err);
         if (status === undefined) {
@@ -42,21 +42,21 @@ export default function NoticeDetailPost({
         }
       });
   };
-  const useStyles = makeStyles((theme) => ({
+  const useStyles = makeStyles(theme => ({
     paper: {
       padding: theme.spacing(2),
       display: "flex",
       overflow: "auto",
-      flexDirection: "column",
+      flexDirection: "column"
     },
     fixedHeight: {
-      height: 240,
-    },
+      height: 240
+    }
   }));
   const classes = useStyles();
 
   const [NoticeDetail, setNoticeDetail] = useState(true);
-  function findnotice(NoticeData, id) {
+  function findnotice (NoticeData, id) {
     for (let i = 0; NoticeData.results[i].id >= id; i++) {
       if (NoticeData.results[i].id == id) {
         return i;
@@ -71,43 +71,43 @@ export default function NoticeDetailPost({
             <Grid container spacing={0}>
               <Grid item xs={3}>
                 <Typography
-                  align="center"
-                  color="inherit"
-                  variant="h5"
-                  component="div"
+                  align='center'
+                  color='inherit'
+                  variant='h5'
+                  component='div'
                 >
                   제목
                 </Typography>
               </Grid>
               <Grid item xs={9}>
                 <Typography
-                  align="left"
-                  color="inherit"
-                  variant="h5"
-                  component="div"
+                  align='left'
+                  color='inherit'
+                  variant='h5'
+                  component='div'
                 >
                   {NoticeData.results[findnotice(NoticeData, id)].title}
                 </Typography>
               </Grid>
             </Grid>
             <br></br>
-            <div className="fixdeletebtn">
-              <Button color="primary" variant="contained" onClick={handlePatch}>
+            <div className='fixdeletebtn'>
+              <Button color='primary' variant='contained' onClick={handlePatch}>
                 수정하기
               </Button>
               <Button
-                color="primary"
-                variant="contained"
+                color='primary'
+                variant='contained'
                 onClick={handleDelete}
               >
                 삭제하기
               </Button>
             </div>
             <Typography
-              align="right"
-              color="inherit"
-              variant="subtitle2"
-              component="div"
+              align='right'
+              color='inherit'
+              variant='subtitle2'
+              component='div'
             >
               {NoticeData.results[findnotice(NoticeData, id)].writer.last_name +
                 NoticeData.results[findnotice(NoticeData, id)].writer
@@ -121,15 +121,15 @@ export default function NoticeDetailPost({
             <br></br>
             <br></br>
             <Typography
-              align="left"
-              color="inherit"
-              variant="body1"
-              component="div"
+              align='left'
+              color='inherit'
+              variant='body1'
+              component='div'
             >
               <div
                 dangerouslySetInnerHTML={{
                   __html:
-                    NoticeData.results[findnotice(NoticeData, id)].contents,
+                    NoticeData.results[findnotice(NoticeData, id)].contents
                 }}
               />
             </Typography>

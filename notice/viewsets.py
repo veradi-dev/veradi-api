@@ -7,7 +7,7 @@ from .models import Notice
 
 
 class NoticePagination(PageNumberPagination):
-    page_size = 10
+    page_size = 20
 
 
 class NoticeViewSet(viewsets.ModelViewSet):

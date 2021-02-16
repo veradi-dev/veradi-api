@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
-import Noticelist from "../Notice/Noticelist";
+import Noticelist from "../Notice/NoticeList";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import { Avatar, Box, Icon, Typography } from "@material-ui/core";

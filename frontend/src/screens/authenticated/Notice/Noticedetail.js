@@ -5,11 +5,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import "./Noticedetail.css";
 import axios from "axios";
 import { connect } from "react-redux";
-import NoticeDetailPost from "./../../../components/NoticeDetailPost";
+import NoticeDetailPost from "../../../components/NoticeDetailPost";
 import { redirect } from "react-router-dom";
 import { getTeamCode } from "~/frontend/src/utils";
 
-const Noticedetail = ({ match, user }) => {
+const NoticeDetail = ({ match, user }) => {
   const [NoticeData, setNoticeData] = useState();
   const [loading, setLoading] = useState(true);
   const pageNumber = match.params.pageNumber;
@@ -18,13 +18,13 @@ const Noticedetail = ({ match, user }) => {
     if (match.params.team == "전체") {
       axios
         .get(`api/v1/notice?page=${pageNumber}`, {
-          headers: { Authorization: "Token " + `${user.token}` },
+          headers: { Authorization: "Token " + `${user.token}` }
         })
-        .then((res) => {
+        .then(res => {
           setNoticeData(res.data);
           setLoading(false);
         })
-        .catch((err) => {
+        .catch(err => {
           const status = err?.response?.status;
           if (status === undefined) {
             console.dir(
@@ -44,14 +44,14 @@ const Noticedetail = ({ match, user }) => {
         .get(
           `/api/v1/notice?team=${getTeamCode(user.team)}&page=${pageNumber}`,
           {
-            headers: { Authorization: "token " + `${user.token}` },
+            headers: { Authorization: "token " + `${user.token}` }
           }
         )
-        .then((res) => {
+        .then(res => {
           setNoticeData(res.data);
           setLoading(false);
         })
-        .catch((err) => {
+        .catch(err => {
           const status = err?.response?.status;
           if (status === undefined) {
             console.dir(
@@ -85,7 +85,7 @@ const Noticedetail = ({ match, user }) => {
     </Grid>
   );
 };
-const mapStateToProps = (state) => ({
-  user: state.user,
+const mapStateToProps = state => ({
+  user: state.user
 });
-export default connect(mapStateToProps)(Noticedetail);
+export default connect(mapStateToProps)(NoticeDetail);
