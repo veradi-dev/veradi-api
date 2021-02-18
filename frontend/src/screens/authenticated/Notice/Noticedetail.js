@@ -68,6 +68,8 @@ const NoticeDetail = ({
       .catch(err => {
         if (err.response.status === 403) {
           dispatch(alertActions.error("권한이 없습니다."));
+        } else if (err.ersponse.status === 404) {
+          dispatch(alertActions.error("존재하지 않는 게시물입니다."));
         } else if (err.ersponse.status === 400) {
           dispatch(alertActions.error("잘못된 접근입니다."));
         }

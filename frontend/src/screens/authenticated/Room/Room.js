@@ -156,9 +156,6 @@ const Room = ({ user, getConference }) => {
       })
       .catch(err => {
         const status = err?.response?.status;
-        // if (status === undefined) {
-        //   console.dir("데이터를 불러오던 중 예기치 못한 예외가 발생하였습니다.\n" + JSON.stringify(err));
-        // }
         if (status === 400) {
           reduxDispatch(alertActions.error("잘못된 접근입니다."));
         } else if (status === 500) {
@@ -166,8 +163,13 @@ const Room = ({ user, getConference }) => {
             alertActions.error("내부 서버 오류입니다.개발팀에 문의주세요.")
           );
         }
-        setLoading(false);
+        if (isUnmount === false) {
+          setLoading(false);
+        }
       });
+    return () => {
+      isUnmount = true;
+    };
   }, [date, room, refresh]);
 
   const handleSubmit = () => {

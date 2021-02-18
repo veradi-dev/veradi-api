@@ -83,7 +83,11 @@ const Dashboard = ({ user, workhours, getMyWorkhours }) => {
           setTeamMembers(res.data);
         }
       })
-      .finally(() => setTMLoading(false));
+      .finally(() => {
+        if (isUnmount === false) {
+          setTMLoading(false);
+        }
+      });
     getMyWorkhours(year, month);
     return () => {
       isUnmount = true;

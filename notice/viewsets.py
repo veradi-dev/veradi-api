@@ -71,7 +71,8 @@ class NoticeViewSet(viewsets.ModelViewSet):
         )
 
     def partial_update(self, request, *args, **kwargs):
-        instance = self.get_object()
+        pk = kwargs.get("pk", None)
+        instance = Notice.objects.get(pk=pk)
         # 본인만 수정 가능, 스테프는 가능
         if request.user.is_staff is False:
             if request.user != instance.writer:
@@ -88,7 +89,8 @@ class NoticeViewSet(viewsets.ModelViewSet):
         pass
 
     def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
+        pk = kwargs.get("pk", None)
+        instance = Notice.objects.get(pk=pk)
         # 공지사항을 삭제할 수 있는 사람
         # 1. 본인 2. 해당 팀의 상급자 3.staff
         if request.user.is_staff is not True:
