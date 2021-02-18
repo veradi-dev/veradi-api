@@ -37,9 +37,14 @@ const login = data => dispatch => {
 
 const checkLogedIn = () => (dispatch, getState) => {
   const token = getState().user.token;
+  let isLogin = true;
   CheckLogedInRequest(token).catch(e => {
-    dispatch(logout());
+    if (e.response.status === 401) {
+      dispatch(logout());
+      isLogin = false;
+    }
   });
+  return isLogin;
 };
 
 export { login, logout, checkLogedIn };

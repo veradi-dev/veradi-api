@@ -1,5 +1,6 @@
 from rest_framework import viewsets, status
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from users.models import Team
 from .serializers import NoticeSerializer
@@ -13,7 +14,7 @@ class NoticePagination(PageNumberPagination):
 class NoticeViewSet(viewsets.ModelViewSet):
     queryset = Notice.objects.all()
     serializer_class = NoticeSerializer
-    permission_classes = []
+    permission_classes = [IsAuthenticated]
     pagination_class = NoticePagination
 
     def get_queryset(self):
@@ -71,9 +72,10 @@ class NoticeViewSet(viewsets.ModelViewSet):
 
     def partial_update(self, request, *args, **kwargs):
         instance = self.get_object()
-        # 본인만 수정 가능
-        if request.user != instance.writer:
-            return Response(status=status.HTTP_403_FORBIDDEN)
+        # 본인만 수정 가능, 스테프는 가능
+        if request.user.is_staff is False:
+            if request.user != instance.writer:
+                return Response(status=status.HTTP_403_FORBIDDEN)
         data = request.data
         print(data)
         serializer = self.get_serializer(instance, data=data, partial=True)
@@ -88,11 +90,12 @@ class NoticeViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         # 공지사항을 삭제할 수 있는 사람
-        # 1. 본인 2. 해당 팀의 상급자
-        if (
-            request.user.position < instance.writer.position
-            or request.user.team != instance.writer.team
-        ):
-            return Response(status=status.HTTP_403_FORBIDDEN)
+        # 1. 본인 2. 해당 팀의 상급자 3.staff
+        if request.user.is_staff is not True:
+            if (
+                request.user.position < instance.writer.position
+                or request.user.team != instance.writer.team
+            ):
+                return Response(status=status.HTTP_403_FORBIDDEN)
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)

@@ -38,7 +38,13 @@ const NavItem = () => {
         </ListItem>
       </Link>
       <Link
-        to='/notice/전체/1'
+        to={{
+          pathname: "/notice/전체/1",
+          key: Math.random(),
+          state: {
+            applied: false
+          }
+        }}
         style={{ textDecoration: "none", color: "black" }}
       >
         <ListItem button>

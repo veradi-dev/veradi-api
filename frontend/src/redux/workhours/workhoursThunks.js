@@ -5,14 +5,20 @@ import {
   getTeamStatRequest
 } from "../../api/workhours";
 import { alertActions } from "../alert/alertSlice";
+import { logout } from "../user/userThunks";
 
 export const getMyWorkhours = (year, month) => (dispatch, getState) => {
   const userId = getState().user.id;
   const token = getState().user.token;
 
-  getMyWorkhoursRequest({ token, userId, year, month }).then(res => {
-    dispatch(workhoursActions.load(res.data));
-  });
+  getMyWorkhoursRequest({ token, userId, year, month })
+    .then(res => {
+      dispatch(workhoursActions.load(res.data));
+    })
+    .catch(err => {
+      if (err.response.status === 401) {
+      }
+    });
 };
 
 export const correctionWorkhour = (data, method) => (dispatch, getState) => {

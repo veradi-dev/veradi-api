@@ -145,14 +145,13 @@ const Home = ({ history, user, checkLogedIn, logout }) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
   useEffect(() => {
-    checkLogedIn();
-  }, []);
-  useEffect(() => {
-    if (!user.isAuthenticated) {
+    if (checkLogedIn() === false || !user.isAuthenticated) {
+      logout();
       history.push("/auth");
     }
-  }, [user]);
+  });
 
   return (
     <div className={classes.root}>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { connect, useDispatch } from "react-redux";
 import { Link, useParams, useLocation } from "react-router-dom";
 import { getNotice } from "~/frontend/src/redux/notice/noticeThunk";
@@ -9,6 +9,7 @@ import PaginationItem from "@material-ui/lab/PaginationItem";
 import Pagination from "@material-ui/lab/Pagination";
 import { getPosition, getTeamCode } from "~/frontend/src/utils";
 import NoticeList from "./NoticeList";
+import NoticeDetail from "./NoticeDetail";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import {
@@ -24,16 +25,17 @@ const useStyles = makeStyles(theme => ({
   paper: {
     padding: theme.spacing(2),
     display: "flex",
-    overflow: "auto",
+    overflow: "hidden",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center"
   },
   fixedHeight: {
-    height: 240
+    height: 300
   },
   link: {
-    textDecoration: "inherit"
+    textDecoration: "none",
+    color: "black"
   }
 }));
 
@@ -45,10 +47,8 @@ const convertTeamName = (user, team, type) => {
   } else if (type === "toggle") {
     if (team === "전체") {
       return user.team;
-    } else if (team === user.team) {
-      return "전체";
     } else {
-      return null;
+      return "전체";
     }
   }
 };
@@ -59,10 +59,49 @@ const Notice = ({ user, getNotice, match, location, history }) => {
   const [notices, setNotices] = useState([]);
   const [count, setCount] = useState(0);
   const [detailMode, setDetailMode] = useState(false);
+  const [detailId, setDetailId] = useState(0);
+  let isUnmounted = false;
+
+  const clear = () => {
+    setLoading(true);
+    setNotices([]);
+    setCount(0);
+    setDetailMode(false);
+    setDetailId(0);
+  };
+
   const dispatch = useDispatch();
   const classes = useStyles();
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-  console.log(location.pathname);
+
+  const setDetail = id => {
+    if (id === 0) {
+      setDetailMode(false);
+    } else {
+      setDetailMode(true);
+    }
+    setDetailId(id);
+  };
+
+  const updateSingleNotice = (id, data) => {
+    const { title, contents } = data;
+
+    setNotices(
+      notices.map(obj => {
+        if (obj.id === id) {
+          obj.title = title;
+          obj.contents = contents;
+          obj.updatedAt = new Date();
+        }
+        return obj;
+      })
+    );
+  };
+  const deleteSingleNotice = id => {
+    setDetail(0);
+    setNotices(notices.filter(obj => obj.id !== id));
+  };
+
   useEffect(() => {
     setLoading(true);
 
@@ -73,7 +112,7 @@ const Notice = ({ user, getNotice, match, location, history }) => {
 
     getNotice(data)
       .then(res => {
-        if (res.status === 200) {
+        if (isUnmounted === false && res.status === 200) {
           setNotices(
             res.data.results.map((obj, index) => ({
               no: parseInt(res.data.count) - index,
@@ -81,7 +120,8 @@ const Notice = ({ user, getNotice, match, location, history }) => {
               writer: `${obj.writer.last_name}${obj.writer.first_name}`,
               team: obj.team,
               title: obj.title,
-              contents: obj.contents
+              contents: obj.contents,
+              createdAt: obj.created_at
             }))
           );
           setCount(parseInt(res.data.count));
@@ -89,71 +129,103 @@ const Notice = ({ user, getNotice, match, location, history }) => {
       })
       .catch(err => {
         dispatch(alertActions.error("에러 발생"));
-        console.log(err.response.data);
         history.goBack();
       })
       .finally(() => {
         setLoading(false);
       });
+    return () => {
+      isUnmounted = true;
+      clear();
+    };
   }, [page, team]);
 
   return (
     <>
-      <Typography component='h2' variant='h6' color='primary' gutterBottom>
-        {convertTeamName(user, team, "string")} 공지사항
-      </Typography>
-      <Grid container justify='space-between'>
-        <Grid item xs={12}>
-          <Link
-            to={`/notice/${convertTeamName(user, team, "toggle")}/${page}`}
-            className={classes.link}
-          >
-            <Button>{convertTeamName(user, team, "toggle")} 공지사항</Button>
-          </Link>
-        </Grid>
+      <Box flex={1}>
+        <Typography component='h2' variant='h6' color='primary' gutterBottom>
+          {convertTeamName(user, team, "string")} 공지사항
+        </Typography>
+        {detailMode === true ? null : (
+          <Button disabled={loading} className={classes.link}>
+            <Link
+              to={`/notice/${convertTeamName(user, team, "toggle")}/${page}`}
+              className={classes.link}
+            >
+              {convertTeamName(user, team, "toggle")} 공지사항 으로 전환
+            </Link>
+          </Button>
+        )}
+      </Box>
+
+      <Grid container justify='flex-end'>
         <Grid item>
-          {getPosition(user) > 2 ? (
+          {getPosition(user) > 2 && detailMode !== true ? (
             <Link to={`/notice/create`} className={classes.link}>
-              <Button>작성하기</Button>
+              <Button
+                variant='contained'
+                color='primary'
+                style={{ marginBottom: 10 }}
+              >
+                작성하기
+              </Button>
             </Link>
           ) : (
-            <div></div>
+            <Fragment />
           )}
         </Grid>
       </Grid>
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <Paper className={fixedHeightPaper}>
-            {loading ? <CircularProgress /> : null}
-          </Paper>
+          {loading ? (
+            <Paper className={fixedHeightPaper}>
+              <CircularProgress />
+            </Paper>
+          ) : detailMode ? (
+            <Paper className={classes.paper}>
+              <NoticeDetail
+                notice={notices.filter(obj => obj.id === detailId)[0]}
+                setDetail={setDetail}
+                updateSingleNotice={updateSingleNotice}
+                deleteSingleNotice={deleteSingleNotice}
+              />
+            </Paper>
+          ) : (
+            <Paper className={classes.paper}>
+              {" "}
+              <NoticeList notices={notices} setDetail={setDetail} />
+            </Paper>
+          )}
         </Grid>
       </Grid>
-      <Box
-        display='flex'
-        justifyContent='flex-end'
-        flex={1}
-        padding={1}
-        paddingRight={10}
-      >
-        <Pagination
-          page={Number(page)}
-          count={Math.ceil(count / 20)}
-          shape='rounded'
-          color='primary'
-          showFirstButton
-          showLastButton
-          boundaryCount={2}
-          renderItem={item => (
-            <PaginationItem
-              type={"start-ellipsis"}
-              component={Link}
-              selected
-              to={`${item.page}`}
-              {...item}
-            />
-          )}
-        />
-      </Box>
+      {detailMode ? null : (
+        <Box
+          display='flex'
+          justifyContent='flex-end'
+          flex={1}
+          padding={1}
+          paddingRight={10}
+        >
+          <Pagination
+            page={Number(page)}
+            count={Math.ceil(count / 20)}
+            shape='rounded'
+            color='primary'
+            showFirstButton
+            showLastButton
+            boundaryCount={2}
+            renderItem={item => (
+              <PaginationItem
+                type={"start-ellipsis"}
+                component={Link}
+                selected
+                to={`${item.page}`}
+                {...item}
+              />
+            )}
+          />
+        </Box>
+      )}
     </>
   );
 };

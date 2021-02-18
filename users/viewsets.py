@@ -15,6 +15,13 @@ class UserViewSet(ModelViewSet):
     @action(methods=["get"], detail=False)
     def get_team_members(self, request):
         user = request.user
-        team_members = user.team.users.get_queryset()
+        team_members = self.get_queryset().filter(team=user.team)
         serializer = TeamMemberSerializer(team_members, many=True)
         return Response(status=status.HTTP_200_OK, data=serializer.data)
+
+    @action(methods=["get"], detail=False)
+    def is_logged_in(self, request):
+        if request.user.is_authenticated:
+            return Response(status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)

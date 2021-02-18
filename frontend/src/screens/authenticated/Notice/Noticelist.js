@@ -28,10 +28,11 @@ const useStyles = makeStyles(theme => ({
 }));
 
 //https://medium.com/@ankita.singh170190/material-ui-table-with-pagination-component-9f53a3380245
-const NoticeList = ({ user, match, team }) => {
-  const [NoticeData, setNoticeData] = useState([]);
+const NoticeList = ({ notices, setDetail }) => {
   const classes = useStyles();
-
+  const handleClick = id => {
+    setDetail(id);
+  };
   return (
     <React.Fragment>
       <Table className={classes.table} size='small'>
@@ -54,31 +55,28 @@ const NoticeList = ({ user, match, team }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {NoticeData.results.map(row => {
+          {notices.map(notice => {
             return (
-              <TableRow key={row.id}>
-                <TableCell
-                  component={Link}
-                  to={`/notice/${match.params.team}/${pageNumber}/${row.id}`}
-                  style={{ textDecoration: "none" }}
-                  align='center'
-                  width='10%'
-                >
-                  {row.id}
+              <TableRow key={notice.id}>
+                <TableCell align='center'>
+                  <Button
+                    style={{ width: "100%" }}
+                    onClick={() => handleClick(notice.id)}
+                  >
+                    {notice.no}
+                  </Button>
                 </TableCell>
-                <TableCell
-                  component={Link}
-                  to={`/notice/${match.params.team}/${pageNumber}/${row.id}`}
-                  style={{ textDecoration: "none" }}
-                  width='50%'
-                >
-                  {row.title}
+                <TableCell>
+                  <Button
+                    style={{ width: "100%" }}
+                    onClick={() => handleClick(notice.id)}
+                  >
+                    {notice.title}{" "}
+                  </Button>
                 </TableCell>
-                <TableCell align='center' width='20%'>
-                  {row.writer.last_name + row.writer.first_name}
-                </TableCell>
-                <TableCell align='center' width='20%'>
-                  {row.created_at.slice(0, 10)}
+                <TableCell align='center'>{notice.writer}</TableCell>
+                <TableCell align='center'>
+                  {notice.createdAt.slice(0, 10)}
                 </TableCell>
               </TableRow>
             );

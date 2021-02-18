@@ -24,6 +24,7 @@ class WorkHourViewset(viewsets.ModelViewSet):
         user=검색하고자 하는 user의 id(pk)
         month=검색하고자 하는 달 (1-12)
         """
+
         user = request.user
         # target_user 를 가져온다. 가져오지 못한다면 400
         try:
@@ -58,11 +59,14 @@ class WorkHourViewset(viewsets.ModelViewSet):
         # user == target_user 이거나 target_user의 position보다 user의 position이 높은 경우
         workhours = [
             workhour
-            for workhour in user.workhours.get_queryset()
+            for workhour in WorkHour.objects.prefetch_related(Prefetch("user")).filter(
+                user=target_user
+            )
             if workhour.start.date().month == month
             and workhour.start.date().year == year
         ]
         serializer = self.get_serializer(workhours, many=True)
+
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
     # update 는 구현하지 않는다. WorkHour 업데이트는 correction 을 통해서만 가능하다.
@@ -85,7 +89,6 @@ class WorkHourViewset(viewsets.ModelViewSet):
             if queryset.__len__() == 0:
                 return Response(status=status.HTTP_204_NO_CONTENT)
             serializer = WorkHourCorrectionRequestSerializer(queryset, many=True)
-            print(queryset)
             return Response(status=status.HTTP_200_OK, data=serializer.data)
 
         elif request.method == "POST":
@@ -119,7 +122,6 @@ class WorkHourViewset(viewsets.ModelViewSet):
             근무 시간 정정 요청을 결재한다. (승인 / 거절)
             """
             data = request.data
-            print(data)
             wcr = WorkHourCorrectionRequest.objects.get(id=data.pop("id"))
 
             serializer = WorkHourCorrectionRequestSerializer(

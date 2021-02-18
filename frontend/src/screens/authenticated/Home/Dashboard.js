@@ -17,31 +17,31 @@ import HomeIcon from "@material-ui/icons/Home";
 import { get_team_members } from "../../../api/users/team_management";
 import { getMyWorkhours } from "../../../redux/workhours/workhoursThunks";
 
-const Dashboard = ({ user, workhours, getMyWorkhours }) => {
-  const useStyles = makeStyles(theme => ({
-    paper: {
-      padding: theme.spacing(2),
-      display: "flex",
-      overflow: "auto",
-      flexDirection: "column"
-    },
-    fixedHeight: {
-      height: 300
-    },
-    smallfixedHeight: {
-      height: 160,
-      marginBottom: 10
-    },
-    verysmallfixedHeight: {
-      height: 130
-    },
-    avatar: {
-      backgroundColor: "#000000",
-      height: 30,
-      width: 30
-    }
-  }));
+const useStyles = makeStyles(theme => ({
+  paper: {
+    padding: theme.spacing(2),
+    display: "flex",
+    overflow: "auto",
+    flexDirection: "column"
+  },
+  fixedHeight: {
+    height: 300
+  },
+  smallfixedHeight: {
+    height: 160,
+    marginBottom: 10
+  },
+  verysmallfixedHeight: {
+    height: 130
+  },
+  avatar: {
+    backgroundColor: "#000000",
+    height: 30,
+    width: 30
+  }
+}));
 
+const Dashboard = ({ user, workhours, getMyWorkhours }) => {
   const [teamMembers, setTeamMembers] = useState([]);
   const [myWorkHoursInMonth, setMyWorkHoursInMonth] = useState(0);
   const date = new Date();
