@@ -60,7 +60,6 @@ const Notice = ({ user, getNotice, match, location, history }) => {
   const [count, setCount] = useState(0);
   const [detailMode, setDetailMode] = useState(false);
   const [detailId, setDetailId] = useState(0);
-  let isUnmounted = false;
 
   const clear = () => {
     setLoading(true);
@@ -103,6 +102,8 @@ const Notice = ({ user, getNotice, match, location, history }) => {
   };
 
   useEffect(() => {
+    let isUnmounted = false;
+
     setLoading(true);
 
     const data = {
@@ -132,7 +133,7 @@ const Notice = ({ user, getNotice, match, location, history }) => {
         history.goBack();
       })
       .finally(() => {
-        setLoading(false);
+        if (isUnmounted === false) setLoading(false);
       });
     return () => {
       isUnmounted = true;
