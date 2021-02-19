@@ -2,6 +2,7 @@
 # Created by https://www.toptal.com/developers/gitignore/api/react,node,pycharm+all,visualstudiocode,django,windows,macos
 # Edit at https://www.toptal.com/developers/gitignore?templates=react,node,pycharm+all,visualstudiocode,django,windows,macos
 
+Dockerfile
 ### Django ###
 *.log
 *.pot
