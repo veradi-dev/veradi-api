@@ -6,3 +6,4 @@ python manage.py initialize_models
 python manage.py createadmin
 
 gunicorn config.wsgi:application -b 0.0.0.0:8000
+
