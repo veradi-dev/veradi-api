@@ -1,5 +1,7 @@
-export const getDate = () => {
-  const date = new Date();
+export const getDate = (date = undefined) => {
+  if (date === undefined) {
+    date = new Date();
+  }
   const year = date.getFullYear();
   const month = date.getMonth() + 1;
   const day = date.getDate();

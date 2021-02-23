@@ -5,7 +5,7 @@ import Calendar from "react-calendar";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import "react-calendar/dist/Calendar.css";
-import { Box } from "@material-ui/core";
+import { Box, CircularProgress } from "@material-ui/core";
 import "./Room.css";
 import Title from "../Title";
 import { Time } from "./TimeBtn";
@@ -27,12 +27,12 @@ import { alertActions } from "~/frontend/src/redux/alert/alertSlice";
 import { columnLookupSelector } from "@material-ui/data-grid";
 import { getConferenceRequest } from "../../../api/conference";
 
-const AntSwitch = withStyles((theme) => ({
+const AntSwitch = withStyles(theme => ({
   root: {
     width: 28,
     height: 16,
     padding: 0,
-    display: "flex",
+    display: "flex"
   },
   switchBase: {
     padding: 2,
@@ -43,25 +43,25 @@ const AntSwitch = withStyles((theme) => ({
       "& + $track": {
         opacity: 1,
         backgroundColor: theme.palette.primary.main,
-        borderColor: theme.palette.primary.main,
-      },
-    },
+        borderColor: theme.palette.primary.main
+      }
+    }
   },
   thumb: {
     width: 12,
     height: 12,
-    boxShadow: "none",
+    boxShadow: "none"
   },
   track: {
     border: `1px solid ${theme.palette.grey[500]}`,
     borderRadius: 16 / 2,
     opacity: 1,
-    backgroundColor: theme.palette.common.white,
+    backgroundColor: theme.palette.common.white
   },
-  checked: {},
+  checked: {}
 }))(Switch);
 
-function reducer(state, action) {
+function reducer (state, action) {
   const { type, payload } = action;
   switch (type) {
     case "LOAD":
@@ -75,7 +75,7 @@ function reducer(state, action) {
       //     "team": "기술개발 본부팀"
       //   }
       // ]
-      return state.map((time) => {
+      return state.map(time => {
         if (payload.length == 0) {
           time.booked = false;
           time.team = null;
@@ -102,16 +102,16 @@ function reducer(state, action) {
     //id는 그냥 구분하기 위한 것....
     case "TOGGLE":
       return [
-        ...state.map((time) =>
+        ...state.map(time =>
           time.id === payload.id ? { ...time, active: !time.active } : time
-        ),
+        )
       ];
     default:
       return state;
   }
 }
 
-const initialState = [...Array(96).keys()].map((n) => {
+const initialState = [...Array(96).keys()].map(n => {
   const isMorning = n < 48 ? true : false;
   const hour = Math.floor(n / 4);
   const minute = Math.round(n % 2) === 0 ? "00" : "30";
@@ -125,7 +125,7 @@ const initialState = [...Array(96).keys()].map((n) => {
     time: `${hour}:${minute}`,
     active: false,
     team: null,
-    booked: false,
+    booked: false
   };
 });
 
@@ -133,39 +133,44 @@ const Room = ({ user, getConference }) => {
   const [date, setDate] = useState(new Date());
   const [loading, setLoading] = useState(true);
   const [room, setRoom] = React.useState("1");
-  const [reservation, setReservation] = useState(false);
+  const [refresh, setRefresh] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
   const reduxDispatch = useDispatch();
-  const load = useCallback((payload) => dispatch({ type: "LOAD", payload }), [
-    date,
+  const load = useCallback(payload => dispatch({ type: "LOAD", payload }), [
+    date
   ]);
-  const toggle = useCallback((id) => {
+  const toggle = useCallback(id => {
     return dispatch({ type: "TOGGLE", payload: { id } });
   }, []);
   const [isMorning, setIsMorning] = React.useState(true);
 
   useEffect(() => {
+    let isUnmount = false;
     setLoading(true);
     getConference(date)
-      .then((res) => {
-        load(res.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        const status = err?.response?.status;
-        // if (status === undefined) {
-        //   console.dir("데이터를 불러오던 중 예기치 못한 예외가 발생하였습니다.\n" + JSON.stringify(err));
-        // }
-        if (status === 400) {
-          console.dir("400에러");
-        } else if (status === 401) {
-          console.dir("401에러");
-        } else if (status === 500) {
-          console.dir("내부 서버 오류입니다. 잠시만 기다려주세요.");
+      .then(res => {
+        if (isUnmount === false) {
+          load(res.data);
+          setLoading(false);
         }
-        setLoading(false);
+      })
+      .catch(err => {
+        const status = err?.response?.status;
+        if (status === 400) {
+          reduxDispatch(alertActions.error("잘못된 접근입니다."));
+        } else if (status === 500) {
+          reduxDispatch(
+            alertActions.error("내부 서버 오류입니다.개발팀에 문의주세요.")
+          );
+        }
+        if (isUnmount === false) {
+          setLoading(false);
+        }
       });
-  }, [date, room, reservation]);
+    return () => {
+      isUnmount = true;
+    };
+  }, [date, room, refresh]);
 
   const handleSubmit = () => {
     let data = [];
@@ -180,34 +185,37 @@ const Room = ({ user, getConference }) => {
             "-" +
             date.getDate(),
           start_time: state[i].start_time,
-          proposer: user.id,
+          proposer: user.id
         });
       }
     }
     axios
       .post(`/api/v1/conference/`, data, {
-        headers: { Authorization: "Token " + `${user.token}` },
+        headers: { Authorization: "Token " + `${user.token}` }
       })
-      .then((res) => {
+      .then(res => {
         // window.location.reload();
         // alert("예약이 완료되었습니다.");
-        setReservation(true);
-        setReservation(false);
+        setRefresh(!refresh);
         reduxDispatch(alertActions.success("예약이 완료되었습니다."));
       })
-      .catch((err) => {
+      .catch(err => {
         reduxDispatch(alertActions.error("예약 중 오류가 발생했습니다."));
         const status = err?.response?.status;
         console.log(err);
         if (status === undefined) {
-          console.dir(
-            "데이터를 불러오던 중 예기치 못한 예외가 발생하였습니다.\n" +
-              JSON.stringify(err)
+          reduxDispatch(
+            alertActions.error(
+              "데이터를 불러오던 중 예기치 못한 예외가 발생하였습니다.\n" +
+                JSON.stringify(err)
+            )
           );
         } else if (status === 400) {
-          console.dir("400에러");
+          reduxDispatch(alertActions.error("잘못된 접근입니다."));
         } else if (status === 500) {
-          console.dir("내부 서버 오류입니다. 잠시만 기다려주세요.");
+          reduxDispatch(
+            alertActions.error("내부 서버 오류입니다.개발팀에 문의주세요.")
+          );
         }
       });
   };
@@ -220,43 +228,49 @@ const Room = ({ user, getConference }) => {
       )
         axios
           .delete(`/api/v1/conference/${state[i].pk}`, {
-            headers: { Authorization: "Token " + `${user.token}` },
+            headers: { Authorization: "Token " + `${user.token}` }
           })
-          .then((res) => {
-            console.log(res);
-            setReservation(true);
-            setReservation(false);
+          .then(res => {
+            setRefresh(!refresh);
           })
-          .catch((err) => {
+          .catch(err => {
             const status = err?.response?.status;
             console.log(err);
             if (status === undefined) {
-              console.dir(
-                "데이터를 불러오던 중 예기치 못한 예외가 발생하였습니다.\n" +
-                  JSON.stringify(err)
+              reduxDispatch(
+                alertActions.error(
+                  "데이터를 불러오던 중 예기치 못한 예외가 발생하였습니다.\n" +
+                    JSON.stringify(err)
+                )
               );
             } else if (status === 400) {
-              console.dir("400에러");
+              reduxDispatch(alertActions.error("잘못된 접근입니다."));
             } else if (status === 500) {
-              console.dir("내부 서버 오류입니다. 잠시만 기다려주세요.");
+              reduxDispatch(
+                alertActions.error("내부 서버 오류입니다.개발팀에 문의주세요.")
+              );
             }
           });
     }
   };
 
-  const useStyles = makeStyles((theme) => ({
+  const useStyles = makeStyles(theme => ({
+    centerBox: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center"
+    },
     paper: {
       padding: theme.spacing(2),
-      overflow: "auto",
-      flexDirection: "column",
+      overflow: "auto"
     },
     fixedHeight: {
-      height: 500,
-    },
+      height: 500
+    }
   }));
   const classes = useStyles();
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-  //console.log(value);
 
   return (
     <Grid container spacing={3}>
@@ -265,30 +279,30 @@ const Room = ({ user, getConference }) => {
           <Grid item xs={12} md={6} lg={6}>
             <Paper className={fixedHeightPaper}>
               <Title>회의실 예약</Title>
-              <FormControl component="fieldset">
-                <FormLabel component="legend">회의실</FormLabel>
+              <FormControl component='fieldset'>
+                <FormLabel component='legend'>회의실</FormLabel>
                 <RadioGroup
-                  aria-label="room"
-                  name="room"
+                  aria-label='room'
+                  name='room'
                   value={room}
-                  onChange={(e) => setRoom(e.target.value)}
+                  onChange={e => setRoom(e.target.value)}
                 >
                   <FormControlLabel
-                    value="1"
-                    control={<Radio color="primary" />}
-                    label="회의실"
+                    value='1'
+                    control={<Radio color='primary' />}
+                    label='회의실'
                   />
                   <FormControlLabel
-                    value="2"
-                    control={<Radio color="primary" />}
-                    label="탕비실"
+                    value='2'
+                    control={<Radio color='primary' />}
+                    label='탕비실'
                   />
                 </RadioGroup>
               </FormControl>
               <Box
-                alignItems="center"
-                display="flex"
-                flexDirection="column"
+                alignItems='center'
+                display='flex'
+                flexDirection='column'
                 p={2}
               >
                 <Calendar onChange={setDate} value={date} />
@@ -296,43 +310,44 @@ const Room = ({ user, getConference }) => {
             </Paper>
           </Grid>
           <Grid item xs={12} md={6} lg={6}>
-            <Paper className={fixedHeightPaper}>
+            <Paper className={clsx(fixedHeightPaper, classes.centerBox)}>
               {loading ? (
-                <div>로딩중입니다.</div>
+                <CircularProgress />
               ) : (
                 <React.Fragment>
-                  <Typography component="div">
+                  <Typography component='div'>
                     <Grid
-                      component="label"
+                      component='label'
                       container
-                      alignItems="center"
-                      justify="center"
+                      alignItems='center'
+                      justify='center'
                       spacing={1}
                     >
                       <Grid item>오전</Grid>
                       <Grid item>
                         <AntSwitch
                           checked={!isMorning}
-                          onChange={(event) =>
+                          onChange={event =>
                             setIsMorning(!event.target.checked)
                           }
-                          name="ismorning"
+                          name='ismorning'
                         />
                       </Grid>
                       <Grid item>오후</Grid>
                     </Grid>
                   </Typography>
-                  <Box alignItems="center" display="flex" flexWrap="wrap" p={2}>
+                  <Box alignItems='center' display='flex' flexWrap='wrap' p={2}>
                     {state
                       .filter(
-                        (obj) =>
+                        obj =>
                           obj.isMorning === isMorning &&
                           obj.room === parseInt(room)
                       )
-                      .map((obj) => {
+                      .map(obj => {
                         return (
                           <Time
                             key={`TimeBtn${obj.id}`}
+                            date={date}
                             time={obj}
                             toggleCallback={toggle}
                             user={user}
@@ -340,22 +355,31 @@ const Room = ({ user, getConference }) => {
                         );
                       })}
                   </Box>
-                  <span className="reservebtn">
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={handleSubmit}
-                    >
-                      예약하기
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      onClick={handleDelete}
-                    >
-                      예약취소하기
-                    </Button>
-                  </span>
+                  <Grid
+                    container
+                    className='reservebtn'
+                    spacing={1}
+                    style={{ marginTop: 30 }}
+                  >
+                    <Grid item>
+                      <Button
+                        variant='contained'
+                        color='primary'
+                        onClick={handleSubmit}
+                      >
+                        예약하기
+                      </Button>
+                    </Grid>
+                    <Grid item>
+                      <Button
+                        variant='contained'
+                        color='secondary'
+                        onClick={handleDelete}
+                      >
+                        예약취소
+                      </Button>
+                    </Grid>
+                  </Grid>
                 </React.Fragment>
               )}
             </Paper>
@@ -371,7 +395,7 @@ const Room = ({ user, getConference }) => {
     </Grid>
   );
 };
-const mapStateToProps = (state) => ({
-  user: state.user,
+const mapStateToProps = state => ({
+  user: state.user
 });
 export default connect(mapStateToProps, { getConference })(Room);

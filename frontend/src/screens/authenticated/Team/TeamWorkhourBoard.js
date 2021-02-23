@@ -11,16 +11,7 @@ import {
 } from "recharts";
 import { getTeamStat } from "~/frontend/src/redux/workhours/workhoursThunks";
 import { connect } from "react-redux";
-
-// const data = [
-//   {},
-//   { name: "Page A", uv: 400, pv: 2400, amt: 2400 },
-//   { name: "Page B", uv: 300, pv: 2400, amt: 2400 },
-//   { name: "Page C", uv: 400, pv: 2400, amt: 2400 },
-//   { name: "Page D", uv: 300, pv: 2400, amt: 2400 },
-//   { name: "Page E", uv: 400, pv: 2400, amt: 2400 },
-//   { name: "Page F", uv: 300, pv: 2400, amt: 2400 }
-// ];
+import { Box, CircularProgress, makeStyles } from "@material-ui/core";
 
 const RenderLineChart = ({ data }) => {
   return (
@@ -44,33 +35,57 @@ const RenderLineChart = ({ data }) => {
   );
 };
 
+const useStyles = makeStyles(theme => ({
+  centerBox: {
+    width: "100%",
+    height: "100%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center"
+  }
+}));
+
 function TeamWorkhourBoard ({ getTeamStat }) {
   const [date, setDate] = useState(getDate());
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState([{}]);
+  const classes = useStyles();
+
   useEffect(() => {
+    let isUnmount = false;
     getTeamStat(date.year, date.month).then(res => {
-      console.log(res);
-      if (res.status === 200) {
-        const { data } = res;
-        setData([
-          {},
-          ...data
-            .map(obj => ({
-              name: `${obj.name}\n(${obj.code})`,
-              total: parseInt(obj.total / 60)
-            }))
-            .sort((a, b) => b.total - a.total)
-        ]);
+      if (isUnmount === false) {
+        if (res.status === 200) {
+          const { data } = res;
+          setData([
+            {},
+            ...data
+              .map(obj => ({
+                name: `${obj.name}\n(${obj.code})`,
+                total: parseInt(obj.total / 60)
+              }))
+              .sort((a, b) => b.total - a.total),
+            {}
+          ]);
+        }
+        setIsLoading(false);
       }
-      setIsLoading(false);
     });
+    return () => {
+      isUnmount = true;
+    };
   }, []);
   return (
-    <div>
+    <>
       <DateComboBox date={date} setDate={setDate} />
-      {isLoading ? "로딩중" : <RenderLineChart data={data} />}
-    </div>
+      {isLoading ? (
+        <Box className={classes.centerBox}>
+          <CircularProgress />
+        </Box>
+      ) : (
+        <RenderLineChart data={data} />
+      )}
+    </>
   );
 }
 

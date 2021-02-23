@@ -4,7 +4,13 @@ import Paper from "@material-ui/core/Paper";
 import Noticelist from "../Notice/NoticeList";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
-import { Avatar, Box, Icon, Typography } from "@material-ui/core";
+import {
+  Avatar,
+  Box,
+  CircularProgress,
+  Icon,
+  Typography
+} from "@material-ui/core";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -18,6 +24,17 @@ import { get_team_members } from "../../../api/users/team_management";
 import { getMyWorkhours } from "../../../redux/workhours/workhoursThunks";
 
 const useStyles = makeStyles(theme => ({
+  fullSize: {
+    width: "100%",
+    height: "100%"
+  },
+  center: {
+    width: "100%",
+    height: "100%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center"
+  },
   paper: {
     padding: theme.spacing(2),
     display: "flex",
@@ -47,6 +64,8 @@ const Dashboard = ({ user, workhours, getMyWorkhours }) => {
   const date = new Date();
   const year = date.getFullYear();
   const month = date.getMonth() + 1;
+  const [team_member_loading, setTMLoading] = useState(true);
+
   const classes = useStyles();
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   const smallfixedHeightPaper = clsx(classes.paper, classes.smallfixedHeight);
@@ -56,10 +75,23 @@ const Dashboard = ({ user, workhours, getMyWorkhours }) => {
   );
 
   useEffect(() => {
-    get_team_members(user.token).then(res => {
-      setTeamMembers(res.data);
-    });
+    let isUnmount = false;
+    setTMLoading(true);
+    get_team_members(user.token)
+      .then(res => {
+        if (isUnmount === false) {
+          setTeamMembers(res.data);
+        }
+      })
+      .finally(() => {
+        if (isUnmount === false) {
+          setTMLoading(false);
+        }
+      });
     getMyWorkhours(year, month);
+    return () => {
+      isUnmount = true;
+    };
   }, []);
 
   useEffect(() => {
@@ -124,46 +156,55 @@ const Dashboard = ({ user, workhours, getMyWorkhours }) => {
         <Paper className={fixedHeightPaper}>
           <React.Fragment>
             <Title>{user.team} 근무현황</Title>
-            <Table size='small'>
-              <TableHead></TableHead>
-              <TableBody>
-                {teamMembers.map(member =>
-                  member.isWorking === null ||
-                  member.isWorking.complete === true ? (
-                    <TableRow key={member.id}>
-                      <TableCell align='center'>
-                        <HomeIcon color='secondary' style={{ fontSize: 20 }} />
-                      </TableCell>
-                      <TableCell align='center'>
-                        {member.last_name}
-                        {member.first_name}
-                      </TableCell>
-                      <TableCell align='center'>
-                        <Typography>출근중이 아닙니다.</Typography>
-                      </TableCell>
-                    </TableRow>
-                  ) : (
-                    <TableRow key={member.id}>
-                      <TableCell align='center'>
-                        <DirectionsRunIcon
-                          color='primary'
-                          style={{ fontSize: 20 }}
-                        />
-                      </TableCell>
-                      <TableCell align='center'>
-                        {member.last_name}
-                        {member.first_name}
-                      </TableCell>
-                      <TableCell align='center'>
-                        <Typography>
-                          {new Date(member.isWorking.start).toLocaleString()}
-                        </Typography>
-                      </TableCell>
-                    </TableRow>
-                  )
-                )}
-              </TableBody>
-            </Table>
+            {team_member_loading === true ? (
+              <Box className={clsx(classes.fullSize, classes.center)}>
+                <CircularProgress />
+              </Box>
+            ) : (
+              <Table size='small'>
+                <TableHead></TableHead>
+                <TableBody>
+                  {teamMembers.map(member =>
+                    member.isWorking === null ||
+                    member.isWorking.complete === true ? (
+                      <TableRow key={member.id}>
+                        <TableCell align='center'>
+                          <HomeIcon
+                            color='secondary'
+                            style={{ fontSize: 20 }}
+                          />
+                        </TableCell>
+                        <TableCell align='center'>
+                          {member.last_name}
+                          {member.first_name}
+                        </TableCell>
+                        <TableCell align='center'>
+                          <Typography>출근중이 아닙니다.</Typography>
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      <TableRow key={member.id}>
+                        <TableCell align='center'>
+                          <DirectionsRunIcon
+                            color='primary'
+                            style={{ fontSize: 20 }}
+                          />
+                        </TableCell>
+                        <TableCell align='center'>
+                          {member.last_name}
+                          {member.first_name}
+                        </TableCell>
+                        <TableCell align='center'>
+                          <Typography>
+                            {new Date(member.isWorking.start).toLocaleString()}
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                    )
+                  )}
+                </TableBody>
+              </Table>
+            )}
           </React.Fragment>
         </Paper>
       </Grid>

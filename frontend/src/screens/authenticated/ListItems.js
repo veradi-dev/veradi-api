@@ -29,7 +29,16 @@ const NavItem = () => {
   const classes = useStyles();
   return (
     <div>
-      <Link to='/' style={{ textDecoration: "none", color: "black" }}>
+      <Link
+        to={{
+          pathname: "/",
+          key: Math.random(),
+          state: {
+            applied: false
+          }
+        }}
+        style={{ textDecoration: "none", color: "black" }}
+      >
         <ListItem button>
           <ListItemIcon>
             <DashboardIcon />
@@ -54,7 +63,16 @@ const NavItem = () => {
           <ListItemText primary='공지사항' />
         </ListItem>
       </Link>
-      <Link to='/workhour' style={{ textDecoration: "none", color: "black" }}>
+      <Link
+        to={{
+          pathname: "/workhour",
+          key: Math.random(),
+          state: {
+            applied: false
+          }
+        }}
+        style={{ textDecoration: "none", color: "black" }}
+      >
         <ListItem button>
           <ListItemIcon>
             <SearchIcon />
@@ -62,7 +80,16 @@ const NavItem = () => {
           <ListItemText primary='근무시간 조회' />
         </ListItem>
       </Link>
-      <Link to='/room' style={{ textDecoration: "none", color: "black" }}>
+      <Link
+        to={{
+          pathname: "/room",
+          key: Math.random(),
+          state: {
+            applied: false
+          }
+        }}
+        style={{ textDecoration: "none", color: "black" }}
+      >
         <ListItem button>
           <ListItemIcon>
             <EmojiObjectsIcon />
@@ -70,7 +97,16 @@ const NavItem = () => {
           <ListItemText primary='회의실 예약' />
         </ListItem>
       </Link>
-      <Link to='/team' style={{ textDecoration: "none", color: "black" }}>
+      <Link
+        to={{
+          pathname: "/team",
+          key: Math.random(),
+          state: {
+            applied: false
+          }
+        }}
+        style={{ textDecoration: "none", color: "black" }}
+      >
         <ListItem button>
           <ListItemIcon>
             <PeopleIcon />
@@ -78,7 +114,16 @@ const NavItem = () => {
           <ListItemText primary='팀 관리' />
         </ListItem>
       </Link>
-      <Link to='/project' style={{ textDecoration: "none", color: "black" }}>
+      <Link
+        to={{
+          pathname: "/project",
+          key: Math.random(),
+          state: {
+            applied: false
+          }
+        }}
+        style={{ textDecoration: "none", color: "black" }}
+      >
         <ListItem button>
           <ListItemIcon>
             <LayersIcon />

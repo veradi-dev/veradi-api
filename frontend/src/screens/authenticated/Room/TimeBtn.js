@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { device } from "../../interactive/device";
+import { getDate } from "~/frontend/src/utils";
 
 const Button = styled.button`
   margin-bottom: 2px;
@@ -8,14 +9,14 @@ const Button = styled.button`
   border-radius: 15px;
   padding: 12.5px 0px;
   align-items: center;
-  border: ${(props) =>
+  border: ${props =>
     props.time.booked
       ? "transparent"
       : props.time.active
       ? "#53990e"
       : "#f0f7f4"};
   width: 24%;
-  background-color: ${(props) =>
+  background-color: ${props =>
     props.time.team == props.user.team
       ? props.time.active
         ? "#FF0000"
@@ -59,9 +60,19 @@ const Text = styled.text`
   }
 `;
 //
-export const Time = React.memo(({ time, toggleCallback, user }) => {
+export const Time = React.memo(({ date, time, toggleCallback, user }) => {
+  const { year, month, day } = getDate(date);
+  const hour = parseInt(time.start_time / 2);
+  const minutes = parseInt((time.start_time % 2) * 30);
+  const comparableDate = new Date(year, month - 1, day, hour, minutes);
+  const disabled = new Date() - comparableDate > 0 ? true : false;
   return (
-    <Button time={time} onClick={() => toggleCallback(time.id)} user={user}>
+    <Button
+      time={time}
+      onClick={() => toggleCallback(time.id)}
+      user={user}
+      disabled={disabled}
+    >
       {time.booked ? time.team : time.time}
     </Button>
   );

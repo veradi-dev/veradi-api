@@ -90,29 +90,35 @@ class WorkHourCorrectionRequestSerializer(serializers.ModelSerializer):
         for enter_log_data in enter_logs_data:
             if enter_log_data["type"] == "update":
                 log_str = "출입 기록 변경: \n"
-                enter_log = EnterLog.objects.get(id=enter_log_data["id"])
-                datetime_data = timezone.datetime.strptime(
-                    f"{enter_log_data['date']} {enter_log_data['time']}",
-                    "%Y-%m-%d %H:%M",
-                )
+                try:
+                    enter_log = EnterLog.objects.get(id=enter_log_data["id"])
+                    datetime_data = timezone.datetime.strptime(
+                        f"{enter_log_data['date']} {enter_log_data['time']}",
+                        "%Y-%m-%d %H:%M",
+                    )
 
-                if enter_log.date != datetime_data.date():
-                    # 기존의 데이터와 새로 받아온 데이터가 다르면 -> 수정하고 로그를 남긴다.
-                    enter_log.date = datetime_data.date()
-                    log_str += f"date: {enter_log.date.strftime('%Y-%m-%d')} → {datetime_data.date().strftime('%Y-%m-%d')}\n"
+                    if enter_log.date != datetime_data.date():
+                        # 기존의 데이터와 새로 받아온 데이터가 다르면 -> 수정하고 로그를 남긴다.
+                        enter_log.date = datetime_data.date()
+                        log_str += f"date: {enter_log.date.strftime('%Y-%m-%d')} → {datetime_data.date().strftime('%Y-%m-%d')}\n"
 
-                if enter_log.time != datetime_data.time():
-                    enter_log.time = datetime_data.time()
-                    log_str += f"time: {enter_log.time.strftime('%H:%M')} → {datetime_data.time().strftime('%H:%M')}\n"
+                    if enter_log.time != datetime_data.time():
+                        enter_log.time = datetime_data.time()
+                        log_str += f"time: {enter_log.time.strftime('%H:%M')} → {datetime_data.time().strftime('%H:%M')}\n"
 
-                if enter_log.mode != enter_log_data["mode"]:
-                    enter_log.mode = enter_log_data["mode"]
-                    log_str += f"mode: {enter_log.mode} → {enter_log_data['mode']}\n"
+                    if enter_log.mode != enter_log_data["mode"]:
+                        enter_log.mode = enter_log_data["mode"]
+                        log_str += (
+                            f"mode: {enter_log.mode} → {enter_log_data['mode']}\n"
+                        )
 
-                enter_log.save()
-                log_list.append(log_str)
+                    enter_log.save()
+                    log_list.append(log_str)
+                except EnterLog.DoesNotExist:
+                    enter_log_data["type"] = "add"
 
             elif enter_log_data["type"] == "add":
+                print(enter_log_data["date"])
                 enter_log = EnterLog.objects.create(
                     date=enter_log_data["date"],
                     time=enter_log_data["time"],

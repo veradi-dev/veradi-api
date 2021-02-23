@@ -79,13 +79,19 @@ const WorkhourCorrectionRequestTable = ({ correctionWorkhour }) => {
 
   const classes = useStyles();
   useEffect(() => {
+    let isUnmount = false;
     correctionWorkhour(null, "get").then(res => {
-      if (res.status === 200) {
-        setRows(res.data.map(r => createRow(r)));
-      } else {
-        setRows([]);
+      if (isUnmount === false) {
+        if (res.status === 200) {
+          setRows(res.data.map(r => createRow(r)));
+        } else {
+          setRows([]);
+        }
       }
     });
+    return () => {
+      isUnmount = true;
+    };
   }, [refreshOnChange]);
 
   return (
