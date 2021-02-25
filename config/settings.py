@@ -29,8 +29,7 @@ DEBUG = bool(os.environ.get("DEBUG"))
 
 AUTH_USER_MODEL = "users.User"
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split()
 
 # Application definition
 
@@ -122,13 +121,6 @@ DATABASES = {
     },
 }
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.sqlite3",
-#         "NAME": BASE_DIR / "db.sqlite3",
-#     }
-# }
-
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
@@ -168,6 +160,7 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "frontend/static/"),
 ]
+STATIC_ROOT = "static"
 
 WEBPACK_LOADER = {
     "DEFAULT": {

@@ -3,6 +3,7 @@
 import os
 import sys
 import dotenv
+from pathlib import Path
 
 
 def main():
@@ -20,5 +21,7 @@ def main():
 
 
 if __name__ == "__main__":
-    dotenv.read_dotenv()
+    dotenv.read_dotenv(
+        dotenv=os.path.join(Path(__file__).resolve(strict=True).parent, "env", ".env")
+    )
     main()
