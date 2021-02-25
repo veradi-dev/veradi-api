@@ -1,5 +1,6 @@
 from django.core.management import BaseCommand
 from users.models import Department, Team
+from conference.models import ConferenceRoom
 
 
 class Command(BaseCommand):
@@ -91,6 +92,17 @@ class Command(BaseCommand):
                     print(f"{team[0]} team has been created")
                 else:
                     print(f"{team[0]} has been already exist")
+
+        rooms = [
+            {"room_number": 1, "location": "3층 회의실"},
+            {"room_number": 2, "location": "3층 탕비실"},
+        ]
+        for room in rooms:
+            cr, created = ConferenceRoom.objects.get_or_create(**room)
+            if created:
+                print(f"{room['location']}이 생성되었습니다.")
+            else:
+                print(f"{room['location']}이 이미 존재합니다.")
 
         self.stdout.write(
             self.style.SUCCESS("Successfully initialize departments and team")

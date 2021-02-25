@@ -1,0 +1,27 @@
+# Base Docker지정
+FROM python:3
+
+# 프로젝트가 실행될 경로 지정
+WORKDIR /usr/src/app
+
+# requirements.txt 경로 지정 및 실행
+RUN pip install --upgrade pip
+
+COPY requirements.txt ./
+RUN pip install -r requirements.txt
+RUN pip install psycopg2-binary
+
+# 복사할 프로젝트 내용물 지정
+COPY . .
+
+
+# 몰라
+COPY ./entrypoint.sh /
+ENTRYPOINT ["sh", "/entrypoint.sh"]
+
+# 어플리케이션이 실행될 포트 지정
+EXPOSE 8000
+
+# gunicorn 실행 설정
+CMD ["gunicorn", "-b", "0.0.0.0:8000", "config.wsgi:application"]
+

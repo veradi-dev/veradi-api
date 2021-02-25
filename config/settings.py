@@ -22,10 +22,10 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRETKEY")
+SECRET_KEY = os.environ.get("SECRETKEY", "sda&*&QR*HFn90f()VNSERJfeq1c33qt34cq")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(os.environ.get("DEBUG"))
+DEBUG = bool(os.environ.get("DEBUG", False))
 
 AUTH_USER_MODEL = "users.User"
 
@@ -160,7 +160,7 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "frontend/static/"),
 ]
-STATIC_ROOT = "static"
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 WEBPACK_LOADER = {
     "DEFAULT": {
@@ -171,3 +171,26 @@ WEBPACK_LOADER = {
 }
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "uploads")
+
+if DEBUG is False or DEBUG is True:
+    # DATABASES = {
+    #     "default": {
+    #         "ENGINE": "django.db.backends.postgresql",
+    #         "NAME": os.environ.get("DATABASE_NAME"),
+    #         "HOST": os.environ.get("DATABASE_HOST"),
+    #         "USER": os.environ.get("DATABASE_USERNAME"),
+    #         "PASSWORD": os.environ.get("DATABASE_PASSWORD"),
+    #         "PORT": os.environ.get("DATABASE_PORT"),
+    #     },
+    # }
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
+
+    sentry_sdk.init(
+        dsn="https://d809d439f89c4e90a8d3657130194dac@o380211.ingest.sentry.io/5646430",
+        integrations=[DjangoIntegration()],
+        traces_sample_rate=1.0,
+        # If you wish to associate users to errors (assuming you are using
+        # django.contrib.auth) you may enable sending PII data.
+        send_default_pii=True,
+    )

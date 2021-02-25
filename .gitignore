@@ -2,6 +2,7 @@
 # Created by https://www.toptal.com/developers/gitignore/api/react,node,pycharm+all,visualstudiocode,django,windows,macos
 # Edit at https://www.toptal.com/developers/gitignore?templates=react,node,pycharm+all,visualstudiocode,django,windows,macos
 
+Dockerfile
 ### Django ###
 *.log
 *.pot
@@ -18,7 +19,6 @@ frontend/static/frontend/main.js
 docker-compose.yml
 static
 adt
-
 # If your build process includes running collectstatic, then you probably don't need or want to include staticfiles/
 # in your Git repository. Update and uncomment the following line accordingly.
 # <django-project-name>/staticfiles/
