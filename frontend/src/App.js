@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import AuthRouter from "./screens/AuthRouter";
 import Alert from "./components/alert/Alert";
 

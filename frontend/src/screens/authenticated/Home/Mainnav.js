@@ -1,11 +1,11 @@
 import React from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
-import { Dashboard, Project, Room, Team, Workhour } from "./";
-import NoticeCreate from "./Notice/NoticeCreate";
-import Notice from "./Notice/Notice";
-import NoticeDetail from "./Notice/NoticeDetail";
-import CancelRoom from "./Room/CancelRoom";
-import Error from "../authenticated/Error/Error";
+import { Dashboard, Project, Room, Team, Workhour } from "..";
+import NoticeCreate from "../Notice/NoticeCreate";
+import Notice from "../Notice/Notice";
+import NoticeDetail from "../Notice/NoticeDetail";
+import CancelRoom from "../Room/CancelRoom";
+import Error from "../Error/Error";
 
 const MainNav = () => {
   return (
