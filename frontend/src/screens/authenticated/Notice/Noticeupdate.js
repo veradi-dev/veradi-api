@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Editor from "./QuillEditor";
-import Title from "../Title";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Noticelist from "./NoticeList";

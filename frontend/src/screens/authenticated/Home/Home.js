@@ -1,27 +1,15 @@
-import React, { lazy, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 import { connect } from "react-redux";
 import { checkLogedIn, logout } from "../../../redux/user/userThunks";
-import { useDispatch } from "react-redux";
 
 import Container from "@material-ui/core/Container";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import Divider from "@material-ui/core/Divider";
-import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
 import Box from "@material-ui/core/Box";
-import AccountCircle from "@material-ui/icons/AccountCircle";
-import MenuItem from "@material-ui/core/MenuItem";
-import Menu from "@material-ui/core/Menu";
 
 import useStyles from "./styles";
 import Drawer from "./Drawer";
-import LogoImage from "../../../../assets/veradi/logo.png";
-import clsx from "clsx";
-import MainNav from "./Mainnav";
+import MainNav from "./MainNav";
 import Copyright from "./Copyright";
 import Appbar from "./AppBar";
 

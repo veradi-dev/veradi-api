@@ -19,25 +19,38 @@ export default makeStyles(theme => ({
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(["width", "margin"], {
+    transition: theme.transitions.create(["width"], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen
     })
-    //;
   },
   appBarShift: {
     marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(["width", "margin"], {
+    [theme.breakpoints.down("sm")]: {
+      width: 0,
+      display: "none"
+    },
+    [theme.breakpoints.up("sm")]: {
+      width: `calc(100% - ${drawerWidth}px)`
+    },
+
+    transition: theme.transitions.create(["width", "display"], {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen
+      duration: theme.transitions.duration.leavingScreen
     })
   },
   menuButton: {
     marginRight: 36
   },
   menuButtonHidden: {
-    display: "none"
+    opacity: 0,
+    width: 0,
+
+    transition: theme.transitions.create(["width", "opacity"], {
+      easing: theme.transitions.easing.easeIn,
+      duration: theme.transitions.duration.leavingScreen
+    }),
+    cursor: "default"
   },
   title: {
     flexGrow: 1
@@ -47,25 +60,31 @@ export default makeStyles(theme => ({
     cursor: "pointer"
   },
   drawerPaper: {
+    [theme.breakpoints.down("sm")]: {
+      position: "absolute",
+      width: `100%`
+    },
+    [theme.breakpoints.up("sm")]: {
+      position: "relative",
+      width: drawerWidth
+    },
     backgroundColor: "rgb(237, 245, 241)",
-    position: "relative",
     whiteSpace: "nowrap",
-    width: drawerWidth,
     transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen
     })
   },
   drawerPaperClose: {
+    [theme.breakpoints.down("sm")]: {
+      width: 0
+    },
+    width: theme.spacing(7),
     overflowX: "hidden",
     transition: theme.transitions.create("width", {
-      easing: theme.transitions.easing.sharp,
+      easing: theme.transitions.easing.easeIn,
       duration: theme.transitions.duration.leavingScreen
-    }),
-    width: theme.spacing(7),
-    [theme.breakpoints.up("sm")]: {
-      width: theme.spacing(9)
-    }
+    })
   },
   appBarSpacer: theme.mixins.toolbar,
   content: {

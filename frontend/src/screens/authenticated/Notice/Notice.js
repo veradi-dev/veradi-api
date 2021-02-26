@@ -11,7 +11,6 @@ import { getPosition, getTeamCode } from "~/frontend/src/utils";
 import NoticeList from "./NoticeList";
 import NoticeDetail from "./NoticeDetail";
 import clsx from "clsx";
-import { makeStyles } from "@material-ui/core/styles";
 import {
   Box,
   Button,
@@ -20,24 +19,7 @@ import {
   Typography
 } from "@material-ui/core";
 import { alertActions } from "~/frontend/src/redux/alert/alertSlice";
-
-const useStyles = makeStyles(theme => ({
-  paper: {
-    padding: theme.spacing(2),
-    display: "flex",
-    overflow: "hidden",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  fixedHeight: {
-    height: 300
-  },
-  link: {
-    textDecoration: "none",
-    color: "black"
-  }
-}));
+import useStyles from "./styles";
 
 const convertTeamName = (user, team, type) => {
   if (type === "code") {

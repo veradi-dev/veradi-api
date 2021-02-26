@@ -7,7 +7,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import "react-calendar/dist/Calendar.css";
 import { Box, CircularProgress } from "@material-ui/core";
 import "./Room.css";
-import Title from "../Title";
 import { Time } from "./TimeBtn";
 import Switch from "@material-ui/core/Switch";
 import { withStyles } from "@material-ui/core/styles";
@@ -278,7 +277,14 @@ const Room = ({ user, getConference }) => {
         <React.Fragment>
           <Grid item xs={12} md={6} lg={6}>
             <Paper className={fixedHeightPaper}>
-              <Title>회의실 예약</Title>
+              <Typography
+                component='h2'
+                variant='h6'
+                color='primary'
+                gutterBottom
+              >
+                회의실 예약
+              </Typography>
               <FormControl component='fieldset'>
                 <FormLabel component='legend'>회의실</FormLabel>
                 <RadioGroup

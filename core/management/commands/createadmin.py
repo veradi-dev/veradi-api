@@ -13,4 +13,5 @@ class Command(BaseCommand):
             admin.code = 1
             admin.save()
             self.stdout.write(self.style.SUCCESS("Successfully create superuser"))
-        self.stdout.write(self.style.SUCCESS("이미 superuser가 존재합니다."))
+        else:
+            self.stdout.write(self.style.SUCCESS("이미 superuser가 존재합니다."))

@@ -4,7 +4,6 @@ import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import Title from "../Title";
 import { connect } from "react-redux";
 import "./Workhour.css";
 import DateComboBox from "../../../components/DateComboBox";
@@ -136,7 +135,14 @@ const Workhour = ({ user, workhours, getMyWorkhours }) => {
       <Grid item xs={12} md={12} lg={12}>
         <Paper className={classes.paper}>
           <React.Fragment>
-            <Title>{user.last_name + user.first_name}님의 근무시간</Title>
+            <Typography
+              component='h2'
+              variant='h6'
+              color='primary'
+              gutterBottom
+            >
+              {user.last_name + user.first_name}님의 근무시간
+            </Typography>
             <Grid
               container
               direction='row'

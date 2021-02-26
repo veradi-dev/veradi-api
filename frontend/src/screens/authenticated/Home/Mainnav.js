@@ -1,15 +1,18 @@
-import React from "react";
+import { CircularProgress } from "@material-ui/core";
+import React, { lazy, Suspense } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
-import { Dashboard, Project, Room, Team, Workhour } from "..";
+const Dashboard = lazy(() => import("../Dashboard/Dashboard"));
+const Room = lazy(() => import("../Room/Room"));
+const Team = lazy(() => import("../Team/Team"));
+const Workhour = lazy(() => import("../Workhour/Workhour"));
+const Notice = lazy(() => import("../Notice/Notice"));
+const Error = lazy(() => import("../Error/Error"));
 import NoticeCreate from "../Notice/NoticeCreate";
-import Notice from "../Notice/Notice";
 import NoticeDetail from "../Notice/NoticeDetail";
-import CancelRoom from "../Room/CancelRoom";
-import Error from "../Error/Error";
 
 const MainNav = () => {
   return (
-    <>
+    <Suspense fallback={<CircularProgress />}>
       <Switch>
         <Route exact path='/' component={Dashboard} />
         <Route exact path='/notice/:team/:page' component={Notice} />
@@ -18,12 +21,10 @@ const MainNav = () => {
         <Route exact path='/workhour' component={Workhour} />
         <Route exact path='/team' component={Team} />
         <Route exact path='/room' component={Room} />
-        <Route exact path='/cancelroom' component={CancelRoom} />
-        <Route exact path='/project' component={Project} />
         <Route exact path='/error' component={Error} />
         <Redirect path='*' to='/error' />
       </Switch>
-    </>
+    </Suspense>
   );
 };
 

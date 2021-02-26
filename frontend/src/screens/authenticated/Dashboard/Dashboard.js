@@ -1,62 +1,21 @@
 import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
+
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
-import Noticelist from "../Notice/NoticeList";
-import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
-import {
-  Avatar,
-  Box,
-  CircularProgress,
-  Icon,
-  Typography
-} from "@material-ui/core";
+import { Avatar, Box, CircularProgress, Typography } from "@material-ui/core";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import Title from "../Title";
-import { connect } from "react-redux";
 import DirectionsRunIcon from "@material-ui/icons/DirectionsRun";
 import HomeIcon from "@material-ui/icons/Home";
+
+import useStyles from "./styles";
 import { get_team_members } from "../../../api/users/team_management";
 import { getMyWorkhours } from "../../../redux/workhours/workhoursThunks";
-
-const useStyles = makeStyles(theme => ({
-  fullSize: {
-    width: "100%",
-    height: "100%"
-  },
-  center: {
-    width: "100%",
-    height: "100%",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  paper: {
-    padding: theme.spacing(2),
-    display: "flex",
-    overflow: "auto",
-    flexDirection: "column"
-  },
-  fixedHeight: {
-    height: 300
-  },
-  smallfixedHeight: {
-    height: 160,
-    marginBottom: 10
-  },
-  verysmallfixedHeight: {
-    height: 130
-  },
-  avatar: {
-    backgroundColor: "#000000",
-    height: 30,
-    width: 30
-  }
-}));
 
 const Dashboard = ({ user, workhours, getMyWorkhours }) => {
   const [teamMembers, setTeamMembers] = useState([]);
@@ -155,7 +114,14 @@ const Dashboard = ({ user, workhours, getMyWorkhours }) => {
       <Grid item xs={12} md={6} lg={6}>
         <Paper className={fixedHeightPaper}>
           <React.Fragment>
-            <Title>{user.team} 근무현황</Title>
+            <Typography
+              component='h2'
+              variant='h6'
+              color='primary'
+              gutterBottom
+            >
+              {user.team} 근무현황
+            </Typography>
             {team_member_loading === true ? (
               <Box className={clsx(classes.fullSize, classes.center)}>
                 <CircularProgress />
