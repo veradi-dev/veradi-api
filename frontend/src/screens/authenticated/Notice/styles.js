@@ -21,15 +21,9 @@ export default makeStyles(theme => ({
     marginTop: theme.spacing(3)
   },
   table: {
-    minWidth: 300,
-    minHeight: "50vh"
+    minWidth: 300
   },
   row: {
-    "& :first-child": {
-      [theme.breakpoints.down("sm")]: {
-        textAlign: "right"
-      }
-    },
     minWidth: 300,
     maxHeight: "2rem"
   },

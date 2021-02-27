@@ -12,7 +12,7 @@ const Button = styled.button`
   border: ${props =>
     props.time.booked
       ? "transparent"
-      : props.time.active
+      : props.time.active 
       ? "#53990e"
       : "#f0f7f4"};
   width: 24%;

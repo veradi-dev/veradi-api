@@ -37,4 +37,7 @@ module.exports = {
       filename: "./webpack-stats.json",
     }),
   ],
+  optimization: {
+    sideEffects: false,
+  }
 };
