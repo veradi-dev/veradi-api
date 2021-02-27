@@ -4,6 +4,11 @@ FROM python:3
 # 프로젝트가 실행될 경로 지정
 WORKDIR /usr/src/app
 
+ENV PYTHONUNBUFFERED 1
+
+# apt-get
+RUN apt-get update
+RUN apt-get install -y mdbtools
 # requirements.txt 경로 지정 및 실행
 RUN pip install --upgrade pip
 
@@ -15,7 +20,8 @@ RUN pip install psycopg2-binary
 COPY . .
 
 
-# 몰라
+
+# 시작
 COPY ./entrypoint.sh /
 ENTRYPOINT ["sh", "/entrypoint.sh"]
 
