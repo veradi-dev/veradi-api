@@ -10,8 +10,7 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import DirectionsRunIcon from "@material-ui/icons/DirectionsRun";
-import HomeIcon from "@material-ui/icons/Home";
+import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 
 import useStyles from "./styles";
 import { get_team_members } from "../../../api/users/team_management";
@@ -134,10 +133,15 @@ const Dashboard = ({ user, workhours, getMyWorkhours }) => {
                     member.isWorking === null ||
                     member.isWorking.complete === true ? (
                       <TableRow key={member.id}>
-                        <TableCell align='center'>
-                          <HomeIcon
-                            color='secondary'
-                            style={{ fontSize: 20 }}
+                        <TableCell
+                          align='center'
+                          style={{ verticalAlign: "bottom", color: "gray" }}
+                        >
+                          <FiberManualRecordIcon
+                            style={{
+                              padding: 0,
+                              fontSize: 15
+                            }}
                           />
                         </TableCell>
                         <TableCell align='center'>
@@ -150,10 +154,15 @@ const Dashboard = ({ user, workhours, getMyWorkhours }) => {
                       </TableRow>
                     ) : (
                       <TableRow key={member.id}>
-                        <TableCell align='center'>
-                          <DirectionsRunIcon
-                            color='primary'
-                            style={{ fontSize: 20 }}
+                        <TableCell
+                          align='center'
+                          style={{ verticalAlign: "bottom", color: "#52b202" }}
+                        >
+                          <FiberManualRecordIcon
+                            style={{
+                              padding: 0,
+                              fontSize: 15
+                            }}
                           />
                         </TableCell>
                         <TableCell align='center'>
@@ -161,8 +170,11 @@ const Dashboard = ({ user, workhours, getMyWorkhours }) => {
                           {member.first_name}
                         </TableCell>
                         <TableCell align='center'>
-                          <Typography>
-                            {new Date(member.isWorking.start).toLocaleString()}
+                          <Typography variant='caption'>
+                            출근 시각:{" "}
+                            {new Date(member.isWorking.start)
+                              .toLocaleString()
+                              .slice(-10, -3)}
                           </Typography>
                         </TableCell>
                       </TableRow>

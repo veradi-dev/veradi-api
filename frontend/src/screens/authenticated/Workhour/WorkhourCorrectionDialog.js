@@ -1,5 +1,5 @@
 import React from "react";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
@@ -17,6 +17,7 @@ import TableRow from "@material-ui/core/TableRow";
 import { Container } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { correctionWorkhour } from "~/frontend/src/redux/workhours/workhoursThunks";
+import { alertActions } from "../../../redux/alert/alertSlice";
 
 const modes = [
   {
@@ -42,6 +43,7 @@ const useStyles = makeStyles(theme => ({
 
 const WorkhourCorrectionDialog = ({ workhour, correctionWorkhour }) => {
   const [open, setOpen] = React.useState(false);
+  const dispatch = useDispatch();
   const initialForm = {
     workhour: { id: workhour.id },
     datetime: workhour.start.slice(0, 16),
@@ -58,7 +60,10 @@ const WorkhourCorrectionDialog = ({ workhour, correctionWorkhour }) => {
     setOpen(false);
   };
   const handleSubmit = () => {
-    console.log(form);
+    if (form.reason === "") {
+      dispatch(alertActions.error("사유를 입력해주세요."));
+      return;
+    }
     correctionWorkhour(form, "post");
     setForm(initialForm);
     setOpen(false);

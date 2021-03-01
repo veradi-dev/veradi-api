@@ -31,7 +31,8 @@ export default makeStyles(theme => ({
       display: "none"
     },
     [theme.breakpoints.up("sm")]: {
-      width: `calc(100% - ${drawerWidth}px)`
+      width: `calc(100% - ${drawerWidth}px)`,
+      display: "block"
     },
 
     transition: theme.transitions.create(["width", "display"], {

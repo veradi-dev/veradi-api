@@ -1,0 +1,59 @@
+version: '3.7'
+
+services:
+  db:
+    image: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - env/.env.db
+  web:
+    image: marpiotoun/veradi-api:0.1.4
+    volumes:
+      - static:/static
+#      - type: bind
+#        source: /volume1/docker/django/LVMANA/C/Caps/ACServer
+#        target: /usr/src/app/adt
+    environment:
+      - DJANGO_ALLOWED_HOST=localhost 127.0.0.1 0.0.0.0 [::1]
+      - CELERY_BROKER=redis://redis:6379/0
+      - CELERY_BACKEND=redis://redis:6379/0
+    env_file:
+      - env/.env.prod
+    build:
+      context: .
+    command: sh -c "python manage.py migrate --no-input && python manage.py collectstatic --no-input && python manage.py initialize_models && python manage.py createadmin && gunicorn config.wsgi:application -b 0.0.0.0:8000"
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+    links:
+      - db:db
+  nginx:
+    build: ./nginx
+    volumes:
+      - static:/static
+    ports:
+      - "80:80"
+    depends_on:
+      - web
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
+  celery:
+    build: .
+    command: sh -c "celery -A config worker -B -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler"
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - web
+      - redis
+      - db
+    env_file:
+      - env/.env.prod
+
+volumes:
+  static:
+  postgres_data:

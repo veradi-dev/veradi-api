@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from .serializers import WorkHourSerializer, WorkHourCorrectionRequestSerializer
 from .models import WorkHour, WorkHourCorrectionRequest
+from .handle_log import generate_workhours
 from utils import get_aware_datetime
 
 User = get_user_model()
@@ -29,6 +30,7 @@ class WorkHourViewset(viewsets.ModelViewSet):
         # target_user 를 가져온다. 가져오지 못한다면 400
         try:
             target_user = User.objects.get(pk=int(request.GET.get("user")))
+            generate_workhours(target_user)
         except User.DoesNotExist:
             data = {"message": "해당 유저가 없습니다."}
             return Response(status=status.HTTP_400_BAD_REQUEST, data=data)
@@ -170,6 +172,7 @@ class WorkHourViewset(viewsets.ModelViewSet):
         data = []
 
         for member in team_members:
+            generate_workhours(member)
             workhours = [
                 workhour
                 for workhour in WorkHour.objects.prefetch_related(

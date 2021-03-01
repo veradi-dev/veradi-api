@@ -8,10 +8,9 @@ import { alertActions } from "../alert/alertSlice";
 
 const logout = () => (dispatch, getState) => {
   const token = getState().user.token;
-  logoutRequest(token).finally(() => {
-    dispatch(userActions.logout());
-    dispatch(alertActions.success(`로그아웃 되었습니다.`));
-  });
+  logoutRequest(token)
+    .then(() => dispatch(alertActions.success(`로그아웃 되었습니다.`)))
+    .finally(() => dispatch(userActions.logout()));
 };
 
 const login = data => dispatch => {

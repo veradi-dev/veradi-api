@@ -46,15 +46,20 @@ class WorkHour(CoreModel):
 
     @property
     def complete(self):
-        # Workhour 객체는 마지막 EnterLog으로부터 현 6시간이 지났거나 마지막 EnterLog의 mode가 2일때, 종결된 상태이다.
+        # Workhour 객체는
+        # 1. 출근 기록이 없거나
+        # 2. 마지막 EnterLog으로부터 현 6시간이 지났거나
+        # 3. 마지막 EnterLog의 mode가 2일때, 종결된 상태이다.
+
         # 종결되었을때: True 반환
         # 진행중일때: False 반환
 
         now = timezone.now().timestamp()
         latest_enterlog = self.enter_logs.get_queryset().latest("created_at")
         if (
-            now - latest_enterlog.datetime.timestamp() >= 21600
-            or latest_enterlog.mode == 2
+            self.enter_logs.get_queryset().filter(mode=1).__len__() == 0  # 1
+            or latest_enterlog.mode == 2  # 2
+            or now - latest_enterlog.datetime.timestamp() >= 21600  # 3
         ):
             return True
         else:

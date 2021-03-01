@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useCallback, Fragment } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import "./Workhour.css";
 import DateComboBox from "../../../components/DateComboBox";
-import Workhourtable from "./../../../components/Workhourtable";
+import Workhourtable from "./Workhourtable";
 import WorkhourCorrectionDialog from "./WorkhourCorrectionDialog";
 import { getMyWorkhours } from "~/frontend/src/redux/workhours/workhoursThunks";
 import { getDate } from "~/frontend/src/utils";
@@ -16,6 +16,9 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
 import ErrorIcon from "@material-ui/icons/Error";
 import { red, green } from "@material-ui/core/colors";
+import { Box, CircularProgress, Container } from "@material-ui/core";
+import { getMyWorkhoursRequest } from "../../../api/workhours";
+import { alertActions } from "../../../redux/alert/alertSlice";
 
 const headCells = [
   { id: "collapseBtn", numeric: false, disablePadding: false, label: "" },
@@ -34,40 +37,60 @@ const isEqualDate = (date_string, date_object) => {
   );
 };
 
-const Workhour = ({ user, workhours, getMyWorkhours }) => {
-  const useStyles = makeStyles(theme => ({
-    paper: {
-      padding: theme.spacing(2),
-      display: "flex",
-      flexDirection: "column"
-    },
-    acjc: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center"
-    },
-    fixedHeight: {
-      height: 240
-    },
-    seeMore: {
-      marginTop: theme.spacing(3)
-    },
-    formControl: {
-      margin: theme.spacing(1),
-      minWidth: 120
-    },
-    selectEmpty: {
-      marginTop: theme.spacing(2)
-    }
-  }));
-  const classes = useStyles();
-  const [date, setDate] = React.useState(getDate());
-  const [rows, setRows] = React.useState(false);
+const useStyles = makeStyles(theme => ({
+  paper: {
+    padding: theme.spacing(2),
+    display: "flex",
+    flexDirection: "column"
+  },
+  acjc: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  fixedHeight: {
+    height: 240
+  },
+  seeMore: {
+    marginTop: theme.spacing(3)
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2)
+  },
+  DateComboBox: {}
+}));
 
-  const search = useCallback(() => {
-    getMyWorkhours(date.year, date.month);
-  }, [date]);
-  const [total, setTotal] = React.useState(0);
+const Workhour = ({ user, workhoursThisMonth, getMyWorkhours }) => {
+  const classes = useStyles();
+  const [date, setDate] = useState(getDate());
+  const [rows, setRows] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [total, setTotal] = useState(0);
+  const [workhours, setWorkhours] = useState(workhoursThisMonth);
+  const dispatch = useDispatch();
+
+  const search = () => {
+    setLoading(true);
+    getMyWorkhoursRequest({
+      token: user.token,
+      userId: user.id,
+      year: date.year,
+      month: date.month
+    })
+      .then(res => {
+        if (res.status === 200) {
+          setWorkhours(res.data);
+        }
+      })
+      .catch(e => {
+        dispatch(alertActions.error("데이터를 불러올 수 없습니다."));
+      })
+      .finally(() => setLoading(false));
+  };
 
   useEffect(() => {
     const createData = () => {
@@ -143,26 +166,42 @@ const Workhour = ({ user, workhours, getMyWorkhours }) => {
             >
               {user.last_name + user.first_name}님의 근무시간
             </Typography>
-            <Grid
-              container
-              direction='row'
-              justify='space-evenly'
-              alignItems='center'
+            <Container
+              style={{
+                display: "flex",
+                justifyContent: "flex-start",
+                alignItems: "center"
+              }}
             >
-              <Grid>
-                <DateComboBox date={date} setDate={setDate}></DateComboBox>
-              </Grid>
-              <Grid>
-                <Button onClick={search} color='primary' variant='contained'>
-                  검색
-                </Button>
-              </Grid>
-            </Grid>
-            <Typography>
+              <DateComboBox date={date} setDate={setDate}></DateComboBox>
+              <Button onClick={search} color='primary' variant='contained'>
+                검색
+              </Button>
+            </Container>
+            <Typography
+              variant='h6'
+              gutterBottom
+              style={{
+                paddingTop: 20,
+                paddingBottom: 20
+              }}
+            >
               총 {parseInt(total / 3600)}시간 {parseInt((total % 3600) / 60)}분
               입니다.
             </Typography>
-            <Workhourtable rows={rows} headCells={headCells}></Workhourtable>
+            {loading ? (
+              <Box
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center"
+                }}
+              >
+                <CircularProgress />
+              </Box>
+            ) : (
+              <Workhourtable rows={rows} headCells={headCells}></Workhourtable>
+            )}
           </React.Fragment>
         </Paper>
       </Grid>
@@ -172,6 +211,6 @@ const Workhour = ({ user, workhours, getMyWorkhours }) => {
 
 const mapStateToProps = state => ({
   user: state.user,
-  workhours: state.workhours
+  workhoursThisMonth: state.workhours
 });
 export default connect(mapStateToProps, { getMyWorkhours })(Workhour);

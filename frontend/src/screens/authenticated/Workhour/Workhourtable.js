@@ -17,26 +17,6 @@ import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import "./Workhourtable.css";
 
-function EnhancedTableHead (props) {
-  const { classes, headCells } = props;
-
-  return (
-    <TableHead>
-      <TableRow>
-        {headCells.map(headCell => (
-          <TableCell
-            key={headCell.id}
-            align={headCell.numeric ? "right" : "left"}
-            padding={headCell.disablePadding ? "none" : "default"}
-          >
-            {headCell.label}
-          </TableCell>
-        ))}
-      </TableRow>
-    </TableHead>
-  );
-}
-
 const useStyles = makeStyles(theme => ({
   root: {
     width: "100%"
@@ -67,10 +47,42 @@ const useStyles = makeStyles(theme => ({
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
     width: 200
+  },
+  ItemCell: {
+    [theme.breakpoints.down("sm")]: {
+      whiteSpace: "nowrap"
+    }
+  },
+  HeadCell: {
+    [theme.breakpoints.down("sm")]: {
+      whiteSpace: "nowrap"
+    }
   }
 }));
 
+function EnhancedTableHead (props) {
+  const { classes, headCells } = props;
+
+  return (
+    <TableHead>
+      <TableRow>
+        {headCells.map(headCell => (
+          <TableCell
+            key={headCell.id}
+            align={headCell.numeric ? "right" : "left"}
+            padding={headCell.disablePadding ? "none" : "default"}
+            className={classes.HeadCell}
+          >
+            {headCell.label}
+          </TableCell>
+        ))}
+      </TableRow>
+    </TableHead>
+  );
+}
+
 const Row = ({ row }) => {
+  const classes = useStyles();
   const [open, setOpen] = useState(false);
 
   return (
@@ -85,12 +97,16 @@ const Row = ({ row }) => {
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <TableCell>{row.date}</TableCell>
-        <TableCell>{row.start}</TableCell>
-        <TableCell>{row.end}</TableCell>
-        <TableCell>{row.total}</TableCell>
-        <TableCell>{row.status()}</TableCell>
-        <TableCell>{row.btn()}</TableCell>
+        {[row.date, row.start, row.end, row.total, row.status(), row.btn()].map(
+          (item, index) => (
+            <TableCell
+              key={`${index}-workhourcell`}
+              className={classes.ItemCell}
+            >
+              {item}
+            </TableCell>
+          )
+        )}
       </TableRow>
       {open ? (
         <TableRow>

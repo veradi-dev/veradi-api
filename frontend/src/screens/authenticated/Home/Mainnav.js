@@ -1,6 +1,7 @@
-import { CircularProgress } from "@material-ui/core";
 import React, { lazy, Suspense } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
+
+import { CircularProgress } from "@material-ui/core";
 const Dashboard = lazy(() => import("../Dashboard/Dashboard"));
 const Room = lazy(() => import("../Room/Room"));
 const Team = lazy(() => import("../Team/Team"));

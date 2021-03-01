@@ -29,7 +29,8 @@ DEBUG = bool(os.environ.get("DEBUG", False))
 
 AUTH_USER_MODEL = "users.User"
 
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split()
+# ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split()
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -54,6 +55,8 @@ THIRD_PARTY_APPS = [
     "rest_framework",
     "knox",
     "webpack_loader",
+    "django_celery_beat",
+    "django_celery_results",
 ]
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
 
@@ -194,3 +197,9 @@ if DEBUG is False or DEBUG is True:
         # django.contrib.auth) you may enable sending PII data.
         send_default_pii=True,
     )
+
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
+CELERY_RESULT_URL = "django-db"
+CELERY_RESULT_BACKEND = "django-db"
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"

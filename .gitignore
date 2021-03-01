@@ -16,7 +16,6 @@ uploads
 frontend/static/frontend/main.js
 ./webpack-stats.*
 .env.*
-docker-compose.yml
 static
 adt/
 # If your build process includes running collectstatic, then you probably don't need or want to include staticfiles/
