@@ -11,9 +11,9 @@ services:
     image: marpiotoun/veradi-api:0.1.4
     volumes:
       - static:/static
-#      - type: bind
-#        source: /volume1/docker/django/LVMANA/C/Caps/ACServer
-#        target: /usr/src/app/adt
+      - type: bind
+        source: /volume1/docker/django/LVMANA/C/Caps/ACServer
+        target: /usr/src/app/adt
     environment:
       - DJANGO_ALLOWED_HOST=localhost 127.0.0.1 0.0.0.0 [::1]
       - CELERY_BROKER=redis://redis:6379/0
@@ -35,7 +35,7 @@ services:
     volumes:
       - static:/static
     ports:
-      - "80:80"
+      - "81:81"
     depends_on:
       - web
   redis:
@@ -47,6 +47,9 @@ services:
     command: sh -c "celery -A config worker -B -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler"
     volumes:
       - .:/usr/src/app
+      - type: bind
+        source: /volume1/docker/django/LVMANA/C/Caps/ACServer
+        target: /usr/src/app/adt
     depends_on:
       - web
       - redis
