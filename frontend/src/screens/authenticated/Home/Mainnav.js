@@ -8,8 +8,8 @@ const Team = lazy(() => import("../Team/Team"));
 const Workhour = lazy(() => import("../Workhour/Workhour"));
 const Notice = lazy(() => import("../Notice/Notice"));
 const Error = lazy(() => import("../Error/Error"));
-import NoticeCreate from "../Notice/NoticeCreate";
-import NoticeDetail from "../Notice/NoticeDetail";
+const NoticeCreate = lazy(() => import("../Notice/NoticeCreate"));
+const NoticeDerail = lazy(() => import("../Notice/NoticeDetail"));
 
 const MainNav = () => {
   return (

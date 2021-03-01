@@ -1,22 +1,25 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
+import { connect, useDispatch } from "react-redux";
+
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import { connect, useDispatch } from "react-redux";
-import "./Workhour.css";
-import DateComboBox from "../../../components/DateComboBox";
-import Workhourtable from "./Workhourtable";
-import WorkhourCorrectionDialog from "./WorkhourCorrectionDialog";
-import { getMyWorkhours } from "~/frontend/src/redux/workhours/workhoursThunks";
-import { getDate } from "~/frontend/src/utils";
 import Tooltip from "@material-ui/core/Tooltip";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
-import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
 import ErrorIcon from "@material-ui/icons/Error";
 import { red, green } from "@material-ui/core/colors";
 import { Box, CircularProgress, Container } from "@material-ui/core";
+
+import "./Workhour.css";
+import DateComboBox from "../../../components/DateComboBox";
+const Workhourtable = lazy(() => import("./Workhourtable"));
+const WorkhourCorrectionDialog = lazy(() =>
+  import("./WorkhourCorrectionDialog")
+);
+import { getMyWorkhours } from "~/frontend/src/redux/workhours/workhoursThunks";
+import { getDate } from "~/frontend/src/utils";
 import { getMyWorkhoursRequest } from "../../../api/workhours";
 import { alertActions } from "../../../redux/alert/alertSlice";
 

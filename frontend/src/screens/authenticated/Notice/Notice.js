@@ -1,23 +1,18 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { connect, useDispatch } from "react-redux";
-import { Link, useParams, useLocation } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { getNotice } from "~/frontend/src/redux/notice/noticeThunk";
+
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
-import { DataGrid } from "@material-ui/data-grid";
 import PaginationItem from "@material-ui/lab/PaginationItem";
 import Pagination from "@material-ui/lab/Pagination";
+import { Box, Button, CircularProgress, Typography } from "@material-ui/core";
+
 import { getPosition, getTeamCode } from "~/frontend/src/utils";
-import NoticeList from "./NoticeList";
-import NoticeDetail from "./NoticeDetail";
 import clsx from "clsx";
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Container,
-  Typography
-} from "@material-ui/core";
+const NoticeList = lazy(() => import("./NoticeList"));
+const NoticeDetail = lazy(() => import("./NoticeDetail"));
 import { alertActions } from "~/frontend/src/redux/alert/alertSlice";
 import useStyles from "./styles";
 

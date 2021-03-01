@@ -50,7 +50,7 @@
     "file-loader": "^6.2.0",
     "image-webpack-loader": "^6.0.0",
     "react-alert": "^7.0.2",
-    "webpack": "^4.44.1",
+    "webpack": "^4.46.0",
     "webpack-bundle-tracker": "0.4.3",
     "webpack-cli": "^4.4.0"
   }
