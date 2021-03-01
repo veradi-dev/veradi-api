@@ -4,7 +4,8 @@ import { connect } from "react-redux";
 import { login } from "../../redux/user/userThunks";
 import LogoImage from "../../../assets/veradi/logo.png";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import {Link} from 'react-router-dom';
+import { Link } from "react-router-dom";
+
 const bulb = keyframes`
   0%{
     transform: scale(1)
@@ -83,7 +84,7 @@ const Gate = ({ history, isAuthenticated, login }) => {
   const [userInput, setUserInput] = useState({
     username: "",
     password: "",
-    code: "",
+    code: ""
   });
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
@@ -99,20 +100,20 @@ const Gate = ({ history, isAuthenticated, login }) => {
       history.push("/");
     }
   }, [isAuthenticated]);
-  const handleChange = (e) => {
+  const handleChange = e => {
     setUserInput({
       ...userInput,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = e => {
     e.preventDefault();
     login(userInput);
     setUserInput({
       username: "",
       password: "",
-      code: "",
+      code: ""
     });
   };
 
@@ -120,54 +121,54 @@ const Gate = ({ history, isAuthenticated, login }) => {
     <Container>
       {isLoading ? (
         <CircularProgress
-          color="primary"
+          color='primary'
           size={40}
           thickness={5}
           style={{
             color: "#1a90ff",
-            animationDuration: "550ms",
+            animationDuration: "550ms"
           }}
         />
       ) : (
         <>
           <LogoContainer>
             <Bulb />
-            <Logo alt="veradi_logo" src={LogoImage} />
+            <Logo alt='veradi_logo' src={LogoImage} />
           </LogoContainer>
           <LoginForm onSubmit={handleSubmit}>
             <Input
-              type="text"
-              placeholder="ID"
-              name="username"
+              type='text'
+              placeholder='ID'
+              name='username'
               onChange={handleChange}
               value={userInput.username}
             />
             <Input
-              type="password"
-              placeholder="Password"
-              name="password"
+              type='password'
+              placeholder='Password'
+              name='password'
               onChange={handleChange}
               value={userInput.password}
             />
             <Input
-              placeholder="Code"
-              name="code"
+              placeholder='Code'
+              name='code'
               onChange={handleChange}
               value={userInput.code}
             />
-            <SubmitButton type="submit">로그인</SubmitButton>
-            <br/>
+            <SubmitButton type='submit'>로그인</SubmitButton>
+            <br />
           </LoginForm>
-          <Link to="/signup" style={{ textDecoration: 'none', color: 'black' }}>
-          <SubmitButton type="submit">회원가입</SubmitButton>
+          <Link to='/signup' style={{ textDecoration: "none", color: "black" }}>
+            <SubmitButton type='submit'>회원가입</SubmitButton>
           </Link>
         </>
       )}
     </Container>
   );
 };
-const mapStateToProps = (state) => ({
-  isAuthenticated: state.user.isAuthenticated,
+const mapStateToProps = state => ({
+  isAuthenticated: state.user.isAuthenticated
 });
 const mapDispatchToProps = { login };
 export default connect(mapStateToProps, mapDispatchToProps)(Gate);

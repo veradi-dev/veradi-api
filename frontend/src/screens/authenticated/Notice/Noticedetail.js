@@ -1,19 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 import "./Noticedetail.css";
 import { connect, useDispatch } from "react-redux";
 import Paper from "@material-ui/core/Paper";
-import { getPosition, getTeamCode } from "~/frontend/src/utils";
-import clsx from "clsx";
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Container,
-  Divider,
-  Typography
-} from "@material-ui/core";
+import { Box, Button, Divider, Typography } from "@material-ui/core";
 import { alertActions } from "~/frontend/src/redux/alert/alertSlice";
 import Editor from "./QuillEditor";
 import TextField from "@material-ui/core/TextField";

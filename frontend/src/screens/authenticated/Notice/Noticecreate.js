@@ -11,9 +11,10 @@ import FormLabel from "@material-ui/core/FormLabel";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import { Typography } from "@material-ui/core";
-import clsx from "clsx";
 
-import Editor from "./QuillEditor";
+import clsx from "clsx";
+const Editor = lazy(() => import("./QuillEditor"));
+s;
 import { getTeamCode } from "~/frontend/src/utils";
 import { createNoticeRequest } from "~/frontend/src/api/notices";
 import { alertActions } from "~/frontend/src/redux/alert/alertSlice";
