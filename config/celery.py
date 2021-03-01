@@ -70,10 +70,10 @@ def update_enterlogs(self):
         e_date, e_time, e_idno, e_name, e_mode = row
         if prev_row is not None:
             if (
-                prev_row.e_date == e_date
-                and prev_row.e_time == e_time
-                and prev_row.e_idno == e_idno
-                and prev_row.e_mode == e_mode
+                prev_row["e_date"] == e_date
+                and prev_row["e_time"] == e_time
+                and prev_row["e_idno"] == e_idno
+                and prev_row["e_mode"] == e_mode
             ):
                 continue
         try:
